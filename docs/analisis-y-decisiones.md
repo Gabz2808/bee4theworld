@@ -8,7 +8,7 @@ La investigación propia y la de Bee4TheWorld convergen en el [reto oficial](htt
 
 ## Tensiones que resolver
 
-1. **Región y variable:** Costa Rica es el ámbito inicial, con posibilidad de expansión latinoamericana. Quedan por definir la geometría concreta, el indicador, el período y el producto; evaluar IMERG como candidata, no como elección cerrada.
+1. **Región y variable:** Costa Rica es el ámbito inicial, con posibilidad de expansión latinoamericana; el equipo seleccionó precipitación IMERG para empezar. Quedan por definir geometría concreta, indicador, versión, período y disponibilidad real.
 2. **Alcance:** la presentación menciona dos variables, PostGIS, polígonos y Time Travel. Para dos personas y el tiempo limitado, completar primero una serie NASA real, un cálculo defendible, gráfica y evidencia; agregar mapa sincronizado y otras variables si alcanzan.
 3. **Significancia:** no es obligatorio ni correcto asumir que cualquier p < 0,05 prueba una tendencia real. El ejemplo de seis meses del JSON es inventado, estacional y no sustenta la conclusión incluida. Definir pruebas, control de estacionalidad/autocorrelación y criterio de datos insuficientes antes de resultados.
 4. **Datos frente a imágenes:** GIBS sirve para visualización; una imagen no demuestra que las cifras del motor provengan del mismo producto. Documentar datos analíticos y representación por separado. IMERG tiene resolución y sesgos que limitan inferencias locales; [NASA explica estas limitaciones](https://science.data.nasa.gov/disasters/data-gallery/gpm-imerg-precipitation). LST no es temperatura del aire; NDVI aislado no demuestra mortalidad vegetal ni causalidad.
@@ -26,6 +26,7 @@ La investigación propia y la de Bee4TheWorld convergen en el [reto oficial](htt
 ## Decisiones de colaboración — 14 de noviembre de 2026
 
 - Nuestro ámbito es frontend e integración; el compañero implementa el backend. Preparar el entorno local de ambos sin asumir propiedad de la API.
+- La primera variable será precipitación IMERG, investigada mediante Giovanni. NASA advierte sobre cambios de sensores en análisis de tendencia y publica una transición de V07 a V08; comprobar versión, disponibilidad efectiva y cobertura antes de elegir la serie. Fuentes: [guía IMERG V07](https://gpm.nasa.gov/sites/default/files/2025-02/FAQ%20for%20IMERG%20V07%20Applications%20Users_202502.pdf) y [transición V08](https://gpm.nasa.gov/data/news/imerg-v08-transition-schedule).
 - El contrato del JSON sigue siendo un ejemplo ficticio. Acordar con el compañero versión, rutas, esquemas, errores, cobertura, procedencia y estados inconclusos antes de conectar datos. No presentar el mock como medición.
 - El [sitio oficial de 2026](https://www.spaceappschallenge.org/2026/) indica apertura de entregas el 14 de noviembre a las 09:00 y cierre el 15 a las 23:59, hora local. Confirmar requisitos y cualquier plazo anterior con la sede elegida. La página oficial del reto devolvió error al consultarse; no se ha podido reconfirmar íntegramente su enunciado.
 

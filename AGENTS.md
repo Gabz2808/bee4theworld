@@ -17,7 +17,7 @@ Bee4TheWorld son dos ingenieros de software que trabajan remotamente. El product
 
 ## MVP y prioridades
 
-- Prioridad 1: Costa Rica como ámbito inicial, un producto NASA y una serie real, con procedencia, calidad y cálculo reproducible. La geometría de análisis y el producto aún no están elegidos. Guanacaste + precipitación IMERG es hipótesis de trabajo; MODIS LST o humedad del suelo son alternativas del equipo. Comprobar datos antes de decidir.
+- Prioridad 1: Costa Rica como ámbito inicial y precipitación IMERG como primera variable/producto candidato, con una serie real, procedencia, calidad y cálculo reproducible. La geometría de análisis, versión, variable exacta y período aún deben comprobarse y acordarse con el compañero.
 - Prioridad 2: gráfica, magnitud y dirección de la tendencia con incertidumbre, fuente y limitaciones. Integrar un flujo funcional y verificable de extremo a extremo antes de ampliar alcance.
 - Prioridad 3: mapa y control temporal sincronizados si existen capas compatibles con los mismos datos y fechas. No fingir que una imagen GIBS es la medición usada por el cálculo; explicar cualquier diferencia. Comparación de períodos o de regiones, segunda variable y expansión latinoamericana solo después del flujo central.
 - Las series preprocesadas y versionadas con metadatos permiten demo sin depender de la red. La selección arbitraria del planeta, predicción, alertas operativas y actualizaciones en vivo quedan fuera del MVP salvo nueva decisión.
@@ -40,6 +40,6 @@ Trabajo en paralelo por contrato: nuestro equipo se ocupa del frontend, mapas e 
 
 ## Diseño y entrega
 
-Interfaz de investigación accesible, clara y en español, adaptable a inglés/portugués. Priorizar legibilidad y distinción de datos reales, incertidumbre y error. Identidad propuesta del equipo: obsidiana `#111318`, ámbar `#F5B82E`, blanco `#E9EDF2`, azul `#526A86`, Inter y JetBrains Mono; son propuestas, no obligan a confundir marca del equipo con producto. El concepto de abeja y globo es dirección visual propuesta, no un logo aprobado.
+Interfaz de investigación accesible, clara y en español, adaptable a inglés/portugués. Para Iyök, Manuel eligió una dirección natural y científica: tonos tierra y vegetación, con una interfaz clara de investigación. Los detalles de paleta, tipografía y logo aún no están aprobados; consultar `docs/brief-experiencia.md`. Priorizar legibilidad y distinción de datos reales, incertidumbre y error. La identidad propuesta de Bee4TheWorld es independiente de la marca del producto; el concepto de abeja y globo no es un logo aprobado.
 
 Antes de entregar código, ejecutar pruebas pertinentes, validar estadísticas con datos conocidos, comprobar interfaz en escritorio y móvil, y documentar límites y ejecución. Guardar fuentes y decisiones; nunca incluir credenciales ni datos privados. La expansión latinoamericana requiere verificar cobertura, resolución y contexto local, no extrapolar resultados costarricenses.

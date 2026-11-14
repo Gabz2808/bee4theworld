@@ -15,7 +15,9 @@ Instala herramientas de sistema desde sus sitios oficiales si faltan, respetando
 
 ## Frontend, al crear `apps/web`
 
-Estado del 14 de noviembre de 2026: el generador oficial creó `apps/web` con Next.js, TypeScript y Tailwind y generó `package-lock.json`. En `apps/web`, ejecutar `npm ci` para reinstalar, `npm run dev` para desarrollo y `npm run lint` para revisión. La plantilla todavía no es la interfaz de Iyök. La instalación informó 7 vulnerabilidades moderadas en el árbol completo; `npm audit --omit=dev` no informó vulnerabilidades de producción. Revisar las dependencias de desarrollo y la advertencia de soporte de ESLint antes de su uso continuado.
+Estado del 14 de noviembre de 2026: `apps/web` contiene un prototipo Next.js con TypeScript y Tailwind y un `package-lock.json`. En `apps/web`, ejecutar `npm ci` para reinstalar, `npm run dev` para desarrollo y `npm run lint` para revisión. La instalación inicial informó 7 vulnerabilidades moderadas en el árbol completo; una comprobación anterior de `npm audit --omit=dev` no informó vulnerabilidades de producción. Revisar las dependencias de desarrollo y la advertencia de soporte de ESLint antes de su uso continuado.
+
+Playwright está instalado como dependencia de desarrollo para comprobaciones en navegador. En este equipo se utilizó Chrome ya instalado en modo headless; la última instalación informó 8 vulnerabilidades moderadas en el árbol completo. No se ha realizado una auditoría adicional ni se han clasificado aquí.
 
 Inicializar Next.js con TypeScript y Tailwind mediante el generador oficial; fijar versiones y guardar `package-lock.json`. Añadir cuando el código las requiera: `maplibre-gl`, `echarts`, `@tanstack/react-query`; seguir documentación oficial para shadcn/ui, que añade componentes al código y no es solo una dependencia. Para instalaciones reproducibles posteriores usar `npm ci` en `apps/web` cuando exista el lockfile.
 
