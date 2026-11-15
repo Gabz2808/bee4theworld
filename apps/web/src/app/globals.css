@@ -1605,8 +1605,41 @@ button:focus-visible, a:focus-visible, summary:focus-visible, select:focus-visib
 
 .research-panel h3, .interval-panel h3 {
   font: 400 22px/1.2 Georgia, serif;
-  margin: 0;
+  margin: 0 0 12px;
   color: var(--cloud);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trend-research h3 svg,
+.trend-warning-icon {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  max-width: 22px;
+  max-height: 22px;
+  color: var(--amber);
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.trend-research a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  color: var(--amber);
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.15s ease;
+}
+
+.trend-research a:hover {
+  color: var(--amber-hover);
 }
 
 .research-metrics {

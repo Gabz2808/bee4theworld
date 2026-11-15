@@ -31,7 +31,13 @@ export function Research() {
       </div>
 
       <section className="research-panel trend-research" aria-labelledby="research-trend-heading">
-        <h3 id="research-trend-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v4.5M12 17h.01"/></svg>Tendencia e incertidumbre</h3>
+        <h3 id="research-trend-heading">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="trend-warning-icon">
+            <path d="M12 3 2.5 20h19L12 3Z"/>
+            <path d="M12 9v4.5M12 17h.01"/>
+          </svg>
+          Tendencia e incertidumbre
+        </h3>
         <p><strong>Resultado inconcluso.</strong> La revisión del método y sus supuestos está pendiente. La serie mensual muestra estimaciones de precipitación; el análisis de tendencia es un cálculo separado.</p>
         <p>El servicio informa el método y el estado para el período consultado en el explorador. No se dispone de un intervalo de confianza revisado para la pendiente y la cobertura espacial no mide la precisión de la estimación.</p>
         <p>La procedencia, la calidad y el procesamiento siguen en revisión científica. Los cambios observados no demuestran por sí solos su causa.</p>
