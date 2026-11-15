@@ -39,6 +39,20 @@ class SNITExplorationTests(unittest.TestCase):
         self.assertLess(result["timeseries"][0]["coverage_fraction"], 1)
         self.assertNotEqual(result["timeseries"][0]["value"], 66.03)
 
+    def test_catalog_announces_only_reprocessed_snit_range(self):
+        data = self.client.get("/api/v1/catalog").json()
+        combination = next(c for c in data["combinations"] if c["region_id"] == REGION_ID)
+        for key in ("available_interval", "declared_interval", "verified_interval"):
+            self.assertEqual(combination[key], {"start": "2001-01-01", "end": "2024-12-31"})
+
+    def test_request_outside_snit_range_is_invalid_not_unavailable(self):
+        with patch("app.services.exploration_service.GPMIMERGConnector") as connector:
+            response = self.client.post("/api/v1/explorations", json={"region_id": REGION_ID, "variable_id": "precipitation", "start_date": "1998-01-01", "end_date": "1998-12-31"})
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.json()["error"]["code"], "INVALID_REQUEST")
+            self.assertIn("2001-01", response.json()["error"]["message"])
+            connector.assert_not_called()
+
     def test_missing_series_disables_catalog_and_never_falls_back(self):
         with patch("app.services.exploration_service.load_snit", return_value=None), patch("app.services.exploration_service.GPMIMERGConnector") as connector:
             data = self.client.get("/api/v1/catalog").json()

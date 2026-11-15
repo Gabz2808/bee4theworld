@@ -49,7 +49,7 @@ from app.services.gpm_imerg import (
 )
 from app.services.interpretation_service import generate_interpretation
 from app.services.preprocessed_series import load_preprocessed_series
-from app.services.snit_series import GEOMETRY_SHA, REGION_ID as SNIT_REGION_ID, load_snit
+from app.services.snit_series import END as SNIT_END, GEOMETRY_SHA, REGION_ID as SNIT_REGION_ID, START as SNIT_START, load_snit
 from app.services.precipitation_processing import (
     PrecipitationProcessingError,
     aggregate_annual_precipitation,
@@ -299,11 +299,12 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
 
     combinations = [cr_combination, panama_combination, chiquimula_combination]
     snit_ready = load_snit() is not None
+    # La serie SNIT es un archivo reprocesado 2001-2024; no hereda el rango NASA en vivo (1998).
     combinations.append(CatalogCombination(
         region_id=SNIT_REGION_ID, variable_id="precipitation",
-        available_interval=AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE),
-        declared_interval=AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE),
-        verified_interval=AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE) if snit_ready else None,
+        available_interval=AvailableInterval(start=SNIT_START, end=SNIT_END),
+        declared_interval=AvailableInterval(start=SNIT_START, end=SNIT_END),
+        verified_interval=AvailableInterval(start=SNIT_START, end=SNIT_END) if snit_ready else None,
         source_status="verified" if snit_ready else "unavailable",
         temporal_resolution="monthly", is_ready_for_exploration=snit_ready,
         notes="Serie local verificada para la geometría SNIT indicada." if snit_ready else "La serie o su geometría no están disponibles o no pasaron la comprobación de integridad.",
@@ -696,6 +697,8 @@ def run_exploration(
     direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower() == "nasa"
     cache_status = "disabled" if direct_nasa else "unavailable" if supabase_client is None else "miss"
     if is_snit:
+        if start < SNIT_START or end > SNIT_END:
+            raise HTTPException(status_code=400, detail=f"La serie SNIT cubre de {SNIT_START:%Y-%m} a {SNIT_END:%Y-%m}; el período solicitado está fuera de esa cobertura.")
         cached = load_snit(start, end)
         if cached is None:
             raise HTTPException(status_code=503, detail="La serie SNIT no está disponible o no pasó la verificación de integridad.", headers={"X-Iyok-Error-Code": "SNIT_SERIES_UNAVAILABLE"})
