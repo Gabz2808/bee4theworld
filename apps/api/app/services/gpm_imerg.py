@@ -186,10 +186,22 @@ class GPMIMERGConnector:
         granules: list[CMRGranule],
     ) -> GPMIMERGResult:
         with ExitStack() as stack:
-            datasets = [
-                stack.enter_context(xr.open_dataset(path, engine="netcdf4"))
-                for path in paths
-            ]
+            datasets = []
+            for path in paths:
+                ds = None
+                try:
+                    candidate = stack.enter_context(
+                        xr.open_dataset(path, group="Grid", engine="netcdf4")
+                    )
+                    if candidate.data_vars:
+                        ds = candidate
+                except Exception:
+                    pass
+                if ds is None:
+                    ds = stack.enter_context(
+                        xr.open_dataset(path, engine="netcdf4")
+                    )
+                datasets.append(ds)
             dataset = (
                 datasets[0]
                 if len(datasets) == 1
@@ -258,6 +270,17 @@ def _bounding_box(geometry: Polygon) -> BBox:
     )
 
 
+def _parse_time_coordinate(time_values: np.ndarray | list[object]) -> list[date]:
+    parsed: list[date] = []
+    for t in time_values:
+        if hasattr(t, "year") and hasattr(t, "month"):
+            parsed.append(date(int(t.year), int(t.month), 1))
+        else:
+            ts = pd.Timestamp(t)
+            parsed.append(date(int(ts.year), int(ts.month), 1))
+    return parsed
+
+
 def _aggregate_dataset(
     dataset: xr.Dataset,
     geometry: Polygon,
@@ -301,13 +324,13 @@ def _aggregate_dataset(
         precipitation.transpose(time_dim, lat_dim, lon_dim).values,
         dtype=float,
     )
-    timestamps = pd.to_datetime(dataset[time_name].values)
-    if values.shape[0] != len(timestamps):
+    raw_times = dataset[time_name].values
+    parsed_months = _parse_time_coordinate(raw_times)
+    if values.shape[0] != len(parsed_months):
         raise DataIntegrityError("El tamaño del eje temporal no coincide con sus fechas")
 
     by_month: dict[date, np.ndarray] = {}
-    for timestamp, monthly_grid in zip(timestamps, values, strict=True):
-        month = pd.Timestamp(timestamp).date().replace(day=1)
+    for month, monthly_grid in zip(parsed_months, values, strict=True):
         if month in by_month:
             raise DataIntegrityError(f"El NetCDF repite el mes {month:%Y-%m}")
         by_month[month] = monthly_grid

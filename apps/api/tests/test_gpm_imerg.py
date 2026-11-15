@@ -56,6 +56,35 @@ def _netcdf(path: Path, units: str, values: np.ndarray | None = None) -> Path:
     return path
 
 
+def _netcdf_with_group(path: Path, units: str = "mm/hr") -> Path:
+    import netCDF4
+
+    nc = netCDF4.Dataset(str(path), "w", format="NETCDF4")
+    grid_grp = nc.createGroup("Grid")
+    grid_grp.createDimension("time", 1)
+    grid_grp.createDimension("lat", 2)
+    grid_grp.createDimension("lon", 2)
+
+    t_var = grid_grp.createVariable("time", "f8", ("time",))
+    t_var.units = "days since 2024-02-01 00:00:00"
+    t_var.calendar = "julian"
+    t_var[:] = [0]
+
+    lat_var = grid_grp.createVariable("lat", "f4", ("lat",))
+    lat_var.units = "degrees_north"
+    lat_var[:] = [9.95, 10.05]
+
+    lon_var = grid_grp.createVariable("lon", "f4", ("lon",))
+    lon_var.units = "degrees_east"
+    lon_var[:] = [-85.05, -84.95]
+
+    precip_var = grid_grp.createVariable("precipitation", "f4", ("time", "lat", "lon"))
+    precip_var.units = units
+    precip_var[:] = np.ones((1, 2, 2)) * 2.5
+    nc.close()
+    return path
+
+
 class CompletedDownload:
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -190,6 +219,39 @@ class GPMIMERGTests(unittest.TestCase):
         self.assertEqual(result.monthly_values[0].value, 1)
         self.assertEqual(result.region, _sample_region())
         self.assertEqual(harmony.request.variables, ["Grid/precipitation"])
+
+    def test_connector_supports_netcdf_group_grid_and_cftime(self) -> None:
+        granule = {
+            "id": "G123-GES_DISC",
+            "collection_concept_id": "C123-GES_DISC",
+            "time_start": "2024-02-01T00:00:00.000Z",
+        }
+        cmr_client = httpx.Client(
+            transport=httpx.MockTransport(
+                lambda request: httpx.Response(
+                    200,
+                    json={"feed": {"entry": [granule]}},
+                )
+            )
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            source = _netcdf_with_group(Path(directory) / "source_grouped.nc")
+            harmony = FakeHarmonyClient(source)
+            connector = GPMIMERGConnector(
+                harmony_client=harmony,
+                cmr_client=cmr_client,
+            )
+            result = connector.fetch_monthly_precipitation(
+                _sample_region(),
+                date(2024, 2, 1),
+                date(2024, 2, 29),
+            )
+        cmr_client.close()
+
+        self.assertEqual(result.dataset, "GPM_3IMERGM.07")
+        self.assertEqual(result.granule_ids, ("G123-GES_DISC",))
+        self.assertAlmostEqual(result.monthly_values[0].value, 2.5, places=4)
+        self.assertEqual(result.monthly_values[0].month, date(2024, 2, 1))
 
     def test_connector_fails_when_cmr_has_no_monthly_granule(self) -> None:
         cmr_client = httpx.Client(
