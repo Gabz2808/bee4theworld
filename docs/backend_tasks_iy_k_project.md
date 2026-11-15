@@ -2,6 +2,8 @@
 
 Este documento contiene la división de tareas para el desarrollo del backend de Iyök utilizando **Python, FastAPI, Supabase y Pandas/SciPy**. Está diseñado para implementarse con la asistencia de GitHub Copilot.
 
+> **Actualización del 15 de noviembre:** el checklist siguiente es histórico y registra implementación informada, no aceptación científica ni cierre de issues. La geometría es provisional; la ingesta histórica y la extracción NASA directa difieren y su procedencia no está resuelta. Los issues backend #15–#21 permanecen abiertos. Para instrucciones y evidencia vigentes, leer primero el [traspaso de coordinación](../apps/api/COORDINACION_FRONTEND_BACKEND.md) y la [verificación de datos](verificacion-datos-2026-11-15.md).
+
 ## Checklist de estado (14 de noviembre de 2026)
 
 ### Implementado
@@ -9,9 +11,9 @@ Este documento contiene la división de tareas para el desarrollo del backend de
 - [x] **BE-01:** Dependencias y entorno virtual configurados en Python con `requirements.txt`.
 - [x] **BE-02:** Estructura modular FastAPI y health check en `GET /ping`.
 - [x] **BE-03:** Proyecto Supabase conectado; cliente de backend implementado con `SUPABASE_URL` y `SUPABASE_SECRET_KEY` en `.env`.
-- [x] **BE-04:** Esquema de base de datos relacional y geoespacial `app/init.sql` aplicado y verificado en Supabase remoto. Extensión PostGIS, tablas (`regions`, `variables`, `ingestion_runs`, `processed_data`) e índices funcionando; región `Costa Rica Continental` sembrada con geometría PostGIS validada (`IGN/WDC`, versión `2024`).
+- [x] **BE-04:** Esquema de base de datos relacional y geoespacial `app/init.sql` aplicado y verificado en Supabase remoto. Extensión PostGIS, tablas (`regions`, `variables`, `ingestion_runs`, `processed_data`) e índices funcionando; región `Costa Rica Continental` sembrada con geometría PostGIS **provisional, sin fuente oficial validada**.
 - [x] **BE-05:** Modelos Pydantic para los contratos v1 acordados; pruebas de validación rigurosas para polígonos GeoJSON y fechas.
-- [x] **BE-06:** Ingesta y almacenamiento histórico de GPM IMERG Final Run V07 en Supabase: 288 meses continuos (2001-2024) sembrados con trazabilidad de gránulos de NASA CMR en `ingestion_runs` y observaciones en `processed_data`.
+- [x] **BE-06:** Existe una ingesta histórica con 288 meses continuos en Supabase. Su trazabilidad y valores **requieren revisión**: los identificadores no coinciden con CMR y los valores difieren de la extracción directa; ver la actualización anterior.
 - [x] **BE-07:** Preparación y normalización mensual con meses faltantes, cobertura espacial y banderas de calidad (`ok`, `partial_coverage`, `missing_month`).
 - [x] **BE-08:** Cálculo de línea base mensual climatológica y anomalías (`anomaly_mm`) implementado en `app/services/trend_analysis.py`.
 - [x] **BE-09:** Estimación de tendencia robusta (pendiente de Theil-Sen) y regresión OLS implementada.
@@ -22,12 +24,12 @@ Este documento contiene la división de tareas para el desarrollo del backend de
 
 ### Estado general de tareas
 
-- Todas las tareas técnicas del backend (BE-01 a BE-13) están completadas y verificadas contra la base de datos remota de Supabase y la API de NASA CMR.
+- Las marcas de implementación no implican que todas las tareas estén verificadas o cerradas: revisar los issues abiertos y los resultados de la comprobación posterior.
 
 ### Decisiones y acuerdos implementados
 
 - [x] Conexión real de backend a Supabase verificada sin exponer `SUPABASE_SECRET_KEY`.
-- [x] Polígono continental de Costa Rica oficial registrado en PostGIS (`boundary_version: 2024`).
+- [ ] Validar procedencia, licencia y representación del polígono continental registrado en PostGIS; la etiqueta histórica `2024` no demuestra que sea oficial.
 - [x] Adoptada la propuesta conjunta frontend-backend (Borrador 0.1, Issue #6): rutas `/api/v1/catalog` y `/api/v1/explorations` con `region_id`, sobre de errores seguro y separación estricta de responsabilidades científicas.
 - [x] Eliminación de rutas secundarias/legacy para mantener una superficie API limpia.
 - [x] Contrato `iyok_api_contracts_mock.json` y modelos afinados a v1: catálogo unificado, precipitación IMERG mensual, serie con `anomaly_mm`, totales anuales y variantes concluyente, inconclusa y no calculada.

@@ -1,4 +1,18 @@
-# Continuidad de la sesión — 14 de noviembre de 2026
+# Continuidad del proyecto
+
+## Estado vigente — 15 de noviembre de 2026
+
+- `main` está en `94fd272`, compartido con `origin/main` al iniciar esta actualización. Las notas de esta actualización aún pueden estar sin comitear; comprobar `git status` antes de continuar. Los servidores locales de Iyök se detuvieron por solicitud de Manuel.
+- El frontend usa las rutas v1 del backend, restringe fechas al intervalo declarado y muestra carga, error y faltantes; etiqueta la serie como no validada y oculta la interpretación estadística. El cliente aceptó una respuesta real guardada de 288 meses y el navegador mostró las 288 filas; no fue una consulta completa en vivo por el proxy.
+- Se procesaron 288 meses reales de 2001–2024 con CMR/Harmony para la geometría provisional, con fechas consecutivas e identificadores coincidentes con CMR. La primera consulta tardó varios minutos y supera los 90 segundos del proxy. El frontend advierte `BACKEND_TIMEOUT`; la gestión de trabajos largos y deduplicación sigue en [#20](https://github.com/B-28-Labs/bee4theworld/issues/20).
+- La ingesta histórica de Supabase también tiene 288 meses, pero sus identificadores no coinciden con CMR y sus 288 valores difieren de la extracción directa. La causa no está establecida. No usarla como validación ni migrarla a la caché compatible sin aclarar procedencia y procesamiento.
+- Se obtuvieron CSV de Giovanni para 2024 en un rectángulo de control; los 12 meses coinciden con Harmony al redondeo. Ese rectángulo no representa Costa Rica ni valida el polígono provisional. La geometría definitiva, la serie histórica y el método estadístico aún requieren revisión conjunta. Ver [evidencia y límites](verificacion-datos-2026-11-15.md).
+- Verificación más reciente: 105 pruebas de API y tres subpruebas, siete pruebas del cliente, Ruff, ESLint y compilación pasaron. Se comprobó el mensaje de tiempo agotado en escritorio y móvil con un servicio de prueba lento. El contraste no equivale a validación científica.
+- El issue [#6](https://github.com/B-28-Labs/bee4theworld/issues/6) está cerrado en GitHub; [#7–#12](https://github.com/B-28-Labs/bee4theworld/issues?q=is%3Aissue%20is%3Aopen%20label%3AFrontend) y [#15–#21](https://github.com/B-28-Labs/bee4theworld/issues?q=is%3Aissue%20is%3Aopen%20label%3ABackend) siguen abiertos. El traspaso para backend está al comienzo de [coordinación](../apps/api/COORDINACION_FRONTEND_BACKEND.md).
+
+## Notas históricas — 14 de noviembre de 2026
+
+Las notas siguientes documentan observaciones de esa fecha y no sustituyen el estado vigente anterior.
 
 ## Estado
 
@@ -16,9 +30,9 @@ El [#6: contrato de integración](https://github.com/B-28-Labs/bee4theworld/issu
 
 Se recibió un PDF con una propuesta de precipitación del compañero; la [revisión](revision-json-precipitacion.md) identifica campos reutilizables y cuestiones de procedencia, unidades, geometría y análisis. Hay un adaptador provisional que conserva la serie como no verificada; no está conectado al frontend ni acredita datos reales.
 
-El equipo envió una respuesta posterior: consultar la [revisión de backend](revision-respuesta-backend.md). Se comprobó en CMR la existencia de 288 meses de la colección para 2001-2024. Posteriormente, el MCP de Supabase respondió a consultas y mostró una ingesta de 288 registros mensuales para Costa Rica; consulta [el diagnóstico](supabase-acceso-local.md). El usuario confirmó que esta es la base que usará Iyök y que los datos proceden de Giovanni; no se han validado independientemente el procesamiento o los datos. La fórmula de ponderación publicada y el criterio estadístico requieren revisión; la implementación de la API sigue sin verificarse. El issue #6 sigue abierto.
+El equipo envió una respuesta posterior: consultar la [revisión de backend](revision-respuesta-backend.md). En ese momento se habían comprobado metadatos CMR y una ingesta de 288 meses en Supabase, sin validar independientemente el procesamiento o los datos. El estado posterior del contrato y las discrepancias encontradas se indican arriba.
 
-El compañero lidera ingesta, análisis y API. El primer caso acordado es precipitación IMERG para Costa Rica, investigada mediante Giovanni. La geometría, versión, período y método deben acordarse y validarse. Una prueba de metadatos OPeNDAP con autenticación funcionó, pero no se ha extraído ni validado una serie real. No compartir ni versionar tokens.
+El compañero lidera ingesta, análisis y API. El primer caso acordado es precipitación IMERG para Costa Rica, investigada mediante Giovanni. La geometría, versión, período y método deben acordarse y validarse. Las extracciones realizadas posteriormente y sus límites se indican arriba. No compartir ni versionar tokens.
 
 ## Para arrancar
 
