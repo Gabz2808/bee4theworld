@@ -25,14 +25,14 @@ La API está construida sobre **FastAPI** y expone una superficie limpia, minima
 
 ## 3. Instalación y Configuración del Entorno Virtual
 
-Desde la raíz del repositorio:
+Desde la raíz del monorepo o dentro de `apps/api/`:
 
 ### Linux / macOS
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r apps/api/requirements.txt
 ```
 
 ### Windows PowerShell
@@ -40,16 +40,17 @@ python -m pip install -r requirements.txt
 py -3 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r apps/api/requirements.txt
 ```
 
 ---
 
 ## 4. Variables de Entorno (`.env`)
 
-Copia la plantilla [`.env.example`](../.env.example) a `.env`:
+Copia la plantilla [`.env.example`](../apps/api/.env.example) a `.env` en la raíz y en `apps/api/`:
 ```bash
 cp .env.example .env
+cp .env.example apps/api/.env
 ```
 
 Parámetros requeridos y opcionales:
@@ -64,9 +65,9 @@ Parámetros requeridos y opcionales:
 
 ---
 
-## 5. Esquema de Base de Datos y Persistencia (`app/init.sql`)
+## 5. Esquema de Base de Datos y Persistencia (`apps/api/app/init.sql`)
 
-El esquema de base de datos relacional y geoespacial está definido en [`app/init.sql`](../app/init.sql). Se aplica directamente en el **SQL Editor** del dashboard de Supabase y estructura:
+El esquema de base de datos relacional y geoespacial está definido en [`apps/api/app/init.sql`](../apps/api/app/init.sql). Se aplica directamente en el **SQL Editor** del dashboard de Supabase y estructura:
 
 1. **Extensión PostGIS:** `CREATE EXTENSION IF NOT EXISTS postgis;` para cálculo espacial riguroso.
 2. **Tabla `public.variables`:** Catálogo de variables (`id = 'precipitation'`, unidades `mm/month`, dataset `GPM_3IMERGM.07`).
@@ -79,11 +80,14 @@ El esquema de base de datos relacional y geoespacial está definido en [`app/ini
 
 ## 6. Ejecución del Servidor Backend
 
-Con el entorno virtual activado:
+Con el entorno virtual activado, desde la carpeta `apps/api/`:
 
 ```bash
+cd apps/api
 uvicorn app.main:app --reload --env-file .env
 ```
+
+*(O desde la raíz del repositorio: `PYTHONPATH=apps/api uvicorn app.main:app --reload --env-file apps/api/.env`)*
 
 Por defecto, Uvicorn escucha en `http://127.0.0.1:8000`.
 
@@ -318,11 +322,14 @@ Cuando el servidor está en ejecución, se puede acceder a:
 
 ## 11. Verificación y Suite de Pruebas Automatizadas
 
-Desde la raíz del repositorio con el entorno virtual activado:
+Con el entorno virtual activado, desde la carpeta `apps/api/`:
 
 ```bash
+cd apps/api
 python -m unittest discover -s tests -v
 ```
+
+*(O desde la raíz del repositorio: `PYTHONPATH=apps/api python -m unittest discover -s apps/api/tests -v`)*
 
 La suite ejecuta **50 pruebas automatizadas** que validan:
 1. Modelos Pydantic v1, contratos de catálogo y exploración.

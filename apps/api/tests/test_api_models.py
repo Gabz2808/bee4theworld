@@ -18,7 +18,13 @@ from app.models.geojson import GeoJSONPolygon
 class APIContractModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        contract_path = Path(__file__).resolve().parents[1] / "iyok_api_contracts_mock.json"
+        # Busca en referencias/ (raíz del monorepo) o en la raíz de apps/api
+        possible_paths = [
+            Path(__file__).resolve().parents[3] / "referencias" / "iyok_api_contracts_mock.json",
+            Path(__file__).resolve().parents[1] / "iyok_api_contracts_mock.json",
+            Path(__file__).resolve().parents[2] / "iyok_api_contracts_mock.json",
+        ]
+        contract_path = next((p for p in possible_paths if p.exists()), possible_paths[0])
         data = json.loads(contract_path.read_text(encoding="utf-8"))
         cls.contract = data["api_contracts"]
         cls.errors = data.get("error_envelopes", {})
