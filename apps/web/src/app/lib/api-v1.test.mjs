@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import { deepStrictEqual, equal, rejects, throws } from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { ApiClientError, completeMonths, createApiV1Client, parseCatalog, parseExploration } from "./api-v1.ts";
 
 // Datos sintéticos: no representan observaciones ni resultados científicos.
@@ -9,6 +10,16 @@ test("limita la selección a meses completos dentro de la cobertura declarada", 
   deepStrictEqual(completeMonths({ start: "2023-12-02", end: "2024-03-30" }), { start: "2024-01", end: "2024-02" });
   deepStrictEqual(completeMonths({ start: "2024-02-01", end: "2024-02-29" }), { start: "2024-02", end: "2024-02" });
   equal(completeMonths({ start: "2024-02-02", end: "2024-02-29" }), null);
+});
+test("acepta la respuesta NASA de 288 meses para la geometría provisional", () => {
+  // La estructura se comprueba aquí; la geometría y el método siguen sin validar.
+  const path = new URL("../../../../../docs/evidencia/harmony-costa-rica-provisional-2001-2024.json", import.meta.url);
+  const response = JSON.parse(readFileSync(path, "utf8"));
+  const selection = { ...request, start_date: "2001-01-01", end_date: "2024-12-31" };
+  const result = parseExploration(response, selection);
+  equal(result.points.length, 288);
+  equal(result.points[0].date, "2001-01-01");
+  equal(result.points.at(-1).date, "2024-12-01");
 });
 function catalog() {
   return { status: "success", regions: [{ id: request.region_id, name: "Ejemplo", boundary_source: "Ejemplo", boundary_version: "1", geom: { type: "Polygon", coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }],
@@ -56,6 +67,8 @@ test("transporta solicitudes y maneja error de cobertura sin filtrar detalles in
   deepStrictEqual(JSON.parse(calls[1].init.body), request);
   const failure = createApiV1Client("", async () => new Response(JSON.stringify({ error: { code: "NO_COVERAGE", message: "detalle interno" } }), { status: 400 }));
   await rejects(() => failure.explore(request), (e) => e.kind === "http" && e.status === 400 && e.code === "NO_COVERAGE" && !e.message.includes("interno"));
+  const timeout = createApiV1Client("", async () => new Response(JSON.stringify({ error: { code: "BACKEND_TIMEOUT" } }), { status: 504 }));
+  await rejects(() => timeout.explore(request), (e) => e.kind === "http" && e.status === 504 && e.code === "BACKEND_TIMEOUT");
 });
 test("rechaza JSON incompatible y distingue fallo de red", async () => {
   await rejects(() => createApiV1Client("", async () => new Response("no-json")).catalog(), (e) => e.kind === "invalid_response");

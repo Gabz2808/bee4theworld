@@ -1,0 +1,169 @@
+{
+  "status": "success",
+  "metadata": {
+    "variable_name": "Precipitación mensual estimada",
+    "source": "NASA GES DISC mediante CMR y Harmony",
+    "dataset": "GPM_3IMERGM.07",
+    "unit": "mm/month",
+    "spatial_resolution": "0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
+    "temporal_resolution": "monthly",
+    "selection": {
+      "region_id": "custom-polygon",
+      "region_name": "Polígono Personalizado (7af5d8fc44fc)",
+      "boundary_source": "Usuario / Solicitud directa",
+      "boundary_version": "1.0",
+      "requested_period": {
+        "start": "2024-01-01",
+        "end": "2024-12-31"
+      },
+      "effective_period": {
+        "start": "2024-01-01",
+        "end": "2024-12-31"
+      }
+    },
+    "limitations": [
+      "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
+      "Geometría de análisis: Usuario / Solicitud directa, versión 1.0; confirme su representatividad territorial.",
+      "La resolución de 0.1° promedia variaciones locales en microclimas y topografías montañosas complejas."
+    ],
+    "warnings": [
+      "IMERG no sustituye mediciones de estaciones en superficie.",
+      "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida."
+    ],
+    "source_units": "mm/hr",
+    "unit_conversion": "La conversión a mm/month se aplica en Pandas usando la duración real de cada mes.",
+    "weighting_method": "Intersección parcial de celdas y área en proyección equivalente en EPSG:6933",
+    "source_granule_ids": [
+      "G3087531387-GES_DISC",
+      "G3144085255-GES_DISC",
+      "G3181376270-GES_DISC",
+      "G3228670382-GES_DISC",
+      "G3268863526-GES_DISC",
+      "G3290997722-GES_DISC",
+      "G3365978518-GES_DISC",
+      "G3385101388-GES_DISC",
+      "G3385088375-GES_DISC",
+      "G3432241522-GES_DISC",
+      "G3474816818-GES_DISC",
+      "G3522220647-GES_DISC"
+    ],
+    "data_accessed_at": "2026-11-15T08:25:05.451294Z",
+    "cache_status": "disabled"
+  },
+  "trend_analysis": {
+    "status": "inconclusive",
+    "method": "Sen's slope estimator & Mann-Kendall test",
+    "slope": null,
+    "slope_unit": null,
+    "p_value": null,
+    "is_significant": null,
+    "confidence_level": null,
+    "summary": "Serie temporal insuficiente (1 años) para evaluar tendencias climáticas anuales con representatividad estadística.",
+    "methodological_note": "Se requieren al menos 10 años calendario completos para evaluar tendencias con representatividad estadística y distinguir tendencias de oscilaciones multianuales o decil (como El Niño-Oscilación del Sur). La serie contiene 1 año(s)."
+  },
+  "interpretation": {
+    "headline": "Comportamiento pluviométrico observado con tendencia climática formalmente inconclusa",
+    "narrative": "En Polígono Personalizado (7af5d8fc44fc), la precipitación acumulada durante el año 2024 alcanzó 4367.3 mm/año, estimada a partir de 12 meses calendario de observaciones satelitales calibradas (GPM_3IMERGM.07). El ciclo estacional mostró su pico de mayor precipitación en agosto de 2024 (705.1 mm/mes), mientras que el período más seco correspondió a febrero de 2024 (0.0 mm/mes).",
+    "trend_verdict_plain_language": "La serie disponible comprende 1 año(s) calendario completo(s). Motivo metodológico: Se requieren al menos 10 años calendario completos para evaluar tendencias con representatividad estadística y distinguir tendencias de oscilaciones multianuales o decil (como El Niño-Oscilación del Sur). La serie contiene 1 año(s).. En ciencias de la atmósfera y el clima, ciclos como El Niño-Oscilación del Sur (ENSO) provocan oscilaciones interanuales marcadas. Afirmar una tendencia a largo plazo con menos de 10 años de datos (o menos de 5 años sin control de variabilidad) sería metodológicamente imprudente, pues se corre el riesgo de confundir una variación cíclica transitoria con una tendencia permanente.",
+    "anomaly_summary": "Al analizar un solo año calendario de registro, las anomalías calculadas respecto a la media de ese mismo año son nulas por definición. Para observar desviaciones reales (meses inusualmente húmedos o secos) se requiere contrastar contra una climatología multianual de referencia.",
+    "prudence_guidelines": [
+      "Correlación y tendencia no implican causalidad: Un cambio detectado en la precipitación no demuestra por sí solo atribución al cambio climático antropogénico ni a un evento específico sin estudios formales de modelación y atribución climática.",
+      "Naturaleza de la medición satelital: El producto NASA GPM IMERG V07 combina mediciones de múltiples sensores de satélite con calibración mensual de pluviómetros. Al contar con una resolución espacial de 0.1° (~10 km), promedia áreas amplias y puede suavizar microclimas y lluvias orográficas locales en zonas montañosas o costeras.",
+      "Transición y homogeneidad de sensores: El producto NASA GPM IMERG V07 combina la misión TRMM (2000-2014) con el satélite GPM Core Observatory (2014 al presente). Aunque los datos se calibran mensualmente con estaciones terrestres (GPCC), la transición instrumental de 2014 puede introducir diferencias sutiles en la sensibilidad ante eventos de lluvia orográfica o convectiva intensa.",
+      "Contrastación en superficie: Para gestión operativa del agua o evaluación de riesgos locales, se recomienda contrastar estas estimaciones satelitales con estaciones meteorológicas en tierra del Instituto Meteorológico Nacional o entidades locales equivalentes."
+    ]
+  },
+  "timeseries": [
+    {
+      "date": "2024-01-01",
+      "value": 12.46,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-02-01",
+      "value": 0.0,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-03-01",
+      "value": 4.28,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-04-01",
+      "value": 88.74,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-05-01",
+      "value": 514.85,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-06-01",
+      "value": 678.43,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-07-01",
+      "value": 626.45,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-08-01",
+      "value": 705.12,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-09-01",
+      "value": 576.54,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-10-01",
+      "value": 461.28,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-11-01",
+      "value": 586.62,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    },
+    {
+      "date": "2024-12-01",
+      "value": 112.53,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.0
+    }
+  ],
+  "annual_totals": [
+    {
+      "year": 2024,
+      "annual_precipitation_mm": 4367.29,
+      "months_reported": 12
+    }
+  ]
+}

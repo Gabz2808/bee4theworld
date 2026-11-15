@@ -18,6 +18,8 @@ Con escritura de caché desactivada, se consultó desde el navegador enero de 20
 
 Esta comprobación cubre un mes, no toda la cobertura declarada. Usa la geometría aproximada provisional de la aplicación y el mismo procesamiento de la API en ambas consultas: la coincidencia no valida la geometría, el procesamiento científico ni una extracción de Giovanni. El flujo y la metodología requieren revisión con el compañero antes de presentar la serie como evidencia científica.
 
+Una comprobación posterior procesó directamente los 288 meses de 2001–2024 para la misma geometría provisional. El cliente validó la respuesta y el navegador representó las 288 filas al servirle esa respuesta guardada; esto no fue una consulta en vivo a través del proxy. La primera consulta completa tardó más de los 90 segundos que permite el proxy, por lo que el trabajo de solicitudes largas sigue pendiente en el issue #20. El frontend informa si se agota el tiempo y advierte que el trabajo puede continuar. La serie histórica previa de Supabase difiere de la extracción directa y no está validada; véase la [revisión de datos](verificacion-datos-2026-11-15.md).
+
 ## Integración y datos
 
 El compañero lidera los datos y el backend. El cliente implementado es provisional; acordar versión y rutas, catálogo y cobertura, parámetros, fechas, unidades, datos faltantes, procedencia, resultado inconcluso y errores antes de considerar aprobado el contrato. El JSON ficticio no es un contrato aprobado.

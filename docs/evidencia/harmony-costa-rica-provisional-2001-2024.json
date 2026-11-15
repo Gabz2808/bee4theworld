@@ -1,0 +1,2492 @@
+{
+  "status": "success",
+  "metadata": {
+    "variable_name": "Precipitación mensual estimada",
+    "source": "NASA GES DISC mediante CMR y Harmony",
+    "dataset": "GPM_3IMERGM.07",
+    "unit": "mm/month",
+    "spatial_resolution": "0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
+    "temporal_resolution": "monthly",
+    "selection": {
+      "region_id": "costa-rica-continental",
+      "region_name": "Costa Rica Continental",
+      "boundary_source": "Geometría aproximada no verificada",
+      "boundary_version": "provisional",
+      "requested_period": {
+        "start": "2001-01-01",
+        "end": "2024-12-31"
+      },
+      "effective_period": {
+        "start": "2001-01-01",
+        "end": "2024-12-31"
+      }
+    },
+    "limitations": [
+      "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
+      "Geometría de análisis: Geometría aproximada no verificada, versión provisional; confirme su representatividad territorial.",
+      "La resolución de 0.1° promedia variaciones locales en microclimas y topografías montañosas complejas."
+    ],
+    "warnings": [
+      "IMERG no sustituye mediciones de estaciones en superficie.",
+      "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida."
+    ],
+    "source_units": "mm/hr",
+    "unit_conversion": "La conversión a mm/month se aplica en Pandas usando la duración real de cada mes.",
+    "weighting_method": "Intersección parcial de celdas y área en proyección equivalente en EPSG:6933",
+    "source_granule_ids": [
+      "G2819417581-GES_DISC",
+      "G2819454271-GES_DISC",
+      "G2819245406-GES_DISC",
+      "G2819245482-GES_DISC",
+      "G2819250962-GES_DISC",
+      "G2819355639-GES_DISC",
+      "G2819262612-GES_DISC",
+      "G2819259869-GES_DISC",
+      "G2819245130-GES_DISC",
+      "G2819259382-GES_DISC",
+      "G2819258336-GES_DISC",
+      "G2819263780-GES_DISC",
+      "G2819246555-GES_DISC",
+      "G2819677943-GES_DISC",
+      "G2819675489-GES_DISC",
+      "G2819677945-GES_DISC",
+      "G2819697649-GES_DISC",
+      "G2819724810-GES_DISC",
+      "G2819746170-GES_DISC",
+      "G2819760521-GES_DISC",
+      "G2819757964-GES_DISC",
+      "G2819773052-GES_DISC",
+      "G2819774467-GES_DISC",
+      "G2819800105-GES_DISC",
+      "G2820281342-GES_DISC",
+      "G2820232668-GES_DISC",
+      "G2820275773-GES_DISC",
+      "G2820266935-GES_DISC",
+      "G2820926906-GES_DISC",
+      "G2820954800-GES_DISC",
+      "G2821041874-GES_DISC",
+      "G2821255468-GES_DISC",
+      "G2821432335-GES_DISC",
+      "G2821631656-GES_DISC",
+      "G2821633476-GES_DISC",
+      "G2822122063-GES_DISC",
+      "G2823384574-GES_DISC",
+      "G2822503590-GES_DISC",
+      "G2823932461-GES_DISC",
+      "G2822862653-GES_DISC",
+      "G2822533008-GES_DISC",
+      "G2822981560-GES_DISC",
+      "G2823775178-GES_DISC",
+      "G2823724488-GES_DISC",
+      "G2823450787-GES_DISC",
+      "G2823347598-GES_DISC",
+      "G2823660275-GES_DISC",
+      "G2824039692-GES_DISC",
+      "G2823464479-GES_DISC",
+      "G2823496864-GES_DISC",
+      "G2823458559-GES_DISC",
+      "G2824062942-GES_DISC",
+      "G2823642773-GES_DISC",
+      "G2823796393-GES_DISC",
+      "G2823905637-GES_DISC",
+      "G2824099076-GES_DISC",
+      "G2823998313-GES_DISC",
+      "G2824029918-GES_DISC",
+      "G2824129615-GES_DISC",
+      "G2824166458-GES_DISC",
+      "G2824249523-GES_DISC",
+      "G2824247285-GES_DISC",
+      "G2824603568-GES_DISC",
+      "G2824681774-GES_DISC",
+      "G2824714954-GES_DISC",
+      "G2824762726-GES_DISC",
+      "G2824848045-GES_DISC",
+      "G2824891281-GES_DISC",
+      "G2827524637-GES_DISC",
+      "G2825111421-GES_DISC",
+      "G2827950319-GES_DISC",
+      "G2827526153-GES_DISC",
+      "G2827706495-GES_DISC",
+      "G2827546676-GES_DISC",
+      "G2827548459-GES_DISC",
+      "G2828108875-GES_DISC",
+      "G2828227490-GES_DISC",
+      "G2827565333-GES_DISC",
+      "G2828175352-GES_DISC",
+      "G2827685244-GES_DISC",
+      "G2828192163-GES_DISC",
+      "G2827574907-GES_DISC",
+      "G2827696326-GES_DISC",
+      "G2827698623-GES_DISC",
+      "G2828169072-GES_DISC",
+      "G2827696338-GES_DISC",
+      "G2827602379-GES_DISC",
+      "G2827953757-GES_DISC",
+      "G2828235998-GES_DISC",
+      "G2828246084-GES_DISC",
+      "G2827617737-GES_DISC",
+      "G2828196187-GES_DISC",
+      "G2827862805-GES_DISC",
+      "G2827869143-GES_DISC",
+      "G2827878849-GES_DISC",
+      "G2828146717-GES_DISC",
+      "G2828046319-GES_DISC",
+      "G2827964762-GES_DISC",
+      "G2827988423-GES_DISC",
+      "G2827910534-GES_DISC",
+      "G2828386903-GES_DISC",
+      "G2828649829-GES_DISC",
+      "G2829893223-GES_DISC",
+      "G2829068977-GES_DISC",
+      "G2829068975-GES_DISC",
+      "G2829127047-GES_DISC",
+      "G2829125668-GES_DISC",
+      "G2829126316-GES_DISC",
+      "G2829186145-GES_DISC",
+      "G2829915010-GES_DISC",
+      "G2829916319-GES_DISC",
+      "G2830344537-GES_DISC",
+      "G2830362153-GES_DISC",
+      "G2830364905-GES_DISC",
+      "G2830356582-GES_DISC",
+      "G2830377715-GES_DISC",
+      "G2830403896-GES_DISC",
+      "G2830541069-GES_DISC",
+      "G2830544996-GES_DISC",
+      "G2830506010-GES_DISC",
+      "G2830602137-GES_DISC",
+      "G2830537570-GES_DISC",
+      "G2830585683-GES_DISC",
+      "G2830712816-GES_DISC",
+      "G2830865328-GES_DISC",
+      "G2830899369-GES_DISC",
+      "G2831011583-GES_DISC",
+      "G2831097197-GES_DISC",
+      "G2831224382-GES_DISC",
+      "G2831314937-GES_DISC",
+      "G2831420461-GES_DISC",
+      "G2831530403-GES_DISC",
+      "G2831680649-GES_DISC",
+      "G2831680852-GES_DISC",
+      "G2831863782-GES_DISC",
+      "G2831952071-GES_DISC",
+      "G2832077556-GES_DISC",
+      "G2832238997-GES_DISC",
+      "G2832237022-GES_DISC",
+      "G2832936649-GES_DISC",
+      "G2832960050-GES_DISC",
+      "G2832974318-GES_DISC",
+      "G2832968549-GES_DISC",
+      "G2832976016-GES_DISC",
+      "G2833261128-GES_DISC",
+      "G2833378809-GES_DISC",
+      "G2833423585-GES_DISC",
+      "G2833394428-GES_DISC",
+      "G2833486490-GES_DISC",
+      "G2833413544-GES_DISC",
+      "G2833566580-GES_DISC",
+      "G2833593732-GES_DISC",
+      "G2833686023-GES_DISC",
+      "G2833920077-GES_DISC",
+      "G2833997542-GES_DISC",
+      "G2834121257-GES_DISC",
+      "G2834668272-GES_DISC",
+      "G2834668100-GES_DISC",
+      "G2834669026-GES_DISC",
+      "G2834668665-GES_DISC",
+      "G2834668209-GES_DISC",
+      "G2817505604-GES_DISC",
+      "G2817505605-GES_DISC",
+      "G2819253841-GES_DISC",
+      "G2819264822-GES_DISC",
+      "G2819474845-GES_DISC",
+      "G2819389065-GES_DISC",
+      "G2819412389-GES_DISC",
+      "G2819257469-GES_DISC",
+      "G2819260311-GES_DISC",
+      "G2819277871-GES_DISC",
+      "G2819253386-GES_DISC",
+      "G2819268801-GES_DISC",
+      "G2819311874-GES_DISC",
+      "G2819352059-GES_DISC",
+      "G2819675462-GES_DISC",
+      "G2819715901-GES_DISC",
+      "G2819699145-GES_DISC",
+      "G2819760467-GES_DISC",
+      "G2819757905-GES_DISC",
+      "G2819773910-GES_DISC",
+      "G2819874784-GES_DISC",
+      "G2819918562-GES_DISC",
+      "G2820311515-GES_DISC",
+      "G2820607988-GES_DISC",
+      "G2821013052-GES_DISC",
+      "G2820928632-GES_DISC",
+      "G2821071569-GES_DISC",
+      "G2821215521-GES_DISC",
+      "G2821365948-GES_DISC",
+      "G2823555960-GES_DISC",
+      "G2822185306-GES_DISC",
+      "G2823562659-GES_DISC",
+      "G2823008659-GES_DISC",
+      "G2823476404-GES_DISC",
+      "G2823725355-GES_DISC",
+      "G2823914750-GES_DISC",
+      "G2823468652-GES_DISC",
+      "G2823913025-GES_DISC",
+      "G2823650167-GES_DISC",
+      "G2823547309-GES_DISC",
+      "G2823941993-GES_DISC",
+      "G2823916100-GES_DISC",
+      "G2824012384-GES_DISC",
+      "G2824288989-GES_DISC",
+      "G2824482454-GES_DISC",
+      "G2824521072-GES_DISC",
+      "G2824603398-GES_DISC",
+      "G2824714995-GES_DISC",
+      "G2824856632-GES_DISC",
+      "G2827533091-GES_DISC",
+      "G2828104216-GES_DISC",
+      "G2827620549-GES_DISC",
+      "G2827970481-GES_DISC",
+      "G2827554505-GES_DISC",
+      "G2827924680-GES_DISC",
+      "G2827928521-GES_DISC",
+      "G2828213932-GES_DISC",
+      "G2827577788-GES_DISC",
+      "G2827588448-GES_DISC",
+      "G2828043463-GES_DISC",
+      "G2827721053-GES_DISC",
+      "G2827716169-GES_DISC",
+      "G2828040655-GES_DISC",
+      "G2828253184-GES_DISC",
+      "G2827648937-GES_DISC",
+      "G2828247468-GES_DISC",
+      "G2827990267-GES_DISC",
+      "G2828015621-GES_DISC",
+      "G2828055552-GES_DISC",
+      "G2827973176-GES_DISC",
+      "G2828052933-GES_DISC",
+      "G2828104151-GES_DISC",
+      "G2828196139-GES_DISC",
+      "G2828375584-GES_DISC",
+      "G2828649702-GES_DISC",
+      "G2828678389-GES_DISC",
+      "G2828695766-GES_DISC",
+      "G2828730347-GES_DISC",
+      "G2829072635-GES_DISC",
+      "G2829125431-GES_DISC",
+      "G2829126269-GES_DISC",
+      "G2830345607-GES_DISC",
+      "G2830353760-GES_DISC",
+      "G2830461859-GES_DISC",
+      "G2830491870-GES_DISC",
+      "G2830546878-GES_DISC",
+      "G2830521151-GES_DISC",
+      "G2830593682-GES_DISC",
+      "G2830729137-GES_DISC",
+      "G2830856272-GES_DISC",
+      "G2831043898-GES_DISC",
+      "G2831223745-GES_DISC",
+      "G2831284857-GES_DISC",
+      "G2831421796-GES_DISC",
+      "G2831525832-GES_DISC",
+      "G2831774481-GES_DISC",
+      "G2831921939-GES_DISC",
+      "G2832051662-GES_DISC",
+      "G2832157502-GES_DISC",
+      "G2832964145-GES_DISC",
+      "G2833004806-GES_DISC",
+      "G2832967613-GES_DISC",
+      "G2833536571-GES_DISC",
+      "G2833518859-GES_DISC",
+      "G2833356571-GES_DISC",
+      "G2833395021-GES_DISC",
+      "G2833349532-GES_DISC",
+      "G2833559784-GES_DISC",
+      "G2833551697-GES_DISC",
+      "G2833739714-GES_DISC",
+      "G2837511896-GES_DISC",
+      "G2921452469-GES_DISC",
+      "G2921835338-GES_DISC",
+      "G2921989334-GES_DISC",
+      "G2984603690-GES_DISC",
+      "G3087531387-GES_DISC",
+      "G3144085255-GES_DISC",
+      "G3181376270-GES_DISC",
+      "G3228670382-GES_DISC",
+      "G3268863526-GES_DISC",
+      "G3290997722-GES_DISC",
+      "G3365978518-GES_DISC",
+      "G3385101388-GES_DISC",
+      "G3385088375-GES_DISC",
+      "G3432241522-GES_DISC",
+      "G3474816818-GES_DISC",
+      "G3522220647-GES_DISC"
+    ],
+    "data_accessed_at": "2026-11-15T08:37:32.697618Z",
+    "cache_status": "disabled"
+  },
+  "trend_analysis": {
+    "status": "conclusive",
+    "method": "Sen's slope estimator & Mann-Kendall test",
+    "slope": -12.24,
+    "slope_unit": "mm/year",
+    "p_value": 0.2242,
+    "is_significant": false,
+    "confidence_level": 0.95,
+    "summary": "No se detecta una tendencia estadísticamente significativa (no se rechaza la hipótesis nula) en el período evaluado (pendiente de Theil-Sen = -12.24 mm/año, p = 0.2242 >= 0.05, nivel de confianza del 95%). La evidencia estadística no es suficiente para afirmar una dirección de cambio sistemática; este resultado no demuestra ausencia de cambio ni autoriza inferir estabilidad o atribuciones no verificadas.",
+    "methodological_note": null
+  },
+  "interpretation": {
+    "headline": "Precipitación anual sin tendencia direccional estadísticamente significativa",
+    "narrative": "A lo largo de los 24 años analizados en Costa Rica Continental, el promedio anual de precipitación fue de 3192.9 mm/año, fluctuando entre un mínimo de 2783.1 mm en 2012 y un máximo de 3740.7 mm en 2008. El ciclo estacional mostró su pico de mayor precipitación en noviembre de 2024 (600.6 mm/mes), mientras que el período más seco correspondió a marzo de 2020 (36.0 mm/mes).",
+    "trend_verdict_plain_language": "El estimador de Theil-Sen calcula una tasa de cambio nominal de -12.24 mm/year, pero la prueba de Mann-Kendall no rechaza la hipótesis nula de ausencia de tendencia (valor p = 0.2242 >= 0.05). Esto indica que la evidencia observada no es estadísticamente suficiente para afirmar una dirección sistemática de cambio; este resultado no demuestra ausencia de cambio (no debe interpretarse como prueba de que no haya cambio) ni autoriza inferir estabilidad o atribuirlo a causas no verificadas.",
+    "anomaly_summary": "Respecto a la climatología base, la mayor anomalía positiva registrada ocurrió en noviembre de 2024 con +265.7 mm sobre el promedio esperado, mientras que el déficit más marcado se registró en mayo de 2015 con -119.3 mm por debajo de la media.",
+    "prudence_guidelines": [
+      "Correlación y tendencia no implican causalidad: Un cambio detectado en la precipitación no demuestra por sí solo atribución al cambio climático antropogénico ni a un evento específico sin estudios formales de modelación y atribución climática.",
+      "Naturaleza de la medición satelital: El producto NASA GPM IMERG V07 combina mediciones de múltiples sensores de satélite con calibración mensual de pluviómetros. Al contar con una resolución espacial de 0.1° (~10 km), promedia áreas amplias y puede suavizar microclimas y lluvias orográficas locales en zonas montañosas o costeras.",
+      "Transición y homogeneidad de sensores: El producto NASA GPM IMERG V07 combina la misión TRMM (2000-2014) con el satélite GPM Core Observatory (2014 al presente). Aunque los datos se calibran mensualmente con estaciones terrestres (GPCC), la transición instrumental de 2014 puede introducir diferencias sutiles en la sensibilidad ante eventos de lluvia orográfica o convectiva intensa.",
+      "Contrastación en superficie: Para gestión operativa del agua o evaluación de riesgos locales, se recomienda contrastar estas estimaciones satelitales con estaciones meteorológicas en tierra del Instituto Meteorológico Nacional o entidades locales equivalentes."
+    ]
+  },
+  "timeseries": [
+    {
+      "date": "2001-01-01",
+      "value": 150.22,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 25.38
+    },
+    {
+      "date": "2001-02-01",
+      "value": 84.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.68
+    },
+    {
+      "date": "2001-03-01",
+      "value": 66.85,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -21.53
+    },
+    {
+      "date": "2001-04-01",
+      "value": 161.29,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 5.0
+    },
+    {
+      "date": "2001-05-01",
+      "value": 285.52,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -56.77
+    },
+    {
+      "date": "2001-06-01",
+      "value": 345.3,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -15.6
+    },
+    {
+      "date": "2001-07-01",
+      "value": 327.32,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -37.87
+    },
+    {
+      "date": "2001-08-01",
+      "value": 358.56,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -11.94
+    },
+    {
+      "date": "2001-09-01",
+      "value": 362.25,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -3.43
+    },
+    {
+      "date": "2001-10-01",
+      "value": 447.76,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 19.4
+    },
+    {
+      "date": "2001-11-01",
+      "value": 344.59,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.67
+    },
+    {
+      "date": "2001-12-01",
+      "value": 210.34,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 29.9
+    },
+    {
+      "date": "2002-01-01",
+      "value": 147.78,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 22.94
+    },
+    {
+      "date": "2002-02-01",
+      "value": 77.52,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 2.45
+    },
+    {
+      "date": "2002-03-01",
+      "value": 78.5,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -9.89
+    },
+    {
+      "date": "2002-04-01",
+      "value": 102.67,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -53.62
+    },
+    {
+      "date": "2002-05-01",
+      "value": 416.94,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 74.64
+    },
+    {
+      "date": "2002-06-01",
+      "value": 326.89,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -34.02
+    },
+    {
+      "date": "2002-07-01",
+      "value": 437.81,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 72.62
+    },
+    {
+      "date": "2002-08-01",
+      "value": 427.03,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 56.52
+    },
+    {
+      "date": "2002-09-01",
+      "value": 401.52,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 35.85
+    },
+    {
+      "date": "2002-10-01",
+      "value": 393.8,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -34.56
+    },
+    {
+      "date": "2002-11-01",
+      "value": 389.62,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 54.7
+    },
+    {
+      "date": "2002-12-01",
+      "value": 103.01,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -77.44
+    },
+    {
+      "date": "2003-01-01",
+      "value": 107.89,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -16.95
+    },
+    {
+      "date": "2003-02-01",
+      "value": 55.05,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -20.02
+    },
+    {
+      "date": "2003-03-01",
+      "value": 97.69,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.31
+    },
+    {
+      "date": "2003-04-01",
+      "value": 155.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -0.71
+    },
+    {
+      "date": "2003-05-01",
+      "value": 424.71,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 82.42
+    },
+    {
+      "date": "2003-06-01",
+      "value": 467.7,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 106.79
+    },
+    {
+      "date": "2003-07-01",
+      "value": 334.43,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -30.77
+    },
+    {
+      "date": "2003-08-01",
+      "value": 345.87,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -24.64
+    },
+    {
+      "date": "2003-09-01",
+      "value": 410.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 45.07
+    },
+    {
+      "date": "2003-10-01",
+      "value": 457.44,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 29.07
+    },
+    {
+      "date": "2003-11-01",
+      "value": 341.17,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 6.26
+    },
+    {
+      "date": "2003-12-01",
+      "value": 286.46,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 106.02
+    },
+    {
+      "date": "2004-01-01",
+      "value": 98.54,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -26.3
+    },
+    {
+      "date": "2004-02-01",
+      "value": 83.32,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 8.25
+    },
+    {
+      "date": "2004-03-01",
+      "value": 123.76,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 35.37
+    },
+    {
+      "date": "2004-04-01",
+      "value": 146.83,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -9.47
+    },
+    {
+      "date": "2004-05-01",
+      "value": 531.13,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 188.84
+    },
+    {
+      "date": "2004-06-01",
+      "value": 311.12,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -49.78
+    },
+    {
+      "date": "2004-07-01",
+      "value": 352.63,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -12.57
+    },
+    {
+      "date": "2004-08-01",
+      "value": 379.63,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.13
+    },
+    {
+      "date": "2004-09-01",
+      "value": 423.93,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 58.26
+    },
+    {
+      "date": "2004-10-01",
+      "value": 385.4,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -42.96
+    },
+    {
+      "date": "2004-11-01",
+      "value": 347.45,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 12.53
+    },
+    {
+      "date": "2004-12-01",
+      "value": 208.41,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 27.96
+    },
+    {
+      "date": "2005-01-01",
+      "value": 281.5,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 156.66
+    },
+    {
+      "date": "2005-02-01",
+      "value": 93.64,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 18.57
+    },
+    {
+      "date": "2005-03-01",
+      "value": 115.78,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 27.4
+    },
+    {
+      "date": "2005-04-01",
+      "value": 153.98,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -2.31
+    },
+    {
+      "date": "2005-05-01",
+      "value": 312.9,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -29.39
+    },
+    {
+      "date": "2005-06-01",
+      "value": 430.2,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 69.29
+    },
+    {
+      "date": "2005-07-01",
+      "value": 317.01,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -48.19
+    },
+    {
+      "date": "2005-08-01",
+      "value": 337.19,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -33.31
+    },
+    {
+      "date": "2005-09-01",
+      "value": 437.7,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 72.03
+    },
+    {
+      "date": "2005-10-01",
+      "value": 489.61,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 61.25
+    },
+    {
+      "date": "2005-11-01",
+      "value": 344.81,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.89
+    },
+    {
+      "date": "2005-12-01",
+      "value": 122.02,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -58.42
+    },
+    {
+      "date": "2006-01-01",
+      "value": 243.18,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 118.34
+    },
+    {
+      "date": "2006-02-01",
+      "value": 96.99,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 21.92
+    },
+    {
+      "date": "2006-03-01",
+      "value": 130.0,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 41.61
+    },
+    {
+      "date": "2006-04-01",
+      "value": 120.84,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -35.46
+    },
+    {
+      "date": "2006-05-01",
+      "value": 276.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -65.54
+    },
+    {
+      "date": "2006-06-01",
+      "value": 397.31,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 36.4
+    },
+    {
+      "date": "2006-07-01",
+      "value": 421.7,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 56.5
+    },
+    {
+      "date": "2006-08-01",
+      "value": 291.01,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -79.49
+    },
+    {
+      "date": "2006-09-01",
+      "value": 299.84,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -65.84
+    },
+    {
+      "date": "2006-10-01",
+      "value": 361.55,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -66.82
+    },
+    {
+      "date": "2006-11-01",
+      "value": 281.81,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -53.11
+    },
+    {
+      "date": "2006-12-01",
+      "value": 208.64,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 28.2
+    },
+    {
+      "date": "2007-01-01",
+      "value": 100.81,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -24.03
+    },
+    {
+      "date": "2007-02-01",
+      "value": 58.2,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -16.87
+    },
+    {
+      "date": "2007-03-01",
+      "value": 78.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -10.31
+    },
+    {
+      "date": "2007-04-01",
+      "value": 187.55,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 31.26
+    },
+    {
+      "date": "2007-05-01",
+      "value": 484.89,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 142.6
+    },
+    {
+      "date": "2007-06-01",
+      "value": 288.97,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -71.94
+    },
+    {
+      "date": "2007-07-01",
+      "value": 368.81,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 3.61
+    },
+    {
+      "date": "2007-08-01",
+      "value": 511.88,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 141.37
+    },
+    {
+      "date": "2007-09-01",
+      "value": 422.39,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 56.71
+    },
+    {
+      "date": "2007-10-01",
+      "value": 554.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 126.21
+    },
+    {
+      "date": "2007-11-01",
+      "value": 332.87,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -2.05
+    },
+    {
+      "date": "2007-12-01",
+      "value": 250.63,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 70.19
+    },
+    {
+      "date": "2008-01-01",
+      "value": 115.24,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -9.6
+    },
+    {
+      "date": "2008-02-01",
+      "value": 78.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 3.01
+    },
+    {
+      "date": "2008-03-01",
+      "value": 70.07,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -18.32
+    },
+    {
+      "date": "2008-04-01",
+      "value": 154.5,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -1.8
+    },
+    {
+      "date": "2008-05-01",
+      "value": 442.61,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 100.32
+    },
+    {
+      "date": "2008-06-01",
+      "value": 372.48,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 11.57
+    },
+    {
+      "date": "2008-07-01",
+      "value": 446.99,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 81.79
+    },
+    {
+      "date": "2008-08-01",
+      "value": 478.88,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 108.37
+    },
+    {
+      "date": "2008-09-01",
+      "value": 407.23,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 41.56
+    },
+    {
+      "date": "2008-10-01",
+      "value": 548.88,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 120.52
+    },
+    {
+      "date": "2008-11-01",
+      "value": 421.82,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 86.9
+    },
+    {
+      "date": "2008-12-01",
+      "value": 203.91,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 23.47
+    },
+    {
+      "date": "2009-01-01",
+      "value": 138.47,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 13.63
+    },
+    {
+      "date": "2009-02-01",
+      "value": 158.82,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 83.75
+    },
+    {
+      "date": "2009-03-01",
+      "value": 111.99,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 23.6
+    },
+    {
+      "date": "2009-04-01",
+      "value": 92.61,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -63.68
+    },
+    {
+      "date": "2009-05-01",
+      "value": 328.84,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -13.45
+    },
+    {
+      "date": "2009-06-01",
+      "value": 350.72,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -10.18
+    },
+    {
+      "date": "2009-07-01",
+      "value": 304.52,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -60.67
+    },
+    {
+      "date": "2009-08-01",
+      "value": 384.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 13.58
+    },
+    {
+      "date": "2009-09-01",
+      "value": 267.9,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -97.78
+    },
+    {
+      "date": "2009-10-01",
+      "value": 427.81,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -0.55
+    },
+    {
+      "date": "2009-11-01",
+      "value": 343.38,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 8.46
+    },
+    {
+      "date": "2009-12-01",
+      "value": 157.34,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -23.11
+    },
+    {
+      "date": "2010-01-01",
+      "value": 129.44,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 4.6
+    },
+    {
+      "date": "2010-02-01",
+      "value": 145.31,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 70.24
+    },
+    {
+      "date": "2010-03-01",
+      "value": 157.16,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 68.77
+    },
+    {
+      "date": "2010-04-01",
+      "value": 228.49,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 72.2
+    },
+    {
+      "date": "2010-05-01",
+      "value": 272.9,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -69.4
+    },
+    {
+      "date": "2010-06-01",
+      "value": 375.88,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 14.97
+    },
+    {
+      "date": "2010-07-01",
+      "value": 432.22,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 67.03
+    },
+    {
+      "date": "2010-08-01",
+      "value": 431.19,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 60.69
+    },
+    {
+      "date": "2010-09-01",
+      "value": 454.25,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 88.57
+    },
+    {
+      "date": "2010-10-01",
+      "value": 384.43,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -43.93
+    },
+    {
+      "date": "2010-11-01",
+      "value": 398.34,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 63.43
+    },
+    {
+      "date": "2010-12-01",
+      "value": 240.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 60.13
+    },
+    {
+      "date": "2011-01-01",
+      "value": 140.28,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 15.44
+    },
+    {
+      "date": "2011-02-01",
+      "value": 97.76,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 22.69
+    },
+    {
+      "date": "2011-03-01",
+      "value": 71.37,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -17.02
+    },
+    {
+      "date": "2011-04-01",
+      "value": 134.09,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -22.2
+    },
+    {
+      "date": "2011-05-01",
+      "value": 350.38,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 8.09
+    },
+    {
+      "date": "2011-06-01",
+      "value": 368.18,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 7.27
+    },
+    {
+      "date": "2011-07-01",
+      "value": 388.06,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 22.87
+    },
+    {
+      "date": "2011-08-01",
+      "value": 349.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -21.43
+    },
+    {
+      "date": "2011-09-01",
+      "value": 308.48,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -57.2
+    },
+    {
+      "date": "2011-10-01",
+      "value": 485.86,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 57.49
+    },
+    {
+      "date": "2011-11-01",
+      "value": 308.76,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -26.16
+    },
+    {
+      "date": "2011-12-01",
+      "value": 195.47,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 15.03
+    },
+    {
+      "date": "2012-01-01",
+      "value": 97.15,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -27.69
+    },
+    {
+      "date": "2012-02-01",
+      "value": 64.76,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -10.31
+    },
+    {
+      "date": "2012-03-01",
+      "value": 75.59,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -12.8
+    },
+    {
+      "date": "2012-04-01",
+      "value": 155.32,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -0.98
+    },
+    {
+      "date": "2012-05-01",
+      "value": 298.77,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -43.52
+    },
+    {
+      "date": "2012-06-01",
+      "value": 294.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -66.83
+    },
+    {
+      "date": "2012-07-01",
+      "value": 347.49,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -17.7
+    },
+    {
+      "date": "2012-08-01",
+      "value": 365.23,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -5.28
+    },
+    {
+      "date": "2012-09-01",
+      "value": 304.22,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -61.46
+    },
+    {
+      "date": "2012-10-01",
+      "value": 365.06,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -63.3
+    },
+    {
+      "date": "2012-11-01",
+      "value": 273.34,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -61.58
+    },
+    {
+      "date": "2012-12-01",
+      "value": 142.12,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -38.32
+    },
+    {
+      "date": "2013-01-01",
+      "value": 87.48,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -37.36
+    },
+    {
+      "date": "2013-02-01",
+      "value": 55.72,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -19.35
+    },
+    {
+      "date": "2013-03-01",
+      "value": 111.94,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 23.56
+    },
+    {
+      "date": "2013-04-01",
+      "value": 138.64,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -17.65
+    },
+    {
+      "date": "2013-05-01",
+      "value": 302.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -39.71
+    },
+    {
+      "date": "2013-06-01",
+      "value": 317.25,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -43.66
+    },
+    {
+      "date": "2013-07-01",
+      "value": 351.21,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -13.99
+    },
+    {
+      "date": "2013-08-01",
+      "value": 322.17,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -48.34
+    },
+    {
+      "date": "2013-09-01",
+      "value": 371.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 5.4
+    },
+    {
+      "date": "2013-10-01",
+      "value": 357.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -70.61
+    },
+    {
+      "date": "2013-11-01",
+      "value": 258.41,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -76.51
+    },
+    {
+      "date": "2013-12-01",
+      "value": 118.67,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -61.77
+    },
+    {
+      "date": "2014-01-01",
+      "value": 94.32,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -30.52
+    },
+    {
+      "date": "2014-02-01",
+      "value": 48.62,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -26.45
+    },
+    {
+      "date": "2014-03-01",
+      "value": 52.78,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -35.61
+    },
+    {
+      "date": "2014-04-01",
+      "value": 165.68,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.39
+    },
+    {
+      "date": "2014-05-01",
+      "value": 280.68,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -61.61
+    },
+    {
+      "date": "2014-06-01",
+      "value": 380.32,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 19.42
+    },
+    {
+      "date": "2014-07-01",
+      "value": 396.39,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 31.2
+    },
+    {
+      "date": "2014-08-01",
+      "value": 382.32,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 11.81
+    },
+    {
+      "date": "2014-09-01",
+      "value": 473.66,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 107.98
+    },
+    {
+      "date": "2014-10-01",
+      "value": 418.87,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -9.49
+    },
+    {
+      "date": "2014-11-01",
+      "value": 286.02,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -48.9
+    },
+    {
+      "date": "2014-12-01",
+      "value": 227.52,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 47.08
+    },
+    {
+      "date": "2015-01-01",
+      "value": 111.61,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -13.23
+    },
+    {
+      "date": "2015-02-01",
+      "value": 99.27,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 24.2
+    },
+    {
+      "date": "2015-03-01",
+      "value": 83.24,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -5.15
+    },
+    {
+      "date": "2015-04-01",
+      "value": 123.45,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -32.85
+    },
+    {
+      "date": "2015-05-01",
+      "value": 222.95,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -119.34
+    },
+    {
+      "date": "2015-06-01",
+      "value": 378.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 17.85
+    },
+    {
+      "date": "2015-07-01",
+      "value": 279.42,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -85.77
+    },
+    {
+      "date": "2015-08-01",
+      "value": 292.98,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -77.53
+    },
+    {
+      "date": "2015-09-01",
+      "value": 303.07,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -62.61
+    },
+    {
+      "date": "2015-10-01",
+      "value": 369.19,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -59.17
+    },
+    {
+      "date": "2015-11-01",
+      "value": 344.51,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 9.59
+    },
+    {
+      "date": "2015-12-01",
+      "value": 184.04,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 3.6
+    },
+    {
+      "date": "2016-01-01",
+      "value": 79.26,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -45.58
+    },
+    {
+      "date": "2016-02-01",
+      "value": 56.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -18.49
+    },
+    {
+      "date": "2016-03-01",
+      "value": 50.52,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -37.87
+    },
+    {
+      "date": "2016-04-01",
+      "value": 131.8,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -24.49
+    },
+    {
+      "date": "2016-05-01",
+      "value": 282.96,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -59.33
+    },
+    {
+      "date": "2016-06-01",
+      "value": 378.43,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 17.53
+    },
+    {
+      "date": "2016-07-01",
+      "value": 291.93,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -73.26
+    },
+    {
+      "date": "2016-08-01",
+      "value": 356.69,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -13.82
+    },
+    {
+      "date": "2016-09-01",
+      "value": 314.3,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -51.37
+    },
+    {
+      "date": "2016-10-01",
+      "value": 425.34,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -3.03
+    },
+    {
+      "date": "2016-11-01",
+      "value": 389.66,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 54.74
+    },
+    {
+      "date": "2016-12-01",
+      "value": 154.65,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -25.79
+    },
+    {
+      "date": "2017-01-01",
+      "value": 99.33,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -25.5
+    },
+    {
+      "date": "2017-02-01",
+      "value": 42.03,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -33.04
+    },
+    {
+      "date": "2017-03-01",
+      "value": 72.15,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -16.24
+    },
+    {
+      "date": "2017-04-01",
+      "value": 132.62,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -23.67
+    },
+    {
+      "date": "2017-05-01",
+      "value": 474.47,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 132.18
+    },
+    {
+      "date": "2017-06-01",
+      "value": 333.89,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -27.02
+    },
+    {
+      "date": "2017-07-01",
+      "value": 360.45,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -4.74
+    },
+    {
+      "date": "2017-08-01",
+      "value": 346.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -23.76
+    },
+    {
+      "date": "2017-09-01",
+      "value": 313.39,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -52.28
+    },
+    {
+      "date": "2017-10-01",
+      "value": 428.67,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.31
+    },
+    {
+      "date": "2017-11-01",
+      "value": 270.19,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -64.72
+    },
+    {
+      "date": "2017-12-01",
+      "value": 167.39,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -13.05
+    },
+    {
+      "date": "2018-01-01",
+      "value": 247.68,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 122.84
+    },
+    {
+      "date": "2018-02-01",
+      "value": 52.53,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -22.53
+    },
+    {
+      "date": "2018-03-01",
+      "value": 72.23,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -16.16
+    },
+    {
+      "date": "2018-04-01",
+      "value": 153.18,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -3.11
+    },
+    {
+      "date": "2018-05-01",
+      "value": 327.7,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -14.59
+    },
+    {
+      "date": "2018-06-01",
+      "value": 341.26,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -19.65
+    },
+    {
+      "date": "2018-07-01",
+      "value": 468.74,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 103.55
+    },
+    {
+      "date": "2018-08-01",
+      "value": 285.24,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -85.26
+    },
+    {
+      "date": "2018-09-01",
+      "value": 323.59,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -42.09
+    },
+    {
+      "date": "2018-10-01",
+      "value": 533.79,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 105.42
+    },
+    {
+      "date": "2018-11-01",
+      "value": 238.42,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -96.5
+    },
+    {
+      "date": "2018-12-01",
+      "value": 96.9,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -83.54
+    },
+    {
+      "date": "2019-01-01",
+      "value": 62.9,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -61.94
+    },
+    {
+      "date": "2019-02-01",
+      "value": 43.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -31.49
+    },
+    {
+      "date": "2019-03-01",
+      "value": 80.67,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -7.72
+    },
+    {
+      "date": "2019-04-01",
+      "value": 91.99,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -64.3
+    },
+    {
+      "date": "2019-05-01",
+      "value": 368.02,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 25.73
+    },
+    {
+      "date": "2019-06-01",
+      "value": 305.74,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -55.16
+    },
+    {
+      "date": "2019-07-01",
+      "value": 335.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -30.11
+    },
+    {
+      "date": "2019-08-01",
+      "value": 337.38,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -33.13
+    },
+    {
+      "date": "2019-09-01",
+      "value": 329.04,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -36.63
+    },
+    {
+      "date": "2019-10-01",
+      "value": 432.95,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 4.58
+    },
+    {
+      "date": "2019-11-01",
+      "value": 274.7,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -60.22
+    },
+    {
+      "date": "2019-12-01",
+      "value": 171.48,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -8.96
+    },
+    {
+      "date": "2020-01-01",
+      "value": 126.45,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 1.61
+    },
+    {
+      "date": "2020-02-01",
+      "value": 57.55,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -17.52
+    },
+    {
+      "date": "2020-03-01",
+      "value": 36.02,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -52.37
+    },
+    {
+      "date": "2020-04-01",
+      "value": 150.77,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -5.52
+    },
+    {
+      "date": "2020-05-01",
+      "value": 280.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -62.22
+    },
+    {
+      "date": "2020-06-01",
+      "value": 369.61,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 8.7
+    },
+    {
+      "date": "2020-07-01",
+      "value": 313.92,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -51.28
+    },
+    {
+      "date": "2020-08-01",
+      "value": 434.12,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 63.62
+    },
+    {
+      "date": "2020-09-01",
+      "value": 381.62,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 15.94
+    },
+    {
+      "date": "2020-10-01",
+      "value": 507.92,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 79.56
+    },
+    {
+      "date": "2020-11-01",
+      "value": 375.88,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 40.96
+    },
+    {
+      "date": "2020-12-01",
+      "value": 237.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 57.31
+    },
+    {
+      "date": "2021-01-01",
+      "value": 102.4,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -22.44
+    },
+    {
+      "date": "2021-02-01",
+      "value": 73.97,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -1.1
+    },
+    {
+      "date": "2021-03-01",
+      "value": 111.29,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 22.9
+    },
+    {
+      "date": "2021-04-01",
+      "value": 341.96,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 185.67
+    },
+    {
+      "date": "2021-05-01",
+      "value": 332.14,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -10.15
+    },
+    {
+      "date": "2021-06-01",
+      "value": 285.78,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -75.13
+    },
+    {
+      "date": "2021-07-01",
+      "value": 410.76,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 45.57
+    },
+    {
+      "date": "2021-08-01",
+      "value": 440.33,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 69.83
+    },
+    {
+      "date": "2021-09-01",
+      "value": 366.06,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 0.39
+    },
+    {
+      "date": "2021-10-01",
+      "value": 354.4,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -73.96
+    },
+    {
+      "date": "2021-11-01",
+      "value": 231.87,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -103.05
+    },
+    {
+      "date": "2021-12-01",
+      "value": 152.34,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -28.11
+    },
+    {
+      "date": "2022-01-01",
+      "value": 71.26,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -53.58
+    },
+    {
+      "date": "2022-02-01",
+      "value": 47.67,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -27.4
+    },
+    {
+      "date": "2022-03-01",
+      "value": 92.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 4.36
+    },
+    {
+      "date": "2022-04-01",
+      "value": 234.24,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 77.94
+    },
+    {
+      "date": "2022-05-01",
+      "value": 371.16,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 28.87
+    },
+    {
+      "date": "2022-06-01",
+      "value": 476.51,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 115.61
+    },
+    {
+      "date": "2022-07-01",
+      "value": 330.05,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -35.14
+    },
+    {
+      "date": "2022-08-01",
+      "value": 408.5,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 38.0
+    },
+    {
+      "date": "2022-09-01",
+      "value": 416.85,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 51.17
+    },
+    {
+      "date": "2022-10-01",
+      "value": 336.85,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -91.52
+    },
+    {
+      "date": "2022-11-01",
+      "value": 332.26,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -2.66
+    },
+    {
+      "date": "2022-12-01",
+      "value": 120.77,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -59.67
+    },
+    {
+      "date": "2023-01-01",
+      "value": 96.92,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -27.92
+    },
+    {
+      "date": "2023-02-01",
+      "value": 55.9,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -19.17
+    },
+    {
+      "date": "2023-03-01",
+      "value": 123.27,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 34.88
+    },
+    {
+      "date": "2023-04-01",
+      "value": 106.84,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -49.45
+    },
+    {
+      "date": "2023-05-01",
+      "value": 225.17,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -117.12
+    },
+    {
+      "date": "2023-06-01",
+      "value": 318.31,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -42.6
+    },
+    {
+      "date": "2023-07-01",
+      "value": 335.11,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -30.08
+    },
+    {
+      "date": "2023-08-01",
+      "value": 313.49,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -57.01
+    },
+    {
+      "date": "2023-09-01",
+      "value": 282.29,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -83.38
+    },
+    {
+      "date": "2023-10-01",
+      "value": 467.0,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 38.64
+    },
+    {
+      "date": "2023-11-01",
+      "value": 307.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -27.33
+    },
+    {
+      "date": "2023-12-01",
+      "value": 157.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -22.87
+    },
+    {
+      "date": "2024-01-01",
+      "value": 66.03,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -58.81
+    },
+    {
+      "date": "2024-02-01",
+      "value": 74.08,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -0.99
+    },
+    {
+      "date": "2024-03-01",
+      "value": 57.62,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -30.77
+    },
+    {
+      "date": "2024-04-01",
+      "value": 186.11,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 29.82
+    },
+    {
+      "date": "2024-05-01",
+      "value": 320.75,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -21.54
+    },
+    {
+      "date": "2024-06-01",
+      "value": 447.07,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 86.16
+    },
+    {
+      "date": "2024-07-01",
+      "value": 412.58,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 47.39
+    },
+    {
+      "date": "2024-08-01",
+      "value": 312.53,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -57.98
+    },
+    {
+      "date": "2024-09-01",
+      "value": 400.82,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 35.14
+    },
+    {
+      "date": "2024-10-01",
+      "value": 345.82,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": -82.54
+    },
+    {
+      "date": "2024-11-01",
+      "value": 600.59,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 265.68
+    },
+    {
+      "date": "2024-12-01",
+      "value": 212.6,
+      "coverage_fraction": 1.0,
+      "quality_flag": "ok",
+      "anomaly_mm": 32.16
+    }
+  ],
+  "annual_totals": [
+    {
+      "year": 2001,
+      "annual_precipitation_mm": 3144.77,
+      "months_reported": 12
+    },
+    {
+      "year": 2002,
+      "annual_precipitation_mm": 3303.08,
+      "months_reported": 12
+    },
+    {
+      "year": 2003,
+      "annual_precipitation_mm": 3484.72,
+      "months_reported": 12
+    },
+    {
+      "year": 2004,
+      "annual_precipitation_mm": 3392.15,
+      "months_reported": 12
+    },
+    {
+      "year": 2005,
+      "annual_precipitation_mm": 3436.35,
+      "months_reported": 12
+    },
+    {
+      "year": 2006,
+      "annual_precipitation_mm": 3129.6,
+      "months_reported": 12
+    },
+    {
+      "year": 2007,
+      "annual_precipitation_mm": 3639.64,
+      "months_reported": 12
+    },
+    {
+      "year": 2008,
+      "annual_precipitation_mm": 3740.67,
+      "months_reported": 12
+    },
+    {
+      "year": 2009,
+      "annual_precipitation_mm": 3066.47,
+      "months_reported": 12
+    },
+    {
+      "year": 2010,
+      "annual_precipitation_mm": 3650.19,
+      "months_reported": 12
+    },
+    {
+      "year": 2011,
+      "annual_precipitation_mm": 3197.76,
+      "months_reported": 12
+    },
+    {
+      "year": 2012,
+      "annual_precipitation_mm": 2783.12,
+      "months_reported": 12
+    },
+    {
+      "year": 2013,
+      "annual_precipitation_mm": 2792.9,
+      "months_reported": 12
+    },
+    {
+      "year": 2014,
+      "annual_precipitation_mm": 3207.19,
+      "months_reported": 12
+    },
+    {
+      "year": 2015,
+      "annual_precipitation_mm": 2792.48,
+      "months_reported": 12
+    },
+    {
+      "year": 2016,
+      "annual_precipitation_mm": 2912.13,
+      "months_reported": 12
+    },
+    {
+      "year": 2017,
+      "annual_precipitation_mm": 3041.35,
+      "months_reported": 12
+    },
+    {
+      "year": 2018,
+      "annual_precipitation_mm": 3141.26,
+      "months_reported": 12
+    },
+    {
+      "year": 2019,
+      "annual_precipitation_mm": 2833.53,
+      "months_reported": 12
+    },
+    {
+      "year": 2020,
+      "annual_precipitation_mm": 3271.68,
+      "months_reported": 12
+    },
+    {
+      "year": 2021,
+      "annual_precipitation_mm": 3203.29,
+      "months_reported": 12
+    },
+    {
+      "year": 2022,
+      "annual_precipitation_mm": 3238.87,
+      "months_reported": 12
+    },
+    {
+      "year": 2023,
+      "annual_precipitation_mm": 2789.46,
+      "months_reported": 12
+    },
+    {
+      "year": 2024,
+      "annual_precipitation_mm": 3436.6,
+      "months_reported": 12
+    }
+  ]
+}

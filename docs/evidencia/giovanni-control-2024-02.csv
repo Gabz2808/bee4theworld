@@ -1,0 +1,10 @@
+Title:,"Time Series, Area-Averaged of Merged satellite-gauge precipitation estimate - Final Run (recommended for general use) (monthly)"
+User Start Date:,2024-02-01T00:00:00Z
+User End Date:,2024-02-29T23:59:59Z
+User Bounding Box:,"-85.5,9,-85.3,9.2"
+Data Bounding Box:,"-85.45,9.05,-85.35,9.15"
+URL to Reproduce Results:,"#service=ArAvTs&starttime=2024-02-01T00%3A00%3A00Z&endtime=2024-02-29T23%3A59%3A59Z&bbox=-85.5%2C9%2C-85.3%2C9.2&data=GPM_3IMERGM_07_precipitation&portal=GIOVANNI&format=json"
+Fill Value (mean_GPM_3IMERGM_07_precipitation):, -9999.9
+
+time, mean_GPM_3IMERGM_07_precipitation
+2024-02-01 00:00:00,0

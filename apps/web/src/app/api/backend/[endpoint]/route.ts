@@ -21,14 +21,16 @@ async function forward(request: NextRequest, endpoint: string, method: "GET" | "
       JSON.parse(body);
     } catch { return NextResponse.json({ error: { code: "INVALID_REQUEST" } }, { status: 400 }); }
   }
+  const timeout = AbortSignal.timeout(method === "GET" ? 15000 : 90000);
   try {
     const response = await fetch(`${base.replace(/\/+$/, "")}/api/v1/${endpoint}`, {
       method, body, headers: body ? { "Content-Type": "application/json" } : undefined,
-      cache: "no-store", signal: AbortSignal.timeout(method === "GET" ? 15000 : 90000),
+      cache: "no-store", signal: timeout,
     });
     const content = await response.text();
     return new NextResponse(content, { status: response.status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
   } catch {
+    if (timeout.aborted && method === "POST") return NextResponse.json({ error: { code: "BACKEND_TIMEOUT" } }, { status: 504 });
     return NextResponse.json({ error: { code: "BACKEND_UNAVAILABLE" } }, { status: 503 });
   }
 }
