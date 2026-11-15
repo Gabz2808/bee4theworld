@@ -23,11 +23,13 @@ from app.models.exploration import (
     ExplorationMetadata,
     ExplorationRequest,
     ExplorationResponse,
+    ScientificInterpretation,
     TimeSeriesPoint,
 )
 from app.models.geojson import GeoJSONPolygon
 from app.models.regions import Region, RegionsResponse
 from app.models.variables import AvailableInterval, Variable, VariablesResponse
+from app.services.interpretation_service import generate_interpretation
 from app.services.gpm_imerg import (
     DataIntegrityError,
     DataUnavailableError,
@@ -473,10 +475,18 @@ def run_exploration(
         ],
     )
 
+    interpretation = generate_interpretation(
+        metadata=metadata,
+        trend_analysis=trend_analysis,
+        frame_with_anomalies=frame_with_anomalies,
+        annual_totals=annual_totals,
+    )
+
     return ExplorationResponse(
         status="success",
         metadata=metadata,
         trend_analysis=trend_analysis,
+        interpretation=interpretation,
         timeseries=timeseries,
         annual_totals=annual_totals,
     )

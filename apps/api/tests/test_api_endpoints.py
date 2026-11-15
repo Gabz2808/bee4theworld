@@ -12,7 +12,11 @@ from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
 
 class APIEndpointsTests(unittest.TestCase):
     def setUp(self) -> None:
+        app.dependency_overrides[get_optional_supabase] = lambda: None
         self.client = TestClient(app)
+
+    def tearDown(self) -> None:
+        app.dependency_overrides.clear()
 
     def test_get_ping(self) -> None:
         response = self.client.get("/ping")
@@ -197,6 +201,16 @@ class APIEndpointsTests(unittest.TestCase):
             # Tendencia calculada
             self.assertIn("trend_analysis", data)
             self.assertIn(data["trend_analysis"]["status"], {"conclusive", "inconclusive"})
+
+            # Interpretación científica comprensible y prudente
+            self.assertIn("interpretation", data)
+            interp = data["interpretation"]
+            self.assertIsNotNone(interp)
+            self.assertTrue(len(interp["headline"]) > 0)
+            self.assertTrue(len(interp["narrative"]) > 0)
+            self.assertTrue(len(interp["trend_verdict_plain_language"]) > 0)
+            self.assertTrue(len(interp["anomaly_summary"]) > 0)
+            self.assertGreaterEqual(len(interp["prudence_guidelines"]), 1)
 
             # Prueba con polígono personalizado directo en v1
             custom_payload = {

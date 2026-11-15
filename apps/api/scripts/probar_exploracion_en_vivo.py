@@ -112,6 +112,17 @@ def main() -> None:
     if data['trend_analysis']['methodological_note']:
         print(f"   - Nota metodológica: {data['trend_analysis']['methodological_note']}")
 
+    if "interpretation" in data and data["interpretation"]:
+        interp = data["interpretation"]
+        print("\n🧠 INTERPRETACIÓN CIENTÍFICA COMPRENSIBLE Y PRUDENTE:")
+        print(f"   📌 Titular: {interp['headline']}")
+        print(f"   📖 Narrativa: {interp['narrative']}")
+        print(f"   ⚖️  Veredicto de tendencia: {interp['trend_verdict_plain_language']}")
+        print(f"   💧 Resumen anomalías: {interp['anomaly_summary']}")
+        print("   🛡️  Directrices de prudencia:")
+        for g in interp["prudence_guidelines"]:
+            print(f"      • {g}")
+
     print("\n📈 MUESTRA DE SERIE MENSUAL Y ANOMALÍAS:")
     for pt in data['timeseries'][:6]:
         print(f"   • {pt['date']}: {pt['value']} mm/month | Anomalía: {pt['anomaly_mm']} mm | Cobertura: {pt['coverage_fraction']*100:.1f}% [{pt['quality_flag']}]")

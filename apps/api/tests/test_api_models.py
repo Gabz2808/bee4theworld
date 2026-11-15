@@ -49,13 +49,13 @@ class APIContractModelTests(unittest.TestCase):
         )
 
         self.assertEqual(request.model_dump(mode="json", exclude_none=True), exploration["request_body_example"])
-        self.assertEqual(response.model_dump(mode="json"), exploration["response"])
+        self.assertEqual(response.model_dump(mode="json", exclude_unset=True), exploration["response"])
         self.assertEqual(
-            alt_inconclusive.model_dump(mode="json"),
+            alt_inconclusive.model_dump(mode="json", exclude_unset=True),
             exploration["alternative_inconclusive_response"],
         )
         self.assertEqual(
-            alt_not_computed.model_dump(mode="json"),
+            alt_not_computed.model_dump(mode="json", exclude_unset=True),
             exploration["alternative_not_computed_response"],
         )
 

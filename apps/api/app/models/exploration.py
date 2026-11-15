@@ -126,9 +126,33 @@ class AnnualPrecipitation(APIModel):
     months_reported: Literal[12]
 
 
+class ScientificInterpretation(APIModel):
+    headline: str = Field(
+        ...,
+        description="Titular sintético del diagnóstico para el usuario.",
+    )
+    narrative: str = Field(
+        ...,
+        description="Explicación en prosa accesible sobre el comportamiento de la precipitación observada.",
+    )
+    trend_verdict_plain_language: str = Field(
+        ...,
+        description="Traducción comprensible del análisis de Mann-Kendall / Sen para no científicos.",
+    )
+    anomaly_summary: str = Field(
+        ...,
+        description="Resumen de anomalías y contraste entre meses secos y húmedos.",
+    )
+    prudence_guidelines: list[str] = Field(
+        default_factory=list,
+        description="Directrices de prudencia científica, límites de atribución y contrastación.",
+    )
+
+
 class ExplorationResponse(APIModel):
     status: Literal["success"]
     metadata: ExplorationMetadata
     trend_analysis: TrendAnalysis
+    interpretation: ScientificInterpretation | None = None
     timeseries: list[TimeSeriesPoint] = Field(min_length=1)
     annual_totals: list[AnnualPrecipitation]
