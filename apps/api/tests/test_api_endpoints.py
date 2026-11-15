@@ -24,7 +24,7 @@ class APIEndpointsTests(unittest.TestCase):
         self.assertEqual(response.json(), {"status": "ok"})
 
     def test_nasa_without_credentials_returns_clear_error(self) -> None:
-        with patch("app.services.exploration_service.load_from_cache") as cache, patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa", "EARTHDATA_TOKEN": ""}):
+        with patch("app.services.exploration_service.load_supabase_series") as cache, patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa", "EARTHDATA_TOKEN": ""}):
             response = self.client.post("/api/v1/explorations", json={
                 "region_id": "costa-rica-continental", "variable_id": "precipitation",
                 "start_date": "2024-01-01", "end_date": "2024-01-31",

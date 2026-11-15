@@ -18,7 +18,7 @@ def get_connector() -> GPMIMERGConnector:
 
 
 def get_optional_supabase() -> Any | None:
-    source = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower()
+    source = os.environ.get("IYOK_DATA_SOURCE", "auto").strip().lower()
     if source == "nasa":
         return None
     if source != "auto":

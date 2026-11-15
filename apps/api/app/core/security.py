@@ -75,8 +75,9 @@ def validate_polygon_complexity_and_area(coordinates: list[list[list[float]]]) -
     if not coordinates or not coordinates[0]:
         return
 
+    # Codex (Manuel): contar también los anillos interiores para limitar el trabajo total.
     ring = coordinates[0]
-    num_vertices = len(ring)
+    num_vertices = sum(len(part) for part in coordinates)
 
     if num_vertices > MAX_POLYGON_VERTICES:
         raise HTTPException(
@@ -173,6 +174,20 @@ class SecurityLimitsMiddleware(BaseHTTPMiddleware):
                     )
             except ValueError:
                 pass
+
+        # Codex (Manuel): limitar los bytes recibidos incluso sin Content-Length fiable.
+        chunks = []
+        size = 0
+        async for chunk in request.stream():
+            size += len(chunk)
+            if size > self.max_body_bytes:
+                return Response(
+                    status_code=413,
+                    content=b'{"error":{"code":"PAYLOAD_TOO_LARGE","message":"El tamano del cuerpo de la solicitud supera el limite permitido de 1 MB.","details":[]}}',
+                    media_type="application/json",
+                )
+            chunks.append(chunk)
+        request._body = b"".join(chunks)
 
         # 2. Control de frecuencia (Rate Limiting)
         # Omitir OPTIONS (preflight CORS) y ping

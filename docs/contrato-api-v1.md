@@ -22,6 +22,6 @@ El backend admite también geometría directa y `date_range`; el cliente del MVP
 
 ## Conexión, pruebas y límites
 
-El navegador llama al servidor Next.js en `/api/backend/catalog` y `/api/backend/explorations`; este reenvía exclusivamente a las rutas v1 del backend configurado. No hay credenciales en el cliente. El modo predeterminado de la API es NASA directa mediante CMR/Harmony; `auto` intenta usar caché y Supabase. El modo directo evita cachés sin procedencia verificable. El mecanismo de acceso no es Giovanni y no debe etiquetarse como tal.
+El navegador llama al servidor Next.js en `/api/backend/catalog` y `/api/backend/explorations`; este reenvía exclusivamente a las rutas v1 del backend configurado. No hay credenciales en el cliente. El modo predeterminado `auto` intenta usar la [caché compatible en Supabase](cache-supabase.md) y consulta NASA CMR/Harmony si no hay entrada; `nasa` consulta directamente. El mecanismo de acceso no es Giovanni y no debe etiquetarse como tal. Los metadatos incluyen `cache_status` para informar el resultado de la caché.
 
 Se probó el cliente desacoplado con ejemplos sintéticos de catálogo, éxito, faltantes, cobertura parcial, error, respuesta incompatible y análisis inconcluso. También consultó a través de Next.js una exploración real de NASA de enero de 2024 y recibió un punto con estado `not_computed`. Los datos reales y la geometría aproximada siguen pendientes de validación científica. Los issues #7–#10 mantienen los trabajos de cobertura, visualización, interpretación y caso real; este contrato no los cierra.

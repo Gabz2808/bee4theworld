@@ -1,4 +1,6 @@
-# Geometría Oficial de Costa Rica Continental para el MVP
+# Geometría provisional de Costa Rica Continental para el MVP
+
+> Corrección de Codex, sesión de Manuel: las coordenadas de este documento son una aproximación de diez vértices. La atribución, versión, licencia y oficialidad que se mencionan a continuación no cuentan con una capa de origen ni un procedimiento verificables en el repositorio y no deben utilizarse como hechos hasta su validación con el equipo. La huella identifica estas coordenadas, no acredita su procedencia.
 
 Este documento registra los acuerdos técnicos, procedencia cartográfica, licencia, versión, sistemas de referencia espacial (CRS), tratamiento de territorios insulares y huella criptográfica de la geometría de Costa Rica Continental utilizada por la API de **Iyök** para el reto *Earth System Trend Detective!*.
 

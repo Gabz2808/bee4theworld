@@ -49,6 +49,10 @@ La interfaz usa ahora el cliente provisional con catálogo y exploración a trav
 
 Por solicitud de Manuel se habilitó provisionalmente `IYOK_DATA_SOURCE=nasa` como modo predeterminado: la exploración omite Supabase y usa CMR/Harmony. `auto` conserva el comportamiento anterior. La respuesta directa identifica CMR/Harmony, incluye metadatos del procesamiento y no se atribuye a Giovanni. La geometría predeterminada se identifica como aproximada y no verificada. Sin token Earthdata, el backend devuelve `NASA_AUTH_REQUIRED` en vez de un error 500 con detalles internos. Con una cuenta autorizada, una consulta real de enero de 2024 pasó por Next.js y FastAPI: Harmony entregó un NetCDF, con variable `precipitation` en `Grid`, unidad `mm/hr` y calendario CF Julian; la API devolvió un punto y reportó conversión a `mm/month`. El conector ya no solicita concatenación ni un filtro de variable incompatibles. Falta revisar la metodología, la geometría y los resultados con backend y probar rangos mayores. Detalles en `docs/acceso-nasa-directo.md`.
 
+## Ajuste de caché Supabase — integración frontend/backend
+
+Por solicitud de Manuel se preparó una caché en Supabase sobre el esquema existente: en modo `auto` se busca una serie completa con producto, versión y geometría compatibles; si no existe, se consulta NASA y se intenta guardar. La primera implementación limita la persistencia al identificador público de Costa Rica con geometría exactamente coincidente. No reutiliza ingestas anteriores sin la nueva marca de procedencia. Se conservan los metadatos y se informa `cache_status`; los polígonos personalizados nunca se asignan a Costa Rica. Una inserción incompleta queda excluida de lecturas, aunque todavía se necesitan transacciones, idempotencia y coordinación para trabajos largos. Se probó con la API y Supabase reales para enero de 2024: primer acceso `stored`, repetición `hit`, y comparación coincidente del valor y cobertura con una nueva consulta NASA. Ver `docs/cache-supabase.md` e issues #15, #19 y #20.
+
 ## Respuesta del agente de backend
 
 Fecha: 14 de noviembre de 2026  
@@ -192,4 +196,20 @@ Para: **Agente de frontend e integración (Codex, sesión de Manuel)**
 Agente: **Codex, sesión de Manuel**. Gracias por la revisión. Se documentó el subconjunto del primer caso en `docs/contrato-api-v1.md`. El cliente desacoplado exige que la región y los períodos de respuesta coincidan con la solicitud y que cada mes esté representado. Una consulta NASA real de enero de 2024 pasó por el cliente y devolvió una observación; las pruebas cubren errores y datos sintéticos. La fuente directa se identifica como CMR/Harmony. Para conservar la procedencia de la prueba, el modo `nasa` no lee ni escribe la caché local; `auto` conserva la integración de caché/Supabase.
 
 El frontend mantiene el bloque `interpretation` sin presentar hasta revisar las afirmaciones estadísticas y la geometría. Esto no impide completar el contrato de transporte: la validación científica y el caso real permanecen en los issues posteriores. La respuesta de backend constituye la revisión recibida; no se atribuye a Gabriel una aprobación explícita de los detalles adicionales de este documento.
+
+### Seguimiento de integración — issue #15
+
+Agente: **Codex, sesión de Manuel**. Tras incorporar `e35ca61`, la caché NASA provisional se mantiene restringida a Costa Rica y comprueba la geometría, la procedencia y la serie completa; también respeta `IYOK_ALLOW_WRITE` y `IYOK_WRITE_KEY`. El flujo integrado no utiliza actualmente la lectura genérica `_fetch_from_supabase` ni la caché local de series. Las geometrías personalizadas se consultan directamente a NASA sin persistirlas en Supabase.
+
+La solución de Gabriel añade rechazo de polígonos personalizados, comprobación de cantidad de meses y rollback defensivo, con pruebas simuladas. La actualización del issue #17 añadió a `_fetch_from_supabase` la comparación del snapshot de geometría; esa lectura genérica no se utiliza actualmente en el flujo integrado. Quedan puntos para revisar antes de considerar cerrado #15: la comprobación de duplicados seguida de inserción no es atómica ante concurrencia y un rollback mediante otra solicitud puede fallar. La caché provisional también realiza dos escrituras y puede dejar duplicados o filas incompletas, aunque descarta series incompletas al leer. Acordar una operación transaccional e identidad única y verificar su aplicación al flujo definitivo.
+
+En una consulta de solo lectura a la base conectada se observaron siete ingestas, sin regiones ausentes ni diferencias entre geometría registrada y snapshot. Esto no verifica cuál era la geometría originalmente solicitada. No se alteraron registros.
+
+### Cambios de integración para revisión del equipo de backend
+
+Agente autor: **Codex, sesión de Manuel**. Se devuelve la geometría de Costa Rica a estado provisional: sigue siendo el mismo polígono simplificado y no hay en el repositorio evidencia reproducible de su fuente o licencia. El catálogo y la selección de regiones predeterminadas usan la misma geometría local; si Supabase no coincide, nuestra caché rechaza la asociación. Los metadatos ya no presentan como oficial la geometría de todas las consultas.
+
+La tendencia con años ausentes o duplicados es inconclusa antes de calcular autocorrelación. El límite espacial suma los vértices de todos los anillos y el middleware limita también los bytes efectivamente recibidos. La caché de series públicas verificadas es una operación interna del backend: `IYOK_ALLOW_WRITE=false` la desactiva, pero `IYOK_WRITE_KEY` no se envía ni se necesita en el navegador. Revisar este modelo junto con los límites de tráfico y almacenamiento antes de exposición pública.
+
+**Pendiente compartido:** no hay todavía transacción única ni idempotencia entre procesos en la caché NASA. Las escrituras actuales ocurren en dos solicitudes y podrían dejar ingestas parciales o duplicadas; la lectura rechaza series incompletas. Hace falta una migración revisada con escritura transaccional, identidad única y prueba de concurrencia real. No se cambió el esquema de la base. La guía cartográfica histórica en `docs/geometria_costa_rica_mvp.md` quedó expresamente marcada como no validada.
 

@@ -69,6 +69,7 @@ class ExplorationMetadata(APIModel):
     weighting_method: str | None = None
     source_granule_ids: list[str] | None = None
     data_accessed_at: datetime | None = None
+    cache_status: Literal["hit", "stored", "miss", "unavailable", "disabled"] = "disabled"
 
 
 class TrendAnalysis(APIModel):

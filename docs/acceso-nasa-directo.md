@@ -1,11 +1,11 @@
 # Acceso provisional directo a NASA
 
-El backend puede consultar IMERG V07 directamente mediante el catálogo CMR y el servicio NASA Harmony. Este flujo **no es una extracción de Giovanni**; los resultados no deben atribuirse a Giovanni. `IYOK_DATA_SOURCE=nasa` es el valor predeterminado y evita leer la caché de Supabase. La opción `auto` conserva el comportamiento anterior: intenta Supabase y, si no encuentra datos, consulta NASA. No usar `auto` cuando se exija origen directo.
+El backend puede consultar IMERG V07 directamente mediante el catálogo CMR y el servicio NASA Harmony. Este flujo **no es una extracción de Giovanni**; los resultados no deben atribuirse a Giovanni. `IYOK_DATA_SOURCE=nasa` fuerza la consulta directa sin caché. La opción predeterminada `auto` intenta primero usar [la caché Supabase](cache-supabase.md) y, si no encuentra una entrada compatible, consulta NASA.
 
 ## Configuración local
 
 1. Iniciar sesión en [NASA Earthdata Login](https://urs.earthdata.nasa.gov/) y obtener un token de usuario siguiendo las [instrucciones oficiales](https://urs.earthdata.nasa.gov/documentation/for_users/user_token). Aceptar las autorizaciones de las aplicaciones y condiciones de datos que NASA requiera para la cuenta.
-2. En el equipo, copiar `apps/api/.env.example` a `apps/api/.env` si todavía no existe. Añadir el token en la línea `EARTHDATA_TOKEN=` y mantener `IYOK_DATA_SOURCE=nasa`. No enviar el token al chat, guardarlo en Git ni ponerlo en variables públicas del navegador. El archivo `.env` está ignorado por Git.
+2. En el equipo, copiar `apps/api/.env.example` a `apps/api/.env` si todavía no existe. Añadir el token en la línea `EARTHDATA_TOKEN=` y usar `IYOK_DATA_SOURCE=nasa` si se desea evitar la caché. No enviar el token al chat, guardarlo en Git ni ponerlo en variables públicas del navegador. El archivo `.env` está ignorado por Git.
 3. Reiniciar la API desde `apps/api`, de forma que lea el archivo:
 
    ```powershell

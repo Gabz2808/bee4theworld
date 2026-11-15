@@ -13,8 +13,9 @@ import numpy as np
 import pandas as pd
 from fastapi import HTTPException
 
-from app.core.cache import load_from_cache, save_to_cache, save_to_supabase
-from app.core.security import is_write_authorized, validate_polygon_complexity_and_area
+# Codex (Manuel): la validación espacial se mantiene; la caché se gobierna internamente.
+from app.core.security import validate_polygon_complexity_and_area
+from app.core.supabase_cache import load_supabase_series, save_supabase_series
 from app.models.catalog import (
     CatalogCombination,
     CatalogRegion,
@@ -107,12 +108,10 @@ DEFAULT_REGIONS = [
     Region(
         id="costa-rica-continental",
         name="Costa Rica Continental",
-        description=(
-            "Costa Rica Continental oficial para el MVP. Excluye territorio insular oceánico "
-            "(Isla del Coco) para reflejar régimen pluviométrico continental."
-        ),
-        boundary_source="Instituto Geográfico Nacional (IGN) Costa Rica / WDC Cartography",
-        boundary_version="2024",
+        # Codex (Manuel): el polígono simplificado carece de procedencia cartográfica verificable.
+        description="Geometría aproximada de Costa Rica continental; no es una frontera oficial validada.",
+        boundary_source="Geometría aproximada no verificada",
+        boundary_version="provisional",
         geom=DEFAULT_COSTA_RICA_GEOM,
     ),
     Region(
@@ -254,7 +253,11 @@ def resolve_region(
         boundary_version: str | None = None
         internal_uuid: str | None = None
 
-        if supabase_client is not None:
+        # Codex (Manuel): las regiones publicadas en catálogo usan esa misma geometría en la consulta.
+        known_region = any(r.id == request.region_id for r in DEFAULT_REGIONS) or request.region_id in (
+            "costa-rica", "panama-canal", "panama", "corredor-seco"
+        )
+        if supabase_client is not None and not known_region:
             try:
                 query = supabase_client.table("regions").select(
                     "id, name, boundary_source, boundary_version, geom"
@@ -553,21 +556,15 @@ def run_exploration(
 
     monthly_frame: pd.DataFrame | None = None
     nasa_result: GPMIMERGResult | None = None
+    cached = None
 
-    # El modo NASA directo evita cachés cuya procedencia aún no se conserva.
-    direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower() == "nasa"
-    if not direct_nasa:
-        monthly_frame = load_from_cache(request.variable_id, region_id, geom, start, end)
-
-    # 2. Si no está en caché local, intentar consultar en Supabase
-    if monthly_frame is None and supabase_client is not None:
-        monthly_frame = _fetch_from_supabase(
-            supabase_client, request, start, end, internal_uuid or region_id, geom
-        )
-        if monthly_frame is not None:
-            save_to_cache(
-                request.variable_id, region_id, geom, start, end, monthly_frame
-            )
+    direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "auto").strip().lower() == "nasa"
+    cache_status = "disabled" if direct_nasa else "unavailable" if supabase_client is None else "miss"
+    if not direct_nasa and supabase_client is not None and request.region is None:
+        cached = load_supabase_series(supabase_client, region_id, geom, start, end)
+        if cached:
+            monthly_frame = cached.frame
+            cache_status = "hit"
 
     # 3. Si no están en caché, obtener mediante el conector IMERG en vivo
     if monthly_frame is None:
@@ -581,17 +578,10 @@ def run_exploration(
                 end,
             )
             monthly_frame = prepare_monthly_precipitation(nasa_result, start, end)
-            if not direct_nasa:
-                save_to_cache(request.variable_id, region_id, geom, start, end, monthly_frame)
-                if supabase_client is not None and is_write_authorized(request_headers):
-                    save_to_supabase(
-                        supabase_client,
-                        request,
-                        geom,
-                        nasa_result,
-                        monthly_frame,
-                        internal_uuid or region_id,
-                    )
+            # Codex (Manuel): la caché pública es escritura interna del servidor, sin clave en el navegador.
+            if not direct_nasa and supabase_client is not None and request.region is None and os.environ.get("IYOK_ALLOW_WRITE", "true").strip().lower() != "false":
+                if save_supabase_series(supabase_client, region_id, geom, start, end, nasa_result, monthly_frame):
+                    cache_status = "stored"
         except EarthdataAuthenticationRequired:
             raise HTTPException(
                 status_code=503,
@@ -688,25 +678,29 @@ def run_exploration(
 
     metadata = ExplorationMetadata(
         variable_name="Precipitación mensual estimada",
-        source="NASA GES DISC mediante CMR y Harmony" if nasa_result else "Caché o Supabase; procedencia de la ingesta pendiente de verificación",
+        source="NASA GES DISC mediante CMR y Harmony" if nasa_result else "Supabase: serie previamente procesada desde NASA CMR y Harmony",
         dataset="GPM_3IMERGM.07",
         unit="mm/month",
-        spatial_resolution=("0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)" if nasa_result else "0.1°; método de agregación pendiente de verificación"),
+        spatial_resolution="0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
         temporal_resolution="monthly",
         selection=selection,
-        source_units=nasa_result.source_units if nasa_result else None,
-        unit_conversion=nasa_result.unit_conversion if nasa_result else None,
-        weighting_method=nasa_result.weighting_method if nasa_result else None,
-        source_granule_ids=list(nasa_result.granule_ids) if nasa_result else None,
-        data_accessed_at=datetime.now(timezone.utc) if nasa_result else None,
+        source_units=nasa_result.source_units if nasa_result else cached.metadata["source_units"],
+        unit_conversion=nasa_result.unit_conversion if nasa_result else cached.metadata["unit_conversion"],
+        weighting_method=nasa_result.weighting_method if nasa_result else cached.metadata["weighting_method"],
+        source_granule_ids=list(nasa_result.granule_ids) if nasa_result else cached.metadata["source_granule_ids"],
+        data_accessed_at=datetime.now(timezone.utc) if nasa_result else cached.metadata["created_at"],
+        cache_status=cache_status,
         limitations=[
             "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
-            "Geometría oficial del MVP basada en IGN/WDC (2024); excluye territorio insular oceánico (Isla del Coco) para reflejar régimen continental.",
+            # Codex (Manuel): describir la geometría efectiva sin atribuirle una fuente sin verificar.
+            f"Geometría de análisis: {b_source}, versión {b_version}; confirme su representatividad territorial.",
             "La resolución de 0.1° promedia variaciones locales en microclimas y topografías montañosas complejas.",
         ],
         warnings=[
             "IMERG no sustituye mediciones de estaciones en superficie.",
             "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida.",
+            *(["La caché Supabase no está disponible en esta ejecución."] if cache_status == "unavailable" else []),
+            *(["La serie no pudo guardarse en la caché Supabase."] if cache_status == "miss" else []),
         ],
     )
 

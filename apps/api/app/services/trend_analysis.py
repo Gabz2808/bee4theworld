@@ -259,6 +259,18 @@ def analyze_annual_trend(
 
     method_name = "Sen's slope estimator & Mann-Kendall test"
 
+    # Codex (Manuel): no tratar años separados como observaciones consecutivas de lag-1.
+    if len(years) > 1:
+        order = np.argsort(years)
+        years, values = years[order], values[order]
+        if np.any(np.diff(years) != 1):
+            return TrendAnalysis(
+                status="inconclusive", method=method_name, slope=None, slope_unit=None,
+                p_value=None, is_significant=None, confidence_level=None,
+                summary="La serie anual tiene años faltantes o duplicados; la tendencia es inconclusa.",
+                methodological_note="La autocorrelación de primer orden requiere años consecutivos; revise la cobertura antes de interpretar la tendencia.",
+            )
+
     # Regla 0: Sin años completos observados
     if len(values) == 0:
         return TrendAnalysis(

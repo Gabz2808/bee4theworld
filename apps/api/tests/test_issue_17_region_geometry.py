@@ -53,14 +53,15 @@ class Issue17RegionGeometryTests(unittest.TestCase):
     # -------------------------------------------------------------------------
     # Criterio 1: Catálogo y Geometría Oficial de Costa Rica (IGN/WDC 2024)
     # -------------------------------------------------------------------------
-    def test_catalog_exposes_public_id_and_official_ign_metadata(self):
-        """El catálogo anuncia 'costa-rica-continental' con fuente IGN/WDC 2024 y geometría oficial."""
+    # Codex (Manuel): comprobar identidad pública y procedencia provisional.
+    def test_catalog_exposes_public_id_and_provisional_geometry(self):
+        """El catálogo identifica la geometría aproximada sin atribuirle oficialidad."""
         catalog = get_catalog()
         cr = next((r for r in catalog.regions if r.id == "costa-rica-continental"), None)
         self.assertIsNotNone(cr, "La región 'costa-rica-continental' debe existir en el catálogo")
-        self.assertEqual(cr.boundary_version, "2024")
-        self.assertIn("Instituto Geográfico Nacional", cr.boundary_source)
-        self.assertIn("WDC", cr.boundary_source)
+        # Codex (Manuel): no atribuir oficialidad a la geometría hasta verificar su procedencia.
+        self.assertEqual(cr.boundary_version, "provisional")
+        self.assertIn("no verificada", cr.boundary_source)
         self.assertTrue(
             are_geometries_equal(cr.geom, DEFAULT_COSTA_RICA_GEOM),
             "La geometría en catálogo debe coincidir con DEFAULT_COSTA_RICA_GEOM",
@@ -106,8 +107,9 @@ class Issue17RegionGeometryTests(unittest.TestCase):
             "costa-rica-continental",
             "selection.region_id debe coincidir con el identificador público solicitado",
         )
-        self.assertEqual(response.metadata.selection.boundary_version, "2024")
-        self.assertIn("Instituto Geográfico Nacional", response.metadata.selection.boundary_source)
+        # Codex (Manuel): la selección conserva la procedencia provisional publicada en el catálogo.
+        self.assertEqual(response.metadata.selection.boundary_version, "provisional")
+        self.assertIn("no verificada", response.metadata.selection.boundary_source)
 
     @patch.dict(os.environ, {"IYOK_DATA_SOURCE": "auto"})
     def test_auto_mode_with_supabase_returns_public_slug_never_internal_uuid(self):
@@ -153,7 +155,16 @@ class Issue17RegionGeometryTests(unittest.TestCase):
             data=expected_rows
         )
 
-        response = run_exploration(req, supabase_client=mock_supabase)
+        # Codex (Manuel): aislar la prueba de contrato de solicitudes reales a NASA.
+        connector_mock = MagicMock()
+        connector_mock.fetch_monthly_precipitation.return_value = GPMIMERGResult(
+            dataset="GPM_3IMERGM.07", version="07", source_units="mm/hr",
+            output_units="mm/month", unit_conversion="hours_in_month * rate",
+            spatial_resolution_degrees=0.1, weighting_method="equal_area_reprojection",
+            granule_ids=tuple(f"G{m}" for m in range(1, 13)), region=DEFAULT_COSTA_RICA_GEOM,
+            monthly_values=tuple(MonthlyPrecipitation(month=date(2023, m, 1), value=150.0, coverage_fraction=1.0) for m in range(1, 13)),
+        )
+        response = run_exploration(req, supabase_client=mock_supabase, connector=connector_mock)
         # Verificación crítica: NO debe ser el UUID, sino 'costa-rica-continental'
         self.assertEqual(
             response.metadata.selection.region_id,
