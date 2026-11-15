@@ -14,6 +14,10 @@ El [#5: Construir base visual adaptable](https://github.com/B-28-Labs/bee4thewor
 
 El [#6: acordar contrato de integración](https://github.com/B-28-Labs/bee4theworld/issues/6) está en curso. Se preparó [una propuesta para revisión conjunta](propuesta-integracion.md) y se encapsuló la fuente del ejemplo ficticio detrás de un puerto interno. No se ha acordado ni implementado el contrato real: la revisión del compañero y una capa cliente validada contra ese acuerdo siguen pendientes. No dar por finalizado el flujo científico: ese trabajo corresponde a los issues posteriores.
 
+Se recibió un PDF con una propuesta de precipitación del compañero; la [revisión](revision-json-precipitacion.md) identifica campos reutilizables y cuestiones de procedencia, unidades, geometría y análisis. Hay un adaptador provisional que conserva la serie como no verificada; no está conectado al frontend ni acredita datos reales.
+
+El equipo envió una respuesta posterior: consultar la [revisión de backend](revision-respuesta-backend.md). Se comprobó en CMR la existencia de 288 meses de la colección para 2001-2024. Posteriormente, el MCP de Supabase respondió a consultas y mostró una ingesta de 288 registros mensuales para Costa Rica; consulta [el diagnóstico](supabase-acceso-local.md). El usuario confirmó que esta es la base que usará Iyök y que los datos proceden de Giovanni; no se han validado independientemente el procesamiento o los datos. La fórmula de ponderación publicada y el criterio estadístico requieren revisión; la implementación de la API sigue sin verificarse. El issue #6 sigue abierto.
+
 El compañero lidera ingesta, análisis y API. El primer caso acordado es precipitación IMERG para Costa Rica, investigada mediante Giovanni. La geometría, versión, período y método deben acordarse y validarse. Una prueba de metadatos OPeNDAP con autenticación funcionó, pero no se ha extraído ni validado una serie real. No compartir ni versionar tokens.
 
 ## Para arrancar

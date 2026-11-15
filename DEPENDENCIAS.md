@@ -47,6 +47,7 @@ Del proyecto de videos son útiles **como herramientas opcionales** `scripts/gem
 
 ## Datos y servicios opcionales
 
+- El acceso a Supabase mediante MCP respondió a una consulta de prueba; la conexión directa local no está configurada. El diagnóstico directo opcional dispone de un entorno aislado con Psycopg; consulta [acceso a Supabase](docs/supabase-acceso-local.md). La elección de dependencias de la API corresponde al compañero.
 - Crear una cuenta Earthdata Login solo si el producto elegido lo requiere; verificar su acceso antes de comprometer la demo. No incluir tokens en repositorio.
 - PostgreSQL/PostGIS y Docker Compose son opcionales hasta que haya una necesidad real de consultas espaciales; archivos estáticos versionados pueden bastar para una sola región.
 - Hosting, cuentas, dominios y servicios de pago no están configurados. No provisionarlos ni desplegar automáticamente.
