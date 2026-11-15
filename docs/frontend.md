@@ -42,3 +42,11 @@ La primera variable elegida es precipitación IMERG para Costa Rica, investigada
 2. Confirmar la correspondencia geográfica y la procedencia, y conectar una respuesta real validada con el equipo.
 3. Añadir mapa y control temporal únicamente cuando haya capas compatibles y flujo central validado.
 4. Completar pruebas de integración y revisar el flujo real en escritorio y móvil; preparar demostración reproducible. El prototipo ficticio se comprobó en Chrome headless mediante Playwright a 1440 × 900 y 390 × 844.
+
+### Issue #9 — presentación de tendencia y evidencia
+
+El explorador separa la serie mensual del análisis de tendencia y muestra el estado y método reportados, con las limitaciones y procedencia declaradas por el servicio. Mientras el método siga en revisión, no publica pendiente, significancia ni interpretación concluyente aunque el backend las reporte. Explica que no hay un intervalo de confianza revisado y que la serie no demuestra causalidad. Cuando están disponibles, muestra el origen efectivo, la versión del producto, la conversión de unidades y la ponderación reportados; estos metadatos no constituyen validación independiente.
+
+### Issue #10 — procedencia del caso inicial
+
+Por decisión de Manuel del 15 de noviembre de 2026, el caso del MVP utiliza la serie IMERG Final mensual V07 de 2001–2024 para el componente terrestre principal IGN/SNIT, obtenida mediante NASA CMR/Harmony y reprocesada con la geometría identificada. Giovanni se utilizó para una comparación separada en un rectángulo de control; esa comparación no valida la serie SNIT ni convierte su extracción en una consulta de Giovanni. La integración funcional y la reproducibilidad del procesamiento permiten cerrar el alcance del MVP; la validación científica completa, la procedencia y la revisión de geometría, calidad y método permanecen pendientes. Véase la [revisión técnica](revision-serie-snit-issue-8.md).

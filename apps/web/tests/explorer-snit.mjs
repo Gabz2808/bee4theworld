@@ -29,6 +29,8 @@ try {
     assert.equal(await page.getByText(/Su procedencia, calidad y procesamiento siguen en revisión científica/).isVisible(), true);
     assert.equal(await page.getByRole("heading", { name: "Estado del análisis de tendencia" }).isVisible(), true);
     assert.equal(await page.getByText("Inconcluso", { exact: true }).isVisible(), true);
+    assert.match(await page.locator(".trend-status").innerText(), /intervalo de confianza revisado/);
+    assert.match(await page.locator(".trend-status").innerText(), /no demuestran.*su causa/);
     assert.match(await page.locator(".evidence-list").innerText(), /GPM_3IMERGM\.07/);
     assert.equal(await page.locator("tbody tr").count(), 12);
     await page.getByText("Ver valores y cobertura en una tabla").click();
