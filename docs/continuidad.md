@@ -10,7 +10,9 @@
 
 ## Siguiente trabajo
 
-Atender [#5: Construir base visual adaptable](https://github.com/B-28-Labs/bee4theworld/issues/5). Partir del prototipo y del brief, conservar la dirección natural y científica, comprobar la navegación completa con teclado, foco y estados, y validar escritorio y móvil. Corregir lo necesario y ejecutar lint y compilación antes de cerrar el issue. No dar por finalizado el flujo científico: ese trabajo corresponde a los issues posteriores.
+El [#5: Construir base visual adaptable](https://github.com/B-28-Labs/bee4theworld/issues/5) está cerrado: salto al explorador, foco en el resultado al cargar o recargar y estados más claros. Lint y compilación pasaron; Chrome headless comprobó teclado, tabla y ausencia de desbordamiento en 320, 390, 768 y 1440 px, con revisión visual en móvil y escritorio. La comprobación no sustituye pruebas con dispositivos físicos ni lectores de pantalla.
+
+El [#6: acordar contrato de integración](https://github.com/B-28-Labs/bee4theworld/issues/6) está en curso. Se preparó [una propuesta para revisión conjunta](propuesta-integracion.md) y se encapsuló la fuente del ejemplo ficticio detrás de un puerto interno. No se ha acordado ni implementado el contrato real: la revisión del compañero y una capa cliente validada contra ese acuerdo siguen pendientes. No dar por finalizado el flujo científico: ese trabajo corresponde a los issues posteriores.
 
 El compañero lidera ingesta, análisis y API. El primer caso acordado es precipitación IMERG para Costa Rica, investigada mediante Giovanni. La geometría, versión, período y método deben acordarse y validarse. Una prueba de metadatos OPeNDAP con autenticación funcionó, pero no se ha extraído ni validado una serie real. No compartir ni versionar tokens.
 
