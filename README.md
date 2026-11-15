@@ -2,72 +2,116 @@
 
 **Exploración de tendencias del sistema terrestre con evidencia verificable.**
 
-Iyök es un proyecto en desarrollo de **Bee4TheWorld** para el reto [Be An Earth System Trend Detective!](https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/) del NASA Space Apps Challenge 2026. Busca ayudar a las personas a comprender qué cambia, dónde, cuánto y con qué grado de evidencia, mediante datos, visualizaciones y explicaciones accesibles.
+Iyök es un proyecto en desarrollo de **Bee4TheWorld** para el reto [Be An Earth System Trend Detective!](https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/) del NASA Space Apps Challenge 2026. Su propósito es ayudar a las personas a comprender qué cambia, dónde, cuánto y con qué grado de evidencia científica, mediante datos satelitales, visualizaciones interactivas y explicaciones rigurosas y comprensibles.
 
-El punto de partida es **Costa Rica** y la primera variable seleccionada para investigar es la precipitación **IMERG**. La arquitectura debe permitir una futura expansión a Latinoamérica, sujeta a la disponibilidad, calidad y contexto de cada región.
+El ámbito inicial de estudio es **Costa Rica** y la primera variable seleccionada es la precipitación satelital calibrada **IMERG Final Run** (NASA GES DISC). La arquitectura modular en monorepo está diseñada para facilitar una futura expansión geográfica y temática sujeta a la disponibilidad, calidad y calibración local de cada producto.
 
-## Estado del proyecto
+---
 
-Iyök se encuentra en etapa de prototipo. La interfaz permite explorar una gráfica y una tabla de ejemplo, navegar con teclado y visualizar el diseño en escritorio y móvil. Los valores son **ficticios** y están identificados como demostración; no representan mediciones ni conclusiones científicas.
+## Estado del Proyecto
 
-- Los selectores de territorio, variable y período permanecerán deshabilitados hasta conocer la cobertura real.
-- Todavía no hay conexión a una API, serie IMERG validada ni cálculo estadístico integrado.
-- El primer producto, su versión, geometría, período y método de análisis requieren validación conjunta.
-- La [propuesta de integración](docs/propuesta-integracion.md) es un borrador para revisión; sus rutas y esquemas no son un contrato aprobado.
+El repositorio está estructurado como un **monorepo unificado** compuesto por el frontend web y la API analítica backend:
 
-## Iniciar el frontend
+* **Backend (`apps/api`):** Implementado y operativo bajo la API v1 acordada:
+  * Catálogo unificado (`GET /api/v1/catalog`) con geometrías territoriales en PostGIS, metadatos y rangos de cobertura real.
+  * Motor analítico de exploración (`POST /api/v1/explorations`) conectado a una base de datos **Supabase (PostgreSQL + PostGIS)** precargada con la serie histórica completa de 24 años (288 meses calendario, 2001-2024) de NASA GPM IMERG V07.
+  * Algoritmos de climatología multi-anual, cálculo de anomalías mensuales (`anomaly_mm`), agregaciones anuales estrictas y evaluación estadística no paramétrica de tendencias mediante el **estimador de pendiente de Theil-Sen** y el **test de Mann-Kendall** con ajuste de empates.
+  * Suite de pruebas automatizadas con **50 tests unitarios y de integración pasando al 100%**.
+* **Frontend (`apps/web`):** Prototipo accesible desarrollado con **Next.js 15, TypeScript y Tailwind CSS**, con gráficos interactivos y tabla de observaciones, navegable por teclado y adaptable a escritorio y móvil. En proceso de conexión con los contratos v1 del backend.
 
-Se necesitan Node.js y npm compatibles con el proyecto. Desde la raíz del repositorio:
+---
 
-```powershell
+## Estructura del Repositorio
+
+```text
+bee4theworld/
+├── apps/
+│   ├── api/                     # Backend FastAPI, servicios satelitales y estadísticas
+│   │   ├── app/                 # Código de la API (rutas v1, esquemas y lógica científica)
+│   │   │   ├── init.sql         # Esquema de base de datos PostGIS en Supabase
+│   │   │   └── main.py          # Aplicación principal FastAPI
+│   │   ├── tests/               # Suite de 50 pruebas automatizadas
+│   │   ├── requirements.txt     # Manifiesto de dependencias Python
+│   │   └── requirements-lock.txt# Lockfile versionado
+│   └── web/                     # Frontend Next.js, TypeScript y Tailwind CSS
+│       ├── src/                 # Componentes, vistas e interfaces de usuario
+│       ├── package.json         # Dependencias Node
+│       └── package-lock.json    # Lockfile de dependencias npm
+├── docs/                        # Documentación técnica, metodológica y de diseño
+│   ├── assets/                  # Logotipos, capturas de pantalla y diagramas
+│   ├── manual_usuario_tecnico.md# Manual técnico completo de la API v1
+│   ├── backend_tasks_iy_k_project.md # Tablero de control de tareas técnicas
+│   └── brief-experiencia.md     # Lineamientos de experiencia de usuario y visuales
+├── referencias/                 # Contratos API oficiales v1, presentaciones y contexto
+│   └── iyok_api_contracts_mock.json # Especificación de contratos JSON v1
+├── .env.example                 # Plantilla de variables de entorno
+├── .gitignore                   # Reglas de exclusión unificadas (Python y Node)
+├── AGENTS.md                    # Centro de contexto y directrices del equipo
+├── DEPENDENCIAS.md              # Requisitos y configuración de entornos
+└── README.md                    # Descripción general del proyecto
+```
+
+---
+
+## Ejecución del Proyecto
+
+### 1. Backend (`apps/api`)
+
+Requiere Python 3.10 o superior (recomendado Python 3.12/3.14).
+
+```bash
+# 1. Acceder al directorio del backend
+cd apps/api
+
+# 2. Configurar entorno virtual e instalar dependencias
+python3 -m venv .venv
+source .venv/bin/activate       # En Windows: .\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 3. Configurar variables de entorno
+cp .env.example .env            # Añadir SUPABASE_URL y SUPABASE_SECRET_KEY
+
+# 4. Iniciar el servidor de desarrollo
+uvicorn app.main:app --reload --env-file .env
+```
+* **API Health Check:** `http://localhost:8000/ping`
+* **Documentación interactiva Swagger UI:** `http://localhost:8000/docs`
+* **Ejecutar pruebas unitarias e integración (50 tests):**
+  ```bash
+  python -m unittest discover -s tests -v
+  ```
+
+---
+
+### 2. Frontend (`apps/web`)
+
+Requiere Node.js 18+ y npm.
+
+```bash
+# 1. Acceder al directorio del frontend
 cd apps/web
+
+# 2. Instalar dependencias exactas
 npm ci
+
+# 3. Iniciar el servidor de desarrollo
 npm run dev
 ```
+* Aplicación disponible en: `http://localhost:3000`
+* Para revisar calidad y construcción del frontend:
+  ```bash
+  npm run lint
+  npm run build
+  ```
 
-Abre [http://localhost:3000](http://localhost:3000) y selecciona **«Ver ejemplo de interfaz»**. La tabla del ejemplo incluye un valor ausente para mostrar cómo se representa. Para detener el servidor, pulsa `Ctrl + C` en la terminal.
+---
 
-Para comprobar la calidad del código y la compilación, desde `apps/web`:
+## Datos y Rigor Científico
 
-```powershell
-npm run lint
-npm run build
-```
-
-## Backend e integración
-
-El equipo trabaja en paralelo: el frontend y la integración se desarrollan en `apps/web`; el compañero lidera la ingesta, el análisis y la API. `apps/api` contiene las dependencias fijadas para preparar un entorno local, pero **aún no implementa una API**. El acuerdo sobre el contrato y el caso científico precede a la conexión de ambas partes.
-
-Para preparar el entorno en Windows con Python 3.12 disponible, desde la raíz del repositorio:
-
-```powershell
-py -3.12 -m venv apps/api/.venv
-apps/api/.venv/Scripts/python.exe -m pip install -r apps/api/requirements-lock.txt
-apps/api/.venv/Scripts/python.exe -m pip check
-```
-
-Consulta [DEPENDENCIAS.md](DEPENDENCIAS.md) para más detalles y limitaciones del entorno. No incluyas credenciales ni tokens en el repositorio o en código que se ejecute en el navegador.
-
-## Datos y rigor científico
-
-El equipo investiga la disponibilidad de precipitación IMERG mediante [NASA Giovanni](https://giovanni.gsfc.nasa.gov/giovanni/). Antes de presentar resultados reales, debe documentar el producto y su versión, la geometría, el período, las unidades, la cobertura, la calidad, la agregación, los datos faltantes, el método y sus limitaciones.
-
-Una tendencia estadística no demuestra por sí sola causalidad ni importancia práctica. Si la información es insuficiente o no se cumplen los supuestos del análisis, el resultado deberá indicarse como **inconcluso**. La serie ficticia del prototipo no se utilizará como evidencia científica.
-
-## Estructura del repositorio
-
-| Ubicación | Contenido |
-| --- | --- |
-| [`apps/web/`](apps/web/) | Prototipo frontend con Next.js, TypeScript y ECharts. |
-| [`apps/api/`](apps/api/) | Dependencias para preparar el entorno local del backend; API pendiente. |
-| [`docs/`](docs/) | Experiencia, decisiones, integración y continuidad del proyecto. |
-| [`referencias/`](referencias/) | Material de contexto y ejemplos; no son especificaciones aprobadas. |
-
-## Documentación y seguimiento
-
-- [Experiencia y dirección visual](docs/brief-experiencia.md): público, recorrido, estados y criterios de diseño.
-- [Propuesta de integración](docs/propuesta-integracion.md): borrador para acordar datos, contratos y responsabilidades.
-- [Análisis y decisiones](docs/analisis-y-decisiones.md): prioridades, fuentes y cuestiones abiertas.
-- [Estado del frontend](docs/frontend.md) y [continuidad](docs/continuidad.md): implementación, límites y próximos pasos.
-- [Issues de frontend](docs/issues-frontend.md): desglose de trabajo y enlaces de seguimiento.
-- [Guía del proyecto](AGENTS.md) y [dependencias](DEPENDENCIAS.md): contexto de colaboración y preparación del entorno.
+El proyecto sigue estándares científicos estrictos para evitar sesgos o interpretaciones erróneas:
+* **Fuente Satelital Oficial:** NASA GPM IMERG Final Run mensual (`GPM_3IMERGM.07`, calibrado con pluviómetros a nivel global).
+* **Conversión de Unidades:** La tasa media nativa ($\text{mm/hr}$) se convierte a acumulación mensual ($\text{mm/mes}$) multiplicando por el número exacto de horas de cada mes natural ($24.0 \times \text{días}$), computando con precisión años bisiestos.
+* **Ponderación Espacial en Área Equivalente:** La agregación sobre polígonos territoriales se computa en la proyección cilíndrica de igual área **EPSG:6933**, integrando el área en $m^2$ de la intersección exacta de cada celda de cuadrícula ($0.1^\circ$) con la frontera territorial.
+* **Política de Ausencia de Datos Faltantes:** Si un mes no cuenta con observaciones, su valor se mantiene estrictamente como `null` con bandera `missing_month` o `missing_value`. **Nunca se imputa con cero**. Los acumulados anuales exigen los 12 meses observados para no distorsionar las series temporales.
+* **Separación de Veredictos:** Los análisis se clasifican formalmente en `conclusive`, `inconclusive`, `not_computed` o `failed`. Un valor $p \ge 0.05$ indica que no se rechaza la hipótesis nula bajo el método y umbral elegidos, sin atribuir causalidad ni asumir ausencia absoluta de cambio.
