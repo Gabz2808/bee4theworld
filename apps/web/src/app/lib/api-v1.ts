@@ -77,6 +77,10 @@ export function parseCatalog(input: unknown): Catalog {
   if (data.status !== "success") return invalid();
   const regions = array(data.regions).map((v) => {
     const r = object(v); string(r.id); string(r.name); string(r.boundary_source); string(r.boundary_version);
+    if (r.geom === null) {
+      if (typeof r.geometry_sha256 !== "string" || !/^[a-f0-9]{64}$/.test(r.geometry_sha256)) return invalid();
+      return r;
+    }
     const geom = object(r.geom); if (geom.type !== "Polygon") return invalid();
     const rings = array(geom.coordinates); if (!rings.length) return invalid();
     for (const rawRing of rings) {

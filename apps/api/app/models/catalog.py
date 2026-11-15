@@ -13,7 +13,8 @@ class CatalogRegion(APIModel):
     description: str | None = None
     boundary_source: str
     boundary_version: str
-    geom: GeoJSONPolygon
+    geom: GeoJSONPolygon | None = None
+    geometry_sha256: str | None = Field(default=None, exclude_if=lambda value: value is None)
 
 
 class CatalogVariable(APIModel):

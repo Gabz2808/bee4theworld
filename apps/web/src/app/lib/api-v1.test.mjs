@@ -37,6 +37,14 @@ test("valida catálogo, cobertura y referencias entre opciones", () => {
   const bad = catalog(); bad.combinations[0].region_id = "otra";
   throws(() => parseCatalog(bad), ApiClientError);
 });
+test("acepta región identificada por huella y rechaza una referencia inválida", () => {
+  const x = catalog();
+  x.regions[0].geom = null;
+  x.regions[0].geometry_sha256 = "a".repeat(64);
+  equal(parseCatalog(x).regions[0].geometry_sha256, "a".repeat(64));
+  x.regions[0].geometry_sha256 = "no-es-huella";
+  throws(() => parseCatalog(x), ApiClientError);
+});
 test("conserva cero, faltante, cobertura parcial y análisis inconcluso", () => {
   const result = parseExploration(exploration(), request);
   equal(result.kind, "api_unverified"); equal(result.analysisStatus, "inconclusive");

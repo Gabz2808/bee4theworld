@@ -23,6 +23,7 @@ class EffectiveSelection(APIModel):
     region_name: str
     boundary_source: str
     boundary_version: str
+    geometry_sha256: str | None = None
     requested_period: DateRange
     effective_period: DateRange
 

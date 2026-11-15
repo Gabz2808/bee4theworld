@@ -45,6 +45,7 @@ from app.services.gpm_imerg import (
 )
 from app.services.interpretation_service import generate_interpretation
 from app.services.preprocessed_series import load_preprocessed_series
+from app.services.snit_series import GEOMETRY_SHA, REGION_ID as SNIT_REGION_ID, load_snit
 from app.services.precipitation_processing import (
     PrecipitationProcessingError,
     aggregate_annual_precipitation,
@@ -171,6 +172,12 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
         )
         for r in DEFAULT_REGIONS
     ]
+    regions_list.append(CatalogRegion(
+        id=SNIT_REGION_ID, name="Costa Rica continental — IGN/SNIT",
+        description="Componente terrestre principal IGN/SNIT; componentes separados excluidos del MVP.",
+        boundary_source="IGN / Registro Nacional / SNIT", boundary_version="snit-continental-2026-11-15-v1",
+        geom=None, geometry_sha256=GEOMETRY_SHA,
+    ))
 
     has_earthdata_token = bool(os.environ.get("EARTHDATA_TOKEN", "").strip())
 
@@ -287,6 +294,16 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
     )
 
     combinations = [cr_combination, panama_combination, chiquimula_combination]
+    snit_ready = load_snit() is not None
+    combinations.append(CatalogCombination(
+        region_id=SNIT_REGION_ID, variable_id="precipitation",
+        available_interval=AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE),
+        declared_interval=AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE),
+        verified_interval=AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE) if snit_ready else None,
+        source_status="verified" if snit_ready else "unavailable",
+        temporal_resolution="monthly", is_ready_for_exploration=snit_ready,
+        notes="Serie local verificada para la geometría SNIT indicada." if snit_ready else "La serie o su geometría no están disponibles o no pasaron la comprobación de integridad.",
+    ))
 
     return CatalogResponse(
         status="success",
@@ -652,9 +669,13 @@ def run_exploration(
     start = request.start_date  # type: ignore[assignment]
     end = request.end_date      # type: ignore[assignment]
 
-    geom, region_id, region_name, b_source, b_version, _internal_uuid = resolve_region(
-        request, supabase_client
-    )
+    is_snit = request.region_id == SNIT_REGION_ID
+    if is_snit:
+        if request.region is not None:
+            raise HTTPException(status_code=422, detail="La región SNIT usa una geometría interna identificada por huella; no admite una geometría adicional.")
+        geom, region_id, region_name, b_source, b_version = None, SNIT_REGION_ID, "Costa Rica continental — IGN/SNIT", "IGN / Registro Nacional / SNIT", "snit-continental-2026-11-15-v1"
+    else:
+        geom, region_id, region_name, b_source, b_version, _internal_uuid = resolve_region(request, supabase_client)
 
     monthly_frame: pd.DataFrame | None = None
     nasa_result: GPMIMERGResult | None = None
@@ -664,9 +685,20 @@ def run_exploration(
 
     direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower() == "nasa"
     cache_status = "disabled" if direct_nasa else "unavailable" if supabase_client is None else "miss"
-
-    # 1. Intentar serie preprocesada local si es región de catálogo sin polígono personalizado
-    if not direct_nasa and request.region is None:
+    if is_snit:
+        cached = load_snit(start, end)
+        if cached is None:
+            raise HTTPException(status_code=503, detail="La serie SNIT no está disponible o no pasó la verificación de integridad.", headers={"X-Iyok-Error-Code": "SNIT_SERIES_UNAVAILABLE"})
+        monthly_frame, cache_status, preprocessed = cached.frame, "preprocessed", True
+        provenance_info = {
+            "effective_origin": "NASA Harmony", "source": cached.metadata["source"],
+            "dataset": cached.metadata["dataset"], "product_version": "07", "processing_version": "snit-v1",
+            "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+            "source_units": cached.metadata["source_units"], "unit_conversion": cached.metadata["unit_conversion"],
+            "weighting_method": cached.metadata["weighting_method"], "source_granule_ids": cached.metadata["source_granule_ids"],
+            "quality_method": "Cobertura espacial calculada sobre la geometría SNIT",
+        }
+    if not is_snit and not direct_nasa and request.region is None:
         preprocessed_cached = load_preprocessed_series(region_id, geom, start, end)
         if preprocessed_cached:
             monthly_frame = preprocessed_cached.frame
@@ -883,7 +915,7 @@ def run_exploration(
                 if math.isnan(row["precipitation_mm"])
                 else round(float(row["precipitation_mm"]), 2)
             ),
-            coverage_fraction=round(float(row["coverage_fraction"]), 4),
+            coverage_fraction=round(float(row["coverage_fraction"]), 6),
             quality_flag=row["quality_flag"],
             anomaly_mm=(
                 None
@@ -908,6 +940,7 @@ def run_exploration(
         region_name=region_name,
         boundary_source=b_source,
         boundary_version=b_version,
+        geometry_sha256=GEOMETRY_SHA if is_snit else None,
         requested_period=DateRange(start=start, end=end),
         effective_period=DateRange(start=start, end=end),
     )
@@ -948,7 +981,7 @@ def run_exploration(
         elif isinstance(acc_at, datetime):
             acc_at_dt = acc_at
         else:
-            acc_at_dt = datetime.now(timezone.utc)
+            acc_at_dt = None if is_snit else datetime.now(timezone.utc)
     elif nasa_result:
         eff_origin = "NASA Harmony"
         source_label = "NASA GES DISC mediante CMR y Harmony"
@@ -999,7 +1032,7 @@ def run_exploration(
         source_granule_ids=granules,
         data_accessed_at=acc_at_dt,
         quality_method=q_method,
-        geometry_snapshot=geom.model_dump(),
+        geometry_snapshot=geom.model_dump() if geom is not None else None,
         cache_status=cache_status,
         limitations=[
             "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
@@ -1010,7 +1043,7 @@ def run_exploration(
         warnings=[
             "IMERG no sustituye mediciones de estaciones en superficie.",
             "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida.",
-            *(["Serie preprocesada con valores redondeados a dos decimales; geometría y método pendientes de validación."] if preprocessed else []),
+            *(["Serie SNIT preprocesada con precisión conservada; componentes separados excluidos del ámbito del MVP."] if is_snit else ["Serie preprocesada con valores redondeados a dos decimales; geometría y método pendientes de validación."] if preprocessed else []),
             *(["La caché Supabase no está disponible en esta ejecución."] if cache_status == "unavailable" else []),
             *(["La serie no pudo guardarse en la caché Supabase."] if cache_status == "miss" else []),
         ],

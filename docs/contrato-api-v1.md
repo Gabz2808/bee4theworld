@@ -2,12 +2,18 @@
 
 Estado: **alcance operativo del primer caso**, registrado tras la revisión frontend–backend en [coordinación](../apps/api/COORDINACION_FRONTEND_BACKEND.md) y la instrucción de Manuel de continuar con la integración. La respuesta del agente de backend describe las rutas y estructuras v1; este documento precisa el subconjunto que consume frontend, sin atribuirle una aprobación explícita de cada detalle. El OpenAPI de la API en `/openapi.json` describe el esquema implementado. Cambios incompatibles requieren coordinación entre ambos equipos.
 
+## Integración SNIT — propuesta implementada para revisión del equipo
+
+El explorador usa `costa-rica-snit-continental-v1` y la serie local IMERG 2001–2024. Su región de catálogo devuelve `geom: null` y `geometry_sha256`, en vez de transmitir el multipolígono completo en cada consulta. La respuesta de exploración devuelve la misma huella en `metadata.selection.geometry_sha256`; el frontend rechaza una discrepancia. La geometría exacta versionada se conserva en `datos/fuentes/`, no se sustituye por una representación simplificada. Este cambio del contrato v1 requiere revisión coordinada del compañero y de otros consumidores.
+
+Para esta combinación, `is_ready_for_exploration` solo es `true` si la serie y la geometría locales existen, sus huellas coinciden y la serie contiene los 288 meses esperados. Si falta algún archivo o no pasa integridad, el catálogo indica no disponibilidad y la exploración responde `503/SNIT_SERIES_UNAVAILABLE`; no cambia a la geometría provisional ni inicia una descarga NASA. La comprobación de integridad no valida científicamente la estimación. La serie previa permanece identificada por `costa-rica-continental`.
+
 ## Operaciones y selección
 
 | Operación | Solicitud y comportamiento |
 | --- | --- |
 | `GET /api/v1/catalog` | Devuelve `status`, regiones, variables y combinaciones, con identificadores, intervalo y resolución. El catálogo es declarativo: una opción no acredita por sí sola que la serie esté disponible o validada. |
-| `POST /api/v1/explorations` | El frontend envía `region_id`, `variable_id`, `start_date`, `end_date` y `temporal_resolution`. Para el MVP usa `costa-rica-continental`, `precipitation` y `monthly`. Las fechas son inclusivas y abarcan meses completos. |
+| `POST /api/v1/explorations` | El frontend envía `region_id`, `variable_id`, `start_date`, `end_date` y `temporal_resolution`. Para el MVP usa `costa-rica-snit-continental-v1`, `precipitation` y `monthly`. Las fechas son inclusivas y abarcan meses completos. |
 
 El backend admite también geometría directa y `date_range`; el cliente del MVP no utiliza esas variantes. El rango actualmente habilitado por el backend es 2001-01-01 a 2024-12-31. NASA CMR contiene meses anteriores, pero no están habilitados aún en la API.
 
