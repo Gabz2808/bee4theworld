@@ -22,6 +22,12 @@ Una comprobación posterior procesó directamente los 288 meses de 2001–2024 p
 
 ## Integración y datos
 
+### Seguimiento del issue #8 — 15 de noviembre de 2026
+
+Se verificó el explorador con la serie local SNIT en Chrome headless a 1280 y 390 píxeles; en escritorio se consultaron los 288 meses. Las pruebas comprueban que cambiar el período retira el resultado anterior y que los controles quedan bloqueados durante la consulta. Con respuestas modificadas solo para prueba, la tabla distingue el valor cero de un dato ausente y conserva la unidad. Manuel informó que Gabriel aceptó esta serie concreta para el MVP y los issues #7 y #8. Estas comprobaciones y la aceptación de uso no sustituyen la revisión científica de la serie y su geometría.
+
+La [revisión técnica de la serie](revision-serie-snit-issue-8.md) contrasta la derivación de la geometría, el cálculo de los 288 valores y el efecto de la precisión de la cuadrícula; registra los puntos que requieren acuerdo con el compañero.
+
 El compañero lidera los datos y el backend. El cliente implementado es provisional; acordar versión y rutas, catálogo y cobertura, parámetros, fechas, unidades, datos faltantes, procedencia, resultado inconcluso y errores antes de considerar aprobado el contrato. El JSON ficticio no es un contrato aprobado.
 
 La primera variable elegida es precipitación IMERG para Costa Rica, investigada mediante Giovanni. Su [manual](https://giovanni.gsfc.nasa.gov/giovanni/doc/UsersManualworkingdocument.docx.html) describe exportación CSV de series temporales promediadas por área. Antes de mostrar una serie, acordar versión, variable exacta, área y período; registrar geometría y método de promedio, unidad, cobertura, valores faltantes, fecha de acceso y enlace al producto y a su documentación. Un rectángulo que incluye mar o países vecinos no equivale a Costa Rica. La [API de series puntuales](https://forum.earthdata.nasa.gov/viewtopic.php?p=25340&sid=8a19637cc1f2a53eb077d7a9600a4839) no sustituye un promedio regional. Validar conjuntamente la muestra y la metodología antes de comunicar tendencias.

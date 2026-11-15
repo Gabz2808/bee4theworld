@@ -21,12 +21,18 @@ try {
     await period(page);
     await button(page).click();
     await page.getByRole("heading", { name: "Precipitación mensual" }).waitFor({ timeout: 30000 });
+    assert.equal(await page.getByText("MVP · serie en revisión").isVisible(), true);
+    assert.equal(await page.getByText(/La calidad informada en la tabla describe cobertura espacial/).isVisible(), true);
+    assert.equal(await page.getByText(/Su procedencia, calidad y procesamiento siguen en revisión científica/).isVisible(), true);
     assert.equal(await page.locator("tbody tr").count(), 12);
     await page.getByText("Ver valores y cobertura en una tabla").click();
     assert.match(await page.locator("tbody tr").first().innerText(), /70[.,]38/);
     assert.match(await page.locator("tbody tr").first().innerText(), />99 %/);
     assert.equal(await page.locator("#period-start").getAttribute("min"), "2001-01");
     assert.equal(await page.locator("#period-end").getAttribute("max"), "2024-12");
+    await period(page, "2023-01", "2023-12");
+    await page.getByRole("heading", { name: "Aquí comienza la exploración" }).waitFor();
+    assert.equal(await page.locator("tbody tr").count(), 0);
     if (width === 1280) {
       await period(page, "2001-01", "2024-12");
       await button(page).click();
@@ -64,6 +70,23 @@ try {
   assert.equal(await unavailable.locator("#period-start").isDisabled(), true);
   await unavailable.close();
 
+  const missing = await browser.newPage();
+  await missing.route("**/api/backend/explorations", async (route) => {
+    const response = await route.fetch();
+    const data = await response.json();
+    data.timeseries[0].value = 0;
+    data.timeseries[1].value = null;
+    data.timeseries[1].quality_flag = "missing_value";
+    await route.fulfill({ response, json: data });
+  });
+  await ready(missing); await period(missing); await button(missing).click();
+  await missing.getByRole("heading", { name: "Precipitación mensual" }).waitFor();
+  await missing.getByText("Ver valores y cobertura en una tabla").click();
+  assert.match(await missing.locator("tbody tr").nth(0).innerText(), /2024-01\s+0/);
+  assert.match(await missing.locator("tbody tr").nth(1).innerText(), /2024-02\s+Sin dato/);
+  assert.match(await missing.locator("thead").innerText(), /Valor \(.+\)/);
+  await missing.close();
+
   const empty = await browser.newPage();
   await empty.route("**/api/backend/explorations", async (route) => {
     const response = await route.fetch();
@@ -91,7 +114,10 @@ try {
   await ready(loading); await period(loading); await button(loading).click();
   await loading.getByRole("heading", { name: "Consultando la serie" }).waitFor();
   assert.equal(await loading.getByRole("button", { name: /Consultando/ }).isDisabled(), true);
+  assert.equal(await loading.locator("#period-start").isDisabled(), true);
+  assert.equal(await loading.locator("#period-end").isDisabled(), true);
   await loading.getByRole("heading", { name: "Precipitación mensual" }).waitFor({ timeout: 30000 });
+  assert.match(await loading.locator(".chart-caption").innerText(), /2024-01 a 2024-12/);
   await loading.close();
   console.log("Límite, red, disponibilidad, vacío, geometría y carga OK");
 } finally {
