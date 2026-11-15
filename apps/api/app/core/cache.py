@@ -105,16 +105,56 @@ def save_to_supabase(
         region_uuid: str | None = None
         if len(region_identifier) == 36 and "-" in region_identifier:
             region_uuid = region_identifier
-        else:
+        elif region_identifier == "custom-polygon" or request.region:
+            geom_hash = hashlib.sha256(
+                json.dumps(geom.coordinates, sort_keys=True).encode("utf-8")
+            ).hexdigest()[:12]
+            custom_name = f"Polígono Personalizado ({geom_hash})"
             res = (
                 supabase.table("regions")
                 .select("id")
-                .eq("name", "Costa Rica Continental")
+                .eq("name", custom_name)
                 .limit(1)
                 .execute()
             )
             if res.data:
                 region_uuid = str(res.data[0]["id"])
+            else:
+                insert_res = (
+                    supabase.table("regions")
+                    .insert(
+                        {
+                            "name": custom_name,
+                            "description": "Polígono ingresado por el usuario para consulta analítica.",
+                            "geom": geom.model_dump(),
+                            "boundary_source": "Usuario / Solicitud directa",
+                            "boundary_version": "1.0",
+                        }
+                    )
+                    .execute()
+                )
+                if insert_res.data:
+                    region_uuid = str(insert_res.data[0]["id"])
+        else:
+            name_candidates = [region_identifier]
+            if region_identifier in ("costa-rica-continental", "costa-rica"):
+                name_candidates = ["Costa Rica Continental"]
+            elif region_identifier in ("cuenca-canal-panama", "panama-canal", "panama"):
+                name_candidates = ["Cuenca del Canal de Panamá"]
+            elif region_identifier in ("corredor-seco-chiquimula", "corredor-seco"):
+                name_candidates = ["Corredor Seco - Chiquimula"]
+
+            for candidate in name_candidates:
+                res = (
+                    supabase.table("regions")
+                    .select("id")
+                    .eq("name", candidate)
+                    .limit(1)
+                    .execute()
+                )
+                if res.data:
+                    region_uuid = str(res.data[0]["id"])
+                    break
 
         if not region_uuid:
             logger.debug(
@@ -123,7 +163,7 @@ def save_to_supabase(
             )
             return
 
-        geom_json_str = json.dumps(geom.model_dump())
+        geom_payload = geom.model_dump()
         start = request.start_date.isoformat()  # type: ignore[union-attr]
         end = request.end_date.isoformat()      # type: ignore[union-attr]
 
@@ -140,7 +180,7 @@ def save_to_supabase(
             "spatial_resolution_degrees": float(result.spatial_resolution_degrees),
             "weighting_method": result.weighting_method,
             "source_granule_ids": list(result.granule_ids),
-            "region_geometry_snapshot": geom_json_str,
+            "region_geometry_snapshot": geom_payload,
             "region_source_snapshot": "Iyök System Snapshot",
             "region_version_snapshot": "1.0",
         }

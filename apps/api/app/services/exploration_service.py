@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import calendar
+import hashlib
+import json
+import logging
 import math
 import os
 from datetime import date, datetime, timezone
@@ -50,6 +53,8 @@ from app.services.trend_analysis import (
     calculate_climatology_and_anomalies,
 )
 
+logger = logging.getLogger(__name__)
+
 MIN_SUPPORTED_DATE = date(2001, 1, 1)
 MAX_SUPPORTED_DATE = date(2024, 12, 31)
 
@@ -71,6 +76,32 @@ DEFAULT_COSTA_RICA_GEOM = GeoJSONPolygon(
     ],
 )
 
+DEFAULT_PANAMA_CANAL_GEOM = GeoJSONPolygon(
+    type="Polygon",
+    coordinates=[
+        [
+            [-80.00, 8.80],
+            [-79.50, 8.80],
+            [-79.50, 9.30],
+            [-80.00, 9.30],
+            [-80.00, 8.80],
+        ]
+    ],
+)
+
+DEFAULT_CHIQUIMULA_GEOM = GeoJSONPolygon(
+    type="Polygon",
+    coordinates=[
+        [
+            [-89.65, 14.65],
+            [-89.30, 14.65],
+            [-89.30, 15.00],
+            [-89.65, 15.00],
+            [-89.65, 14.65],
+        ]
+    ],
+)
+
 DEFAULT_REGIONS = [
     Region(
         id="costa-rica-continental",
@@ -79,7 +110,23 @@ DEFAULT_REGIONS = [
         boundary_source="Geometría aproximada no verificada",
         boundary_version="provisional",
         geom=DEFAULT_COSTA_RICA_GEOM,
-    )
+    ),
+    Region(
+        id="cuenca-canal-panama",
+        name="Cuenca del Canal de Panamá",
+        description="Subcuenca hidrográfica del Canal de Panamá (Alajuela / Gatún / Miraflores) en la República de Panamá.",
+        boundary_source="Autoridad del Canal de Panamá (ACP) / STRI",
+        boundary_version="2024",
+        geom=DEFAULT_PANAMA_CANAL_GEOM,
+    ),
+    Region(
+        id="corredor-seco-chiquimula",
+        name="Corredor Seco - Chiquimula",
+        description="Zona semiárida oriental de Guatemala en el Corredor Seco Centroamericano.",
+        boundary_source="MAGA Guatemala / FAO",
+        boundary_version="2024",
+        geom=DEFAULT_CHIQUIMULA_GEOM,
+    ),
 ]
 
 DEFAULT_VARIABLES = [
@@ -152,7 +199,29 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
             temporal_resolution="monthly",
             is_ready_for_exploration=True,
             notes="Serie continua de 288 meses calendario verificados en CMR/IMERG.",
-        )
+        ),
+        CatalogCombination(
+            region_id="cuenca-canal-panama",
+            variable_id="precipitation",
+            available_interval=AvailableInterval(
+                start=MIN_SUPPORTED_DATE,
+                end=MAX_SUPPORTED_DATE,
+            ),
+            temporal_resolution="monthly",
+            is_ready_for_exploration=True,
+            notes="Extracción satelital GPM IMERG V07 disponible en tiempo casi real / histórico.",
+        ),
+        CatalogCombination(
+            region_id="corredor-seco-chiquimula",
+            variable_id="precipitation",
+            available_interval=AvailableInterval(
+                start=MIN_SUPPORTED_DATE,
+                end=MAX_SUPPORTED_DATE,
+            ),
+            temporal_resolution="monthly",
+            is_ready_for_exploration=True,
+            notes="Extracción satelital GPM IMERG V07 disponible en tiempo casi real / histórico.",
+        ),
     ]
 
     return CatalogResponse(
@@ -174,11 +243,19 @@ def resolve_region(
     if request.region_id:
         if supabase_client is not None:
             try:
-                query = supabase_client.table("regions").select("id, name, boundary_source, boundary_version, geom")
-                if request.region_id in ("costa-rica-continental", "costa-rica"):
-                    query = query.eq("name", "Costa Rica Continental")
-                else:
+                query = supabase_client.table("regions").select(
+                    "id, name, boundary_source, boundary_version, geom"
+                )
+                if len(request.region_id) == 36 and "-" in request.region_id:
                     query = query.eq("id", request.region_id)
+                elif request.region_id in ("costa-rica-continental", "costa-rica"):
+                    query = query.eq("name", "Costa Rica Continental")
+                elif request.region_id in ("cuenca-canal-panama", "panama-canal", "panama"):
+                    query = query.eq("name", "Cuenca del Canal de Panamá")
+                elif request.region_id in ("corredor-seco-chiquimula", "corredor-seco"):
+                    query = query.eq("name", "Corredor Seco - Chiquimula")
+                else:
+                    query = query.eq("name", request.region_id)
                 res = query.limit(1).execute()
                 if res.data:
                     row = res.data[0]
@@ -189,11 +266,16 @@ def resolve_region(
                         row["boundary_source"],
                         row["boundary_version"],
                     )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Error buscando región en Supabase: %s", e)
 
         for r in DEFAULT_REGIONS:
-            if r.id == request.region_id or (r.id == "costa-rica-continental" and request.region_id in (r.id, "costa-rica")):
+            if (
+                r.id == request.region_id
+                or (r.id == "costa-rica-continental" and request.region_id in (r.id, "costa-rica"))
+                or (r.id == "cuenca-canal-panama" and request.region_id in (r.id, "panama-canal", "panama"))
+                or (r.id == "corredor-seco-chiquimula" and request.region_id in (r.id, "corredor-seco"))
+            ):
                 return (
                     r.geom,
                     r.id,
@@ -206,10 +288,14 @@ def resolve_region(
             detail=f"La región con identificador '{request.region_id}' no existe en el catálogo.",
         )
     elif request.region:
+        geom_hash = hashlib.sha256(
+            json.dumps(request.region.coordinates, sort_keys=True).encode("utf-8")
+        ).hexdigest()[:12]
+        custom_name = f"Polígono Personalizado ({geom_hash})"
         return (
             request.region,
             "custom-polygon",
-            "Polígono personalizado",
+            custom_name,
             "Usuario / Solicitud directa",
             "1.0",
         )
@@ -260,13 +346,54 @@ def _fetch_from_supabase(
     request: ExplorationRequest,
     start: date,
     end: date,
-    region_uuid: str | None = None,
+    region_identifier: str | None = None,
+    geom: GeoJSONPolygon | None = None,
 ) -> pd.DataFrame | None:
-    # Solo consultar en Supabase si se trata de una región registrada con UUID válido
-    if not region_uuid or len(region_uuid) != 36:
+    if not supabase:
         return None
 
     try:
+        region_uuid: str | None = None
+        if region_identifier and len(region_identifier) == 36 and "-" in region_identifier:
+            region_uuid = region_identifier
+        elif (region_identifier == "custom-polygon" or request.region) and geom is not None:
+            geom_hash = hashlib.sha256(
+                json.dumps(geom.coordinates, sort_keys=True).encode("utf-8")
+            ).hexdigest()[:12]
+            custom_name = f"Polígono Personalizado ({geom_hash})"
+            res = (
+                supabase.table("regions")
+                .select("id")
+                .eq("name", custom_name)
+                .limit(1)
+                .execute()
+            )
+            if res.data:
+                region_uuid = str(res.data[0]["id"])
+        elif region_identifier:
+            name_candidates = [region_identifier]
+            if region_identifier in ("costa-rica-continental", "costa-rica"):
+                name_candidates = ["Costa Rica Continental"]
+            elif region_identifier in ("cuenca-canal-panama", "panama-canal", "panama"):
+                name_candidates = ["Cuenca del Canal de Panamá"]
+            elif region_identifier in ("corredor-seco-chiquimula", "corredor-seco"):
+                name_candidates = ["Corredor Seco - Chiquimula"]
+
+            for candidate in name_candidates:
+                res = (
+                    supabase.table("regions")
+                    .select("id")
+                    .eq("name", candidate)
+                    .limit(1)
+                    .execute()
+                )
+                if res.data:
+                    region_uuid = str(res.data[0]["id"])
+                    break
+
+        if not region_uuid:
+            return None
+
         start_str = start.isoformat()
         end_str = end.isoformat()
 
@@ -277,6 +404,7 @@ def _fetch_from_supabase(
             .eq("variable_id", request.variable_id)
             .lte("requested_start", start_str)
             .gte("requested_end", end_str)
+            .order("created_at", desc=True)
         )
         runs_query = query.limit(1).execute()
         if not runs_query.data:
@@ -318,8 +446,16 @@ def _fetch_from_supabase(
             columns=("precipitation_mm", "coverage_fraction", "quality_flag"),
         ).reindex(expected_months)
         df.index.name = "month"
+        logger.info(
+            "Caché Supabase HIT para region_uuid %s en rango [%s, %s] (run_id: %s)",
+            region_uuid,
+            start_str,
+            end_str,
+            run_id,
+        )
         return df
-    except Exception:
+    except Exception as e:
+        logger.warning("Error consultando caché en Supabase: %s", e)
         return None
 
 
@@ -349,8 +485,12 @@ def run_exploration(
     # 2. Si no está en caché local, intentar consultar en Supabase
     if monthly_frame is None and supabase_client is not None:
         monthly_frame = _fetch_from_supabase(
-            supabase_client, request, start, end, region_id
+            supabase_client, request, start, end, region_id, geom
         )
+        if monthly_frame is not None:
+            save_to_cache(
+                request.variable_id, region_id, geom, start, end, monthly_frame
+            )
 
     # 3. Si no están en caché, obtener mediante el conector IMERG en vivo
     if monthly_frame is None:
