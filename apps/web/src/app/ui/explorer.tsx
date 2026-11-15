@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Chart } from "./chart";
 import { Research } from "./research";
 import { ApiClientError, completeMonths, createApiV1Client, type Catalog, type Exploration } from "../lib/api-v1";
@@ -92,7 +93,7 @@ export function Explorer() {
   const warnings = metadata ? [...metadata.limitations as string[], ...metadata.warnings as string[]] : [];
   return <>
     <a className="skip-link" href="#explorar">Saltar al explorador</a>
-    <header className="topbar"><a className="brand" href="#inicio" aria-label="Iyök, inicio"><span className="brand-mark">iy</span><span>iyök<span className="brand-dot">.</span></span></a><nav aria-label="Navegación principal"><a href="#explorar">Explorar</a><a href="#investigacion">Investigación</a><a href="#acerca">Sobre Iyök</a></nav><span className="header-note">UN PROYECTO DE BEE4THEWORLD</span></header>
+    <header className="topbar"><a className="brand" href="#inicio" aria-label="Iyök, inicio"><span className="brand-symbol iyok-symbol" aria-hidden="true"><Image src="/iyok-logo.jpg" alt="" width={160} height={100} priority /></span><span>Iyök</span></a><nav aria-label="Navegación principal"><a href="#explorar">Explorar</a><a href="#investigacion">Investigación</a><a href="#acerca">Sobre Iyök</a></nav><a className="header-team" href="https://github.com/Gabz2808/bee4theworld" target="_blank" rel="noopener noreferrer" aria-label="Repositorio de Bee4TheWorld en GitHub (abre en una pestaña nueva)"><span className="brand-symbol team-symbol" aria-hidden="true"><Image src="/bee4theworld-logo.jpg" alt="" width={100} height={75} priority /></span><span><small>Un proyecto de</small><strong>Bee4TheWorld</strong></span></a></header>
     <main id="inicio"><section className="intro wrap"><div className="intro-copy"><div className="location"><span className="location-dot" /> COSTA RICA · PUNTO DE PARTIDA</div><h1>Entender la Tierra<br /><em>empieza por mirar.</em></h1><p>Explora cómo cambia nuestro territorio a través del tiempo, con datos y evidencia que cuentan la historia completa.</p><a className="primary-link" href="#explorar">Comenzar a explorar <span aria-hidden="true">↗</span></a></div><div className="intro-side"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="earth"><span>CR</span></div><div className="intro-caption"><span>UN PLANETA EN CAMBIO</span><strong>Una mirada más cercana<br />a nuestro territorio.</strong></div></div></section>
     <section id="explorar" className="workspace"><div className="wrap"><div className="section-heading"><div><p className="section-label">EL EXPLORADOR</p><h2>Haz una pregunta.<br /><em>Encuentra contexto.</em></h2></div><p>Un espacio para observar series, entender sus límites y seguir la evidencia detrás de cada resultado.</p></div>
       <div className="demo-notice"><strong>MVP · serie en revisión</strong><span>Este producto está en desarrollo. La serie cubre el componente terrestre principal de IGN/SNIT y excluye componentes separados. Su calidad, el método y la interpretación científica siguen en revisión.</span></div>

@@ -32,3 +32,15 @@ button:disabled:hover{background:#244f3c}
 .trend-status h4{font:400 20px Georgia,serif;margin:0 0 10px}.trend-status p+p{margin-top:8px}.evidence-list span{gap:20px;align-items:baseline}.evidence-list b{text-align:right;max-width:65%;overflow-wrap:anywhere;color:#53665e;font-size:12px}.evidence-list a{text-decoration:underline;text-underline-offset:3px}.evidence-list details{border-bottom:1px solid #ceddce;padding:10px 0}.evidence-list summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700}.evidence-list ul{max-height:180px;overflow:auto;padding-left:20px;overflow-wrap:anywhere;line-height:1.6}
 
 /* Ficha de evidencia del resultado. */
+
+/* Identidad del producto y del equipo en la navegación. */
+.topbar{height:88px;gap:58px}.topbar .brand{gap:12px;flex-shrink:0;font:400 27px/1 Georgia,serif;letter-spacing:-.035em}.brand-symbol{position:relative;display:block;flex:none;overflow:hidden;background:#0b0d11;border-radius:7px}.brand-symbol img{position:absolute;max-width:none;height:auto}.iyok-symbol{width:58px;height:44px}.iyok-symbol img{width:160px;left:-50px;top:-19px}.header-team{margin-left:auto;display:flex;align-items:center;gap:11px}.header-team>span:last-child{display:flex;flex-direction:column;gap:4px}.header-team small{font-size:10px;color:#53665e;letter-spacing:.06em}.header-team strong{font-size:12px;color:#254b38;white-space:nowrap}.team-symbol{width:68px;height:44px}.team-symbol img{width:100px;left:-15px;top:-4px}.topbar nav a:first-child{padding:34px 0}
+@media(max-width:900px){.topbar{height:auto;min-height:0;padding:14px 20px 0;display:grid;grid-template-columns:1fr auto;gap:12px 16px}.topbar .brand{font-size:24px}.topbar nav{grid-column:1/-1;grid-row:2;justify-content:space-between;margin:0;gap:16px}.topbar nav a,.topbar nav a:first-child{min-height:42px;padding:0 0 8px}.header-team{margin:0}.team-symbol{width:60px;height:40px}.team-symbol img{width:91px;left:-14px;top:-4px}.header-team small{font-size:9px}.header-team strong{font-size:11px}}
+@media(max-width:360px){.topbar{padding-inline:16px}.header-team{gap:7px}.topbar nav{gap:8px;font-size:12px}}
+
+/* Ajuste de identidad del encabezado. */
+
+/* Navegación adaptable. */
+.header-team{min-height:44px}.header-team:hover strong{text-decoration:underline;text-underline-offset:3px}
+
+/* Enlace del equipo. */
