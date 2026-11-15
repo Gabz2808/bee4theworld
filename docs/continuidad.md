@@ -12,7 +12,7 @@
 
 El [#5: Construir base visual adaptable](https://github.com/B-28-Labs/bee4theworld/issues/5) está cerrado: salto al explorador, foco en el resultado al cargar o recargar y estados más claros. Lint y compilación pasaron; Chrome headless comprobó teclado, tabla y ausencia de desbordamiento en 320, 390, 768 y 1440 px, con revisión visual en móvil y escritorio. La comprobación no sustituye pruebas con dispositivos físicos ni lectores de pantalla.
 
-El [#6: acordar contrato de integración](https://github.com/B-28-Labs/bee4theworld/issues/6) está en curso. Se preparó [una propuesta para revisión conjunta](propuesta-integracion.md) y se encapsuló la fuente del ejemplo ficticio detrás de un puerto interno. No se ha acordado ni implementado el contrato real: la revisión del compañero y una capa cliente validada contra ese acuerdo siguen pendientes. No dar por finalizado el flujo científico: ese trabajo corresponde a los issues posteriores.
+El [#6: contrato de integración](https://github.com/B-28-Labs/bee4theworld/issues/6) cuenta con una respuesta del agente de backend, un [contrato operativo v1](contrato-api-v1.md) y un cliente desacoplado probado con casos sintéticos y una consulta NASA real de un mes. La aceptación del contrato de integración no valida la geometría, la procedencia de Giovanni ni la interpretación científica; esos trabajos continúan en los issues posteriores.
 
 Se recibió un PDF con una propuesta de precipitación del compañero; la [revisión](revision-json-precipitacion.md) identifica campos reutilizables y cuestiones de procedencia, unidades, geometría y análisis. Hay un adaptador provisional que conserva la serie como no verificada; no está conectado al frontend ni acredita datos reales.
 

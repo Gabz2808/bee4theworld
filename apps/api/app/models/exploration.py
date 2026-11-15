@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from typing import Literal
 
 from pydantic import Field, model_validator
@@ -64,6 +64,11 @@ class ExplorationMetadata(APIModel):
     selection: EffectiveSelection | None = None
     limitations: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    source_units: str | None = None
+    unit_conversion: str | None = None
+    weighting_method: str | None = None
+    source_granule_ids: list[str] | None = None
+    data_accessed_at: datetime | None = None
 
 
 class TrendAnalysis(APIModel):

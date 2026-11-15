@@ -48,6 +48,10 @@ class DataIntegrityError(GPMIMERGError):
     pass
 
 
+class EarthdataAuthenticationRequired(GPMIMERGError):
+    """No hay token explícito para la consulta directa a NASA."""
+
+
 @dataclass(frozen=True)
 class MonthlyPrecipitation:
     month: date
@@ -87,6 +91,8 @@ class GPMIMERGConnector:
     ) -> GPMIMERGResult:
         months = _requested_months(start, end)
         geometry = _polygon_from_geojson(region)
+        if self._harmony_client is None and not os.environ.get("EARTHDATA_TOKEN", "").strip():
+            raise EarthdataAuthenticationRequired("Configure EARTHDATA_TOKEN en el entorno de la API.")
         granules = self._search_granules(start, end, months)
         collection_ids = {granule["collection_concept_id"] for granule in granules}
         if len(collection_ids) != 1:
@@ -99,10 +105,8 @@ class GPMIMERGConnector:
                 "start": datetime.combine(start, time.min, tzinfo=timezone.utc),
                 "stop": datetime.combine(end, time.max, tzinfo=timezone.utc),
             },
-            variables=[HARMONY_VARIABLE],
             granule_id=[granule["id"] for granule in granules],
             format="application/x-netcdf4",
-            concatenate=False,
             ignore_errors=False,
             skip_preview=True,
         )

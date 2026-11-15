@@ -10,6 +10,7 @@ function monthEnd(month: string) {
   return `${month}-${String(new Date(Date.UTC(year, number, 0)).getUTCDate()).padStart(2, "0")}`;
 }
 function errorMessage(error: unknown) {
+  if (error instanceof ApiClientError && error.code === "NASA_AUTH_REQUIRED") return "El servicio necesita configurar el acceso a NASA Earthdata. Solicita al equipo que configure la autenticación y vuelve a intentarlo.";
   if (error instanceof ApiClientError && error.kind === "invalid_response") return "La respuesta no tiene el formato esperado. Vuelve a intentarlo más tarde.";
   if (error instanceof ApiClientError && error.status && error.status >= 400 && error.status < 500) return "La selección no está disponible. Revisa el período e inténtalo de nuevo.";
   return "No fue posible conectar con el servicio. Comprueba que la API esté disponible e inténtalo de nuevo.";
@@ -33,7 +34,9 @@ export function Explorer() {
       const combination = data.combinations.find((c) => c.region_id === "costa-rica-continental" && c.variable_id === "precipitation" && c.is_ready_for_exploration === true);
       if (!combination) { setCatalogError("La serie inicial no está disponible en el catálogo."); return; }
       const interval = combination.available_interval as { start: string; end: string };
-      setStart(interval.start.slice(0, 7)); setEnd(interval.end.slice(0, 7));
+      const endMonth = interval.end.slice(0, 7);
+      setStart(endMonth);
+      setEnd(endMonth);
       setCatalog(data); setCatalogError("");
     }).catch((error) => { if (!controller.signal.aborted) setCatalogError(errorMessage(error)); });
     return () => controller.abort();

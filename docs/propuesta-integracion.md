@@ -1,6 +1,6 @@
 # Propuesta de integración frontend–backend
 
-**Estado: borrador 0.1, pendiente de revisión y acuerdo de ambos integrantes.** No es un contrato aprobado ni describe una API existente. Este documento prepara el issue [#6](https://github.com/B-28-Labs/bee4theworld/issues/6); el compañero lidera la ingesta, el análisis y el backend. Las rutas, nombres y formatos son propuestas modificables. `referencias/iyok_api_contracts_mock.json` es un ejemplo ficticio anterior y no valida esta propuesta.
+**Estado: borrador histórico 0.1.** La implementación posterior y su alcance operativo se describen en [contrato API v1](contrato-api-v1.md); este documento conserva la propuesta anterior y no refleja necesariamente el estado actual. El compañero lidera la ingesta, el análisis y el backend. `referencias/iyok_api_contracts_mock.json` es un ejemplo ficticio anterior y no valida resultados científicos.
 
 ## Objetivo y límites
 

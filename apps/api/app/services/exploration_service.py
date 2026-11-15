@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import calendar
 import math
-from datetime import date
+import os
+from datetime import date, datetime, timezone
 from typing import Any
 
 import numpy as np
@@ -33,6 +34,7 @@ from app.services.interpretation_service import generate_interpretation
 from app.services.gpm_imerg import (
     DataIntegrityError,
     DataUnavailableError,
+    EarthdataAuthenticationRequired,
     GPMIMERGConnector,
     GPMIMERGError,
     GPMIMERGResult,
@@ -73,9 +75,9 @@ DEFAULT_REGIONS = [
     Region(
         id="costa-rica-continental",
         name="Costa Rica Continental",
-        description="Límite territorial continental de la República de Costa Rica según cartografía oficial.",
-        boundary_source="Instituto Geográfico Nacional (IGN) / WDC",
-        boundary_version="2024",
+        description="Geometría aproximada de Costa Rica continental; no es una frontera oficial validada.",
+        boundary_source="Geometría aproximada no verificada",
+        boundary_version="provisional",
         geom=DEFAULT_COSTA_RICA_GEOM,
     )
 ]
@@ -84,7 +86,7 @@ DEFAULT_VARIABLES = [
     Variable(
         id="precipitation",
         name="Precipitación mensual estimada",
-        source="NASA GPM IMERG Final Run (GPM_3IMERGM V07) vía GES DISC / Giovanni",
+        source="NASA GPM IMERG Final Run (GPM_3IMERGM V07), GES DISC",
         unit="mm/month",
         available_interval=AvailableInterval(
             start=MIN_SUPPORTED_DATE,
@@ -123,7 +125,7 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
         CatalogVariable(
             id="precipitation",
             name="Precipitación mensual estimada",
-            source="NASA GES DISC / Giovanni",
+            source="NASA GES DISC; mecanismo de acceso según la consulta",
             dataset="GPM_3IMERGM.07",
             unit="mm/month",
             spatial_resolution="0.1° (~10 km); promedio ponderado espacial",
@@ -337,11 +339,12 @@ def run_exploration(
     )
 
     monthly_frame: pd.DataFrame | None = None
+    nasa_result: GPMIMERGResult | None = None
 
-    # 1. Intentar consultar datos en caché local (disco/memoria)
-    monthly_frame = load_from_cache(
-        request.variable_id, region_id, geom, start, end
-    )
+    # El modo NASA directo evita cachés cuya procedencia aún no se conserva.
+    direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower() == "nasa"
+    if not direct_nasa:
+        monthly_frame = load_from_cache(request.variable_id, region_id, geom, start, end)
 
     # 2. Si no está en caché local, intentar consultar en Supabase
     if monthly_frame is None and supabase_client is not None:
@@ -355,19 +358,22 @@ def run_exploration(
             connector = GPMIMERGConnector()
 
         try:
-            result = connector.fetch_monthly_precipitation(
+            nasa_result = connector.fetch_monthly_precipitation(
                 geom,
                 start,
                 end,
             )
-            monthly_frame = prepare_monthly_precipitation(result, start, end)
-            save_to_cache(
-                request.variable_id, region_id, geom, start, end, monthly_frame
+            monthly_frame = prepare_monthly_precipitation(nasa_result, start, end)
+            if not direct_nasa:
+                save_to_cache(request.variable_id, region_id, geom, start, end, monthly_frame)
+                if supabase_client is not None:
+                    save_to_supabase(supabase_client, request, geom, nasa_result, monthly_frame, region_id)
+        except EarthdataAuthenticationRequired:
+            raise HTTPException(
+                status_code=503,
+                detail="La consulta NASA requiere configurar Earthdata en el servidor.",
+                headers={"X-Iyok-Error-Code": "NASA_AUTH_REQUIRED"},
             )
-            if supabase_client is not None:
-                save_to_supabase(
-                    supabase_client, request, geom, result, monthly_frame, region_id
-                )
         except (DataUnavailableError, DataIntegrityError) as e:
             raise HTTPException(
                 status_code=502,
@@ -385,10 +391,10 @@ def run_exploration(
             )
         except HTTPException:
             raise
-        except Exception as e:
+        except Exception:
             raise HTTPException(
-                status_code=500,
-                detail=f"Fallo inesperado durante la consulta de datos: {e}",
+                status_code=502,
+                detail="No se pudo completar la consulta de datos NASA. Revise el acceso del servidor.",
             )
 
     # 3. Procesamiento analítico: Línea base y anomalías
@@ -458,15 +464,20 @@ def run_exploration(
 
     metadata = ExplorationMetadata(
         variable_name="Precipitación mensual estimada",
-        source="NASA GES DISC / Giovanni",
+        source="NASA GES DISC mediante CMR y Harmony" if nasa_result else "Caché o Supabase; procedencia de la ingesta pendiente de verificación",
         dataset="GPM_3IMERGM.07",
         unit="mm/month",
-        spatial_resolution="0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
+        spatial_resolution=("0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)" if nasa_result else "0.1°; método de agregación pendiente de verificación"),
         temporal_resolution="monthly",
         selection=selection,
+        source_units=nasa_result.source_units if nasa_result else None,
+        unit_conversion=nasa_result.unit_conversion if nasa_result else None,
+        weighting_method=nasa_result.weighting_method if nasa_result else None,
+        source_granule_ids=list(nasa_result.granule_ids) if nasa_result else None,
+        data_accessed_at=datetime.now(timezone.utc) if nasa_result else None,
         limitations=[
             "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
-            "El polígono corresponde a una delimitación territorial para el MVP de Iyök.",
+            "La fuente de la geometría debe verificarse; la geometría provisional no es una frontera oficial.",
             "La resolución de 0.1° promedia variaciones locales en microclimas y topografías montañosas complejas.",
         ],
         warnings=[

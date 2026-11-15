@@ -8,6 +8,8 @@ La interfaz consulta el catálogo y la exploración del backend a través de rut
 
 Para desarrollo, iniciar la API en `127.0.0.1:8000` y el frontend desde `apps/web` con `npm run dev`. La ruta de Next.js usa por defecto esa dirección; `IYOK_API_URL` permite configurar otra URL del backend en el servidor (ver `apps/web/.env.example`). La API necesita su propia configuración y credenciales de servidor; el acceso MCP no las configura. Nunca colocar credenciales de Supabase o Earthdata en variables públicas del frontend. Si el servicio no está disponible, la interfaz muestra un error y permite reintentar.
 
+Para consultar NASA directamente desde el backend, ver [acceso NASA directo](acceso-nasa-directo.md). Este mecanismo usa CMR y Harmony, no Giovanni, y necesita autenticación Earthdata en el servidor.
+
 Las rutas del frontend únicamente reenvían catálogo y exploración; no comprueban que el backend haya seleccionado la ingesta geográfica correcta. La procedencia que aparece es la declarada por el servicio, no una validación independiente de Giovanni. La respuesta de exploración real y la validación científica siguen pendientes antes de su uso en la demo.
 
 ## Integración y datos

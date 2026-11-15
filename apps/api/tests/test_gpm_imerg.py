@@ -1,9 +1,11 @@
 import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import date
 from pathlib import Path
 
 import httpx
+import cftime
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -218,7 +220,7 @@ class GPMIMERGTests(unittest.TestCase):
         self.assertEqual(result.granule_ids, ("G123-GES_DISC",))
         self.assertEqual(result.monthly_values[0].value, 1)
         self.assertEqual(result.region, _sample_region())
-        self.assertEqual(harmony.request.variables, ["Grid/precipitation"])
+        self.assertEqual(harmony.request.variables, ["all"])
 
     def test_connector_supports_netcdf_group_grid_and_cftime(self) -> None:
         granule = {
@@ -252,6 +254,22 @@ class GPMIMERGTests(unittest.TestCase):
         self.assertEqual(result.granule_ids, ("G123-GES_DISC",))
         self.assertAlmostEqual(result.monthly_values[0].value, 2.5, places=4)
         self.assertEqual(result.monthly_values[0].month, date(2024, 2, 1))
+    def test_reads_grid_group_and_julian_calendar(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "grid.nc"
+            dataset = xr.Dataset(
+                {"precipitation": (("time", "lon", "lat"), np.ones((1, 2, 2)), {"units": "mm/hr"})},
+                coords={"time": [cftime.DatetimeJulian(2024, 2, 1)], "lat": [9.95, 10.05], "lon": [-85.05, -84.95]},
+            )
+            dataset.to_netcdf(path, engine="netcdf4", group="Grid")
+            result = GPMIMERGConnector._read_result(
+                [path], _sample_region(), Polygon(_sample_region().coordinates[0]),
+                (date(2024, 2, 1),),
+                [{"id": "G123-GES_DISC", "collection_concept_id": "C123-GES_DISC", "time_start": "2024-02-01T00:00:00Z"}],
+            )
+        self.assertEqual(result.source_units, "mm/hr")
+        self.assertEqual(result.monthly_values[0].month, date(2024, 2, 1))
+        self.assertAlmostEqual(result.monthly_values[0].coverage_fraction, 1.0, places=5)
 
     def test_connector_fails_when_cmr_has_no_monthly_granule(self) -> None:
         cmr_client = httpx.Client(
@@ -261,7 +279,7 @@ class GPMIMERGTests(unittest.TestCase):
         )
         connector = GPMIMERGConnector(cmr_client=cmr_client)
         try:
-            with self.assertRaises(DataUnavailableError):
+            with patch.dict("os.environ", {"EARTHDATA_TOKEN": "test-token"}), self.assertRaises(DataUnavailableError):
                 connector.fetch_monthly_precipitation(
                     _sample_region(),
                     date(2024, 2, 1),

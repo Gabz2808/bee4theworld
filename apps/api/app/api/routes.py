@@ -1,6 +1,7 @@
+import os
 from typing import Any
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.supabase_client import SupabaseConfigurationError, get_supabase_client
 from app.models.catalog import CatalogResponse
@@ -17,6 +18,11 @@ def get_connector() -> GPMIMERGConnector:
 
 
 def get_optional_supabase() -> Any | None:
+    source = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower()
+    if source == "nasa":
+        return None
+    if source != "auto":
+        raise HTTPException(status_code=503, detail="Configuración de fuente de datos no válida.")
     try:
         return get_supabase_client()
     except (SupabaseConfigurationError, Exception):

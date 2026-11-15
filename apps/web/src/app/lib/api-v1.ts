@@ -1,4 +1,4 @@
-/** Cliente experimental: no acredita procedencia ni sustituye el contrato acordado. */
+/** Cliente v1 para el subconjunto de exploración del MVP; no acredita procedencia científica. */
 export type ExplorationRequest = {
   region_id: string;
   variable_id: "precipitation";
@@ -103,7 +103,7 @@ export function parseExploration(input: unknown, request: ExplorationRequest): E
     selection.region_id, selection.region_name, selection.boundary_source, selection.boundary_version].forEach(string);
   strings(metadata.limitations); strings(metadata.warnings);
   const requested = interval(selection.requested_period), effective = interval(selection.effective_period);
-  if (requested.start !== request.start_date || requested.end !== request.end_date || effective.start !== requested.start || effective.end !== requested.end) return invalid();
+  if (selection.region_id !== request.region_id || requested.start !== request.start_date || requested.end !== request.end_date || effective.start !== requested.start || effective.end !== requested.end) return invalid();
   const analysis = object(data.trend_analysis);
   if (analysis.status !== "conclusive" && analysis.status !== "inconclusive" && analysis.status !== "not_computed") return invalid();
   string(analysis.method); string(analysis.summary);
@@ -127,6 +127,13 @@ export function parseExploration(input: unknown, request: ExplorationRequest): E
     return { date: d, value, coverageFraction: coverage, qualityFlag: flag };
   });
   if (!points.length) return invalid();
+  let expected = request.start_date;
+  for (const point of points) {
+    if (point.date !== expected) return invalid();
+    const [year, month] = expected.split("-").map(Number);
+    expected = month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, "0")}-01`;
+  }
+  if (previous.slice(0, 7) !== request.end_date.slice(0, 7)) return invalid();
   array(data.annual_totals).forEach((raw) => { const a = object(raw); if (!Number.isInteger(a.year) || finite(a.annual_precipitation_mm) < 0 || a.months_reported !== 12) invalid(); });
   return { kind: "api_unverified", metadata, points, analysisStatus: analysis.status };
 }

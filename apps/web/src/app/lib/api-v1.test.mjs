@@ -31,10 +31,12 @@ test("rechaza fechas, selección, unidad, cobertura y estados incompatibles", ()
   for (const mutate of [
     (x) => { x.metadata.unit = ""; },
     (x) => { x.metadata.selection.effective_period = { start: "2023-02-01", end: "2023-02-28" }; },
+    (x) => { x.metadata.selection.region_id = "otra-region"; },
     (x) => { x.timeseries[1].date = "2023-02-30"; },
     (x) => { x.timeseries[1].date = "2023-01-01"; },
     (x) => { x.timeseries[0].coverage_fraction = 1.1; },
     (x) => { x.trend_analysis.p_value = 0.2; },
+    (x) => { x.timeseries.pop(); },
   ]) { const response = exploration(); mutate(response); throws(() => parseExploration(response, request), ApiClientError); }
 });
 test("transporta solicitudes y maneja error de cobertura sin filtrar detalles internos", async () => {

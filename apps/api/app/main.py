@@ -38,7 +38,7 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException) ->
         502: "UPSTREAM_SERVICE_ERROR",
         503: "SERVICE_UNAVAILABLE",
     }
-    code = code_map.get(exc.status_code, "ERROR")
+    code = (exc.headers or {}).get("X-Iyok-Error-Code", code_map.get(exc.status_code, "ERROR"))
     return JSONResponse(
         status_code=exc.status_code,
         content={

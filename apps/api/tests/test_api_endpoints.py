@@ -1,6 +1,6 @@
 import unittest
 from datetime import date
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
@@ -22,6 +22,26 @@ class APIEndpointsTests(unittest.TestCase):
         response = self.client.get("/ping")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"status": "ok"})
+
+    def test_nasa_without_credentials_returns_clear_error(self) -> None:
+        with patch("app.services.exploration_service.load_from_cache") as cache, patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa", "EARTHDATA_TOKEN": ""}):
+            response = self.client.post("/api/v1/explorations", json={
+                "region_id": "costa-rica-continental", "variable_id": "precipitation",
+                "start_date": "2024-01-01", "end_date": "2024-01-31",
+                "temporal_resolution": "monthly",
+            })
+        cache.assert_not_called()
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.json()["error"]["code"], "NASA_AUTH_REQUIRED")
+
+    def test_nasa_mode_does_not_use_supabase_and_rejects_unknown_mode(self) -> None:
+        with patch("app.api.routes.get_supabase_client") as client:
+            with patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa"}):
+                self.assertIsNone(get_optional_supabase())
+            client.assert_not_called()
+        app.dependency_overrides.pop(get_optional_supabase, None)
+        with patch.dict("os.environ", {"IYOK_DATA_SOURCE": "invalid"}):
+            self.assertEqual(self.client.get("/api/v1/catalog").status_code, 503)
 
     def test_get_v1_catalog(self) -> None:
         response = self.client.get("/api/v1/catalog")
@@ -183,6 +203,10 @@ class APIEndpointsTests(unittest.TestCase):
             # Metadatos y selección efectiva
             metadata = data["metadata"]
             self.assertEqual(metadata["unit"], "mm/month")
+            self.assertEqual(metadata["source"], "NASA GES DISC mediante CMR y Harmony")
+            self.assertEqual(metadata["source_units"], "mm/month")
+            self.assertEqual(len(metadata["source_granule_ids"]), 24)
+            self.assertIsNotNone(metadata["data_accessed_at"])
             self.assertIsNotNone(metadata["selection"])
             self.assertEqual(metadata["selection"]["region_id"], "costa-rica-continental")
             self.assertIn("warnings", metadata)
