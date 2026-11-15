@@ -63,7 +63,32 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
     let instance: MapLibreMap;
     try {
       maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
-      instance = new maplibregl.Map({ container: container.current, bounds: [[-86.1, 8.0], [-82.5, 11.25]], fitBoundsOptions: { padding: { top: 16, right: 16, left: 16, bottom: 48 } }, minZoom: 4, maxZoom: 11, attributionControl: false, cooperativeGestures: true, locale, style: { version: 8, sources: { basemap: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">colaboradores de OpenStreetMap</a>' } }, layers: [{ id: "background", type: "background", paint: { "background-color": "#e4ebe2" } }, { id: "basemap", type: "raster", source: "basemap", paint: { "raster-saturation": -0.7, "raster-brightness-max": 0.85 } }] } });
+      instance = new maplibregl.Map({
+        container: container.current,
+        bounds: [[-86.1, 8.0], [-82.5, 11.25]],
+        fitBoundsOptions: { padding: { top: 16, right: 16, left: 16, bottom: 48 } },
+        minZoom: 4,
+        maxZoom: 11,
+        attributionControl: false,
+        cooperativeGestures: true,
+        locale,
+        style: {
+          version: 8,
+          sources: {
+            basemap: {
+              type: "raster",
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+              tileSize: 256,
+              maxzoom: 19,
+              attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">colaboradores de OpenStreetMap</a>',
+            },
+          },
+          layers: [
+            { id: "background", type: "background", paint: { "background-color": "#111318" } },
+            { id: "basemap", type: "raster", source: "basemap", paint: { "raster-saturation": -0.85, "raster-brightness-max": 0.45, "raster-opacity": 0.65 } },
+          ],
+        },
+      });
     } catch { queueMicrotask(() => setMapProblem("No se pudo iniciar el mapa en este navegador; puede requerir WebGL. La serie y la tabla siguen disponibles.")); return; }
     map.current = instance;
     instance.on("error", (event) => { if ("sourceId" in event && event.sourceId === "basemap") setBasemapProblem(true); });
@@ -71,9 +96,9 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
     instance.addControl(new maplibregl.AttributionControl({ compact: false }), "bottom-right");
     instance.on("load", () => {
       instance.addSource("cells", { type: "geojson", data: empty, attribution: "IMERG: NASA GES DISC" });
-      instance.addLayer({ id: "cells", type: "fill", source: "cells", paint: { "fill-color": ["interpolate", ["linear"], ["get", "value"], ...stops.flat()], "fill-opacity": 0.72, "fill-outline-color": "rgba(255,255,255,0.6)" } });
+      instance.addLayer({ id: "cells", type: "fill", source: "cells", paint: { "fill-color": ["interpolate", ["linear"], ["get", "value"], ...stops.flat()], "fill-opacity": 0.75, "fill-outline-color": "rgba(233,237,242,0.3)" } });
       instance.addSource("boundary", { type: "geojson", data: "/map-data/boundary.json", attribution: "Frontera: IGN / Registro Nacional / SNIT" });
-      instance.addLayer({ id: "boundary", type: "line", source: "boundary", paint: { "line-color": "#173e31", "line-width": 2 } });
+      instance.addLayer({ id: "boundary", type: "line", source: "boundary", paint: { "line-color": "#F5B82E", "line-width": 2 } });
       const popup = new maplibregl.Popup({ closeButton: true, maxWidth: "240px" });
       instance.on("click", "cells", (event) => {
         const feature = event.features?.[0];
