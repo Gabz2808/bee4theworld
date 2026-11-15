@@ -11,6 +11,7 @@ import pandas as pd
 from app.models.exploration import ExplorationRequest
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGResult
+from app.core.security import is_write_authorized
 
 logger = logging.getLogger(__name__)
 
@@ -106,6 +107,11 @@ def save_to_supabase(
     3. Idempotencia y selección determinista.
     """
     if supabase is None:
+        return
+
+    # Comprobación de autorización de escritura
+    if not is_write_authorized():
+        logger.info("Persistencia en Supabase no autorizada en este entorno.")
         return
 
     # Criterio 1: Polígono personalizado se conserva fuera de Supabase para evitar asociaciones indebidas

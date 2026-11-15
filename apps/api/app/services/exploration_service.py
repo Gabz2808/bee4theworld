@@ -14,6 +14,7 @@ import pandas as pd
 from fastapi import HTTPException
 
 from app.core.cache import load_from_cache, save_to_cache, save_to_supabase
+from app.core.security import is_write_authorized, validate_polygon_complexity_and_area
 from app.models.catalog import (
     CatalogCombination,
     CatalogRegion,
@@ -340,6 +341,10 @@ def validate_exploration_request(request: ExplorationRequest) -> None:
             ),
         )
 
+    # Validar complejidad y extensión del polígono si se proporciona geometría personalizada
+    if request.region is not None:
+        validate_polygon_complexity_and_area(request.region.coordinates)
+
 
 def _fetch_from_supabase(
     supabase: Any,
@@ -471,6 +476,7 @@ def run_exploration(
     *,
     connector: GPMIMERGConnector | None = None,
     supabase_client: Any | None = None,
+    request_headers: dict[str, str] | None = None,
 ) -> ExplorationResponse:
     validate_exploration_request(request)
 
@@ -513,7 +519,7 @@ def run_exploration(
             monthly_frame = prepare_monthly_precipitation(nasa_result, start, end)
             if not direct_nasa:
                 save_to_cache(request.variable_id, region_id, geom, start, end, monthly_frame)
-                if supabase_client is not None:
+                if supabase_client is not None and is_write_authorized(request_headers):
                     save_to_supabase(supabase_client, request, geom, nasa_result, monthly_frame, region_id)
         except EarthdataAuthenticationRequired:
             raise HTTPException(

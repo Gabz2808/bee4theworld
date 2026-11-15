@@ -1,7 +1,7 @@
 import os
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from app.core.supabase_client import SupabaseConfigurationError, get_supabase_client
 from app.models.catalog import CatalogResponse
@@ -79,6 +79,7 @@ def get_v1_catalog(
 )
 def post_v1_explorations(
     request: ExplorationRequest,
+    request_http: Request,
     connector: GPMIMERGConnector = Depends(get_connector),
     supabase: Any | None = Depends(get_optional_supabase),
 ) -> ExplorationResponse:
@@ -86,4 +87,5 @@ def post_v1_explorations(
         request,
         connector=connector,
         supabase_client=supabase,
+        request_headers=dict(request_http.headers),
     )

@@ -13,6 +13,7 @@ else:
     load_dotenv()
 
 from app.api.routes import router
+from app.core.security import SecurityLimitsMiddleware, get_cors_origins
 
 app = FastAPI(
     title="Iyök API",
@@ -20,12 +21,16 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# 1. Middleware de límites de seguridad (tamaño de cuerpo y rate limiting)
+app.add_middleware(SecurityLimitsMiddleware)
+
+# 2. Middleware de CORS con orígenes acordados (nunca wildcard con credenciales)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=get_cors_origins(),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Iyok-Write-Key"],
 )
 
 
@@ -34,7 +39,9 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException) ->
     code_map = {
         400: "INVALID_REQUEST",
         404: "NOT_FOUND",
+        413: "PAYLOAD_TOO_LARGE",
         422: "UNPROCESSABLE_ENTITY",
+        429: "RATE_LIMIT_EXCEEDED",
         502: "UPSTREAM_SERVICE_ERROR",
         503: "SERVICE_UNAVAILABLE",
     }
