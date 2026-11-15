@@ -1,0 +1,404 @@
+{
+  "contract_version": "v1 (Borrador acordado 0.1)",
+  "api_contracts": {
+    "GET_/api/v1/catalog": {
+      "description": "Catálogo unificado de opciones de exploración y cobertura real disponible (regiones, variables y combinaciones válidas).",
+      "response": {
+        "status": "success",
+        "regions": [
+          {
+            "id": "costa-rica-continental",
+            "name": "Costa Rica Continental",
+            "description": "Límite territorial continental de la República de Costa Rica según cartografía oficial.",
+            "boundary_source": "Instituto Geográfico Nacional (IGN) / WDC",
+            "boundary_version": "2024",
+            "geom": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [-85.95, 10.05],
+                  [-85.55, 11.10],
+                  [-84.80, 11.00],
+                  [-83.60, 10.75],
+                  [-82.60, 9.55],
+                  [-82.85, 8.35],
+                  [-83.65, 8.50],
+                  [-84.90, 9.50],
+                  [-85.45, 9.85],
+                  [-85.95, 10.05]
+                ]
+              ]
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": "precipitation",
+            "name": "Precipitación mensual estimada",
+            "source": "NASA GES DISC / Giovanni",
+            "dataset": "GPM_3IMERGM.07",
+            "unit": "mm/month",
+            "spatial_resolution": "0.1° (~10 km); promedio ponderado espacial",
+            "temporal_resolution": "monthly",
+            "available_interval": {
+              "start": "2001-01-01",
+              "end": "2024-12-31"
+            },
+            "restrictions": [
+              "Requiere fechas alineadas a mes completo (primer día a último día de mes).",
+              "Estimación satelital combinada con pluviómetros; no sustituye estaciones puntuales."
+            ]
+          }
+        ],
+        "combinations": [
+          {
+            "region_id": "costa-rica-continental",
+            "variable_id": "precipitation",
+            "available_interval": {
+              "start": "2001-01-01",
+              "end": "2024-12-31"
+            },
+            "temporal_resolution": "monthly",
+            "is_ready_for_exploration": true,
+            "notes": "Serie continua de 288 meses calendario verificados en CMR/IMERG."
+          }
+        ]
+      }
+    },
+    "POST_/api/v1/explorations": {
+      "description": "Consulta analítica y detección de tendencias terrestres basada en region_id, variable_id y rango temporal.",
+      "request_body_example": {
+        "region_id": "costa-rica-continental",
+        "variable_id": "precipitation",
+        "start_date": "2023-01-01",
+        "end_date": "2024-12-31",
+        "temporal_resolution": "monthly"
+      },
+      "response": {
+        "status": "success",
+        "metadata": {
+          "variable_name": "Precipitación mensual estimada",
+          "source": "NASA GES DISC / Giovanni",
+          "dataset": "GPM_3IMERGM.07",
+          "unit": "mm/month",
+          "spatial_resolution": "0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
+          "temporal_resolution": "monthly",
+          "selection": {
+            "region_id": "costa-rica-continental",
+            "region_name": "Costa Rica Continental",
+            "boundary_source": "Instituto Geográfico Nacional (IGN) / WDC",
+            "boundary_version": "2024",
+            "requested_period": {
+              "start": "2023-01-01",
+              "end": "2024-12-31"
+            },
+            "effective_period": {
+              "start": "2023-01-01",
+              "end": "2024-12-31"
+            }
+          },
+          "limitations": [
+            "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
+            "El polígono corresponde a una delimitación territorial para el MVP de Iyök.",
+            "La resolución de 0.1° promedia variaciones locales en microclimas y topografías montañosas complejas."
+          ],
+          "warnings": [
+            "IMERG no sustituye mediciones de estaciones en superficie.",
+            "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida."
+          ]
+        },
+        "trend_analysis": {
+          "status": "conclusive",
+          "method": "Sen's slope estimator & Mann-Kendall test",
+          "slope": 2.15,
+          "slope_unit": "mm/year",
+          "p_value": 0.038,
+          "is_significant": true,
+          "confidence_level": 0.95,
+          "summary": "Se detecta una tendencia positiva (incremento) estadísticamente significativa de 2.15 mm/año (p = 0.0380) con un nivel de confianza del 95%.",
+          "methodological_note": null
+        },
+        "timeseries": [
+          {
+            "date": "2023-01-01",
+            "value": 64.2,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 9.2
+          },
+          {
+            "date": "2023-02-01",
+            "value": 42.8,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 2.8
+          },
+          {
+            "date": "2023-03-01",
+            "value": 38.5,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -3.5
+          },
+          {
+            "date": "2023-04-01",
+            "value": 95.1,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -4.9
+          },
+          {
+            "date": "2023-05-01",
+            "value": 268.4,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -1.6
+          },
+          {
+            "date": "2023-06-01",
+            "value": 295.0,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -5.0
+          },
+          {
+            "date": "2023-07-01",
+            "value": 210.6,
+            "coverage_fraction": 0.98,
+            "quality_flag": "partial_coverage",
+            "anomaly_mm": -9.4
+          },
+          {
+            "date": "2023-08-01",
+            "value": 275.3,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -4.7
+          },
+          {
+            "date": "2023-09-01",
+            "value": 382.9,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 2.9
+          },
+          {
+            "date": "2023-10-01",
+            "value": 412.0,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -8.0
+          },
+          {
+            "date": "2023-11-01",
+            "value": 230.5,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -9.5
+          },
+          {
+            "date": "2023-12-01",
+            "value": 110.2,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -4.8
+          },
+          {
+            "date": "2024-01-01",
+            "value": 58.0,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 3.0
+          },
+          {
+            "date": "2024-02-01",
+            "value": 39.4,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": -0.6
+          },
+          {
+            "date": "2024-03-01",
+            "value": 45.2,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 3.2
+          },
+          {
+            "date": "2024-04-01",
+            "value": 108.7,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 8.7
+          },
+          {
+            "date": "2024-05-01",
+            "value": 285.3,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 15.3
+          },
+          {
+            "date": "2024-06-01",
+            "value": 310.8,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 10.8
+          },
+          {
+            "date": "2024-07-01",
+            "value": 225.1,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 5.1
+          },
+          {
+            "date": "2024-08-01",
+            "value": 290.4,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 10.4
+          },
+          {
+            "date": "2024-09-01",
+            "value": 395.6,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 15.6
+          },
+          {
+            "date": "2024-10-01",
+            "value": 430.2,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 10.2
+          },
+          {
+            "date": "2024-11-01",
+            "value": 245.0,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 5.0
+          },
+          {
+            "date": "2024-12-01",
+            "value": 118.5,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 3.5
+          }
+        ],
+        "annual_totals": [
+          {
+            "year": 2023,
+            "annual_precipitation_mm": 2425.5,
+            "months_reported": 12
+          },
+          {
+            "year": 2024,
+            "annual_precipitation_mm": 2552.2,
+            "months_reported": 12
+          }
+        ]
+      },
+      "alternative_inconclusive_response": {
+        "status": "success",
+        "metadata": {
+          "variable_name": "Precipitación mensual estimada",
+          "source": "NASA GES DISC / Giovanni",
+          "dataset": "GPM_3IMERGM.07",
+          "unit": "mm/month",
+          "spatial_resolution": "0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
+          "temporal_resolution": "monthly",
+          "selection": null,
+          "limitations": [],
+          "warnings": []
+        },
+        "trend_analysis": {
+          "status": "inconclusive",
+          "method": "Sen's slope estimator & Mann-Kendall test",
+          "slope": null,
+          "slope_unit": null,
+          "p_value": null,
+          "is_significant": null,
+          "confidence_level": null,
+          "summary": "No se detecta una tendencia estadísticamente significativa en el período evaluado.",
+          "methodological_note": "El p-valor obtenido (p=0.42) supera el umbral de significancia alfa=0.05. Las variaciones observadas son atribuibles a la variabilidad climática natural interanual."
+        },
+        "timeseries": [
+          {
+            "date": "2023-01-01",
+            "value": 64.2,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 9.2
+          }
+        ],
+        "annual_totals": []
+      },
+      "alternative_not_computed_response": {
+        "status": "success",
+        "metadata": {
+          "variable_name": "Precipitación mensual estimada",
+          "source": "NASA GES DISC / Giovanni",
+          "dataset": "GPM_3IMERGM.07",
+          "unit": "mm/month",
+          "spatial_resolution": "0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
+          "temporal_resolution": "monthly",
+          "selection": null,
+          "limitations": [],
+          "warnings": []
+        },
+        "trend_analysis": {
+          "status": "not_computed",
+          "method": "Sen's slope estimator & Mann-Kendall test",
+          "slope": null,
+          "slope_unit": null,
+          "p_value": null,
+          "is_significant": null,
+          "confidence_level": null,
+          "summary": "Análisis de tendencia no calculado debido a falta de años calendario completos.",
+          "methodological_note": "El rango temporal seleccionado no contiene años calendario completos con 12 meses observados."
+        },
+        "timeseries": [
+          {
+            "date": "2023-01-01",
+            "value": 64.2,
+            "coverage_fraction": 1.0,
+            "quality_flag": "ok",
+            "anomaly_mm": 9.2
+          }
+        ],
+        "annual_totals": []
+      }
+    },
+    "error_envelopes": {
+      "400_invalid_request": {
+        "error": {
+          "code": "INVALID_REQUEST",
+          "message": "La fecha de inicio 2023-01-15 debe ser el primer día de un mes (ej. YYYY-MM-01).",
+          "details": []
+        }
+      },
+      "404_not_found": {
+        "error": {
+          "code": "NOT_FOUND",
+          "message": "La región con identificador 'region-inexistente' no existe en el catálogo.",
+          "details": []
+        }
+      },
+      "422_validation_error": {
+        "error": {
+          "code": "VALIDATION_ERROR",
+          "message": "La solicitud contiene parámetros con formato inválido.",
+          "details": [
+            {
+              "field": "variable_id",
+              "issue": "Input should be 'precipitation'"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
