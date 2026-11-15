@@ -1,6 +1,15 @@
+from pathlib import Path
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+
+# Cargar automáticamente variables de entorno desde apps/api/.env o .env raíz
+env_path = Path(__file__).resolve().parents[1] / ".env"
+if env_path.exists():
+    load_dotenv(env_path)
+else:
+    load_dotenv()
 
 from app.api.routes import router
 
