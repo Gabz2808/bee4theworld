@@ -6,10 +6,9 @@ import json
 import logging
 import math
 import os
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from typing import Any
 
-import numpy as np
 import pandas as pd
 from fastapi import HTTPException
 
@@ -29,13 +28,11 @@ from app.models.exploration import (
     ExplorationMetadata,
     ExplorationRequest,
     ExplorationResponse,
-    ScientificInterpretation,
     TimeSeriesPoint,
 )
 from app.models.geojson import GeoJSONPolygon, are_geometries_equal
-from app.models.regions import Region, RegionsResponse
-from app.models.variables import AvailableInterval, Variable, VariablesResponse
-from app.services.interpretation_service import generate_interpretation
+from app.models.regions import Region
+from app.models.variables import AvailableInterval, Variable
 from app.services.gpm_imerg import (
     DataIntegrityError,
     DataUnavailableError,
@@ -44,6 +41,7 @@ from app.services.gpm_imerg import (
     GPMIMERGError,
     GPMIMERGResult,
 )
+from app.services.interpretation_service import generate_interpretation
 from app.services.precipitation_processing import (
     PrecipitationProcessingError,
     aggregate_annual_precipitation,
@@ -280,7 +278,7 @@ def resolve_region(
                     region_name = row["name"]
                     boundary_source = row["boundary_source"]
                     boundary_version = row["boundary_version"]
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - boundary fallback
                 logger.debug("Error buscando región en Supabase: %s", e)
 
         if resolved_geom is None:
@@ -478,13 +476,12 @@ def _fetch_from_supabase(
         for run_candidate in runs_query.data:
             run_id = run_candidate["id"]
             snapshot = run_candidate.get("region_geometry_snapshot")
-            if snapshot is not None and geom is not None:
-                if not are_geometries_equal(snapshot, geom):
-                    logger.warning(
-                        "Ingestion run %s tiene una geometría de ingesta incompatible con la consultada; omitiendo candidato.",
-                        run_id,
-                    )
-                    continue
+            if snapshot is not None and geom is not None and not are_geometries_equal(snapshot, geom):
+                logger.warning(
+                    "Ingestion run %s tiene una geometría de ingesta incompatible con la consultada; omitiendo candidato.",
+                    run_id,
+                )
+                continue
 
             data_query = (
                 supabase.table("processed_data")
@@ -533,7 +530,7 @@ def _fetch_from_supabase(
             return df
 
         return None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         logger.warning("Error consultando caché en Supabase: %s", e)
         return None
 
@@ -550,7 +547,7 @@ def run_exploration(
     start = request.start_date  # type: ignore[assignment]
     end = request.end_date      # type: ignore[assignment]
 
-    geom, region_id, region_name, b_source, b_version, internal_uuid = resolve_region(
+    geom, region_id, region_name, b_source, b_version, _internal_uuid = resolve_region(
         request, supabase_client
     )
 
@@ -579,9 +576,14 @@ def run_exploration(
             )
             monthly_frame = prepare_monthly_precipitation(nasa_result, start, end)
             # Codex (Manuel): la caché pública es escritura interna del servidor, sin clave en el navegador.
-            if not direct_nasa and supabase_client is not None and request.region is None and os.environ.get("IYOK_ALLOW_WRITE", "true").strip().lower() != "false":
-                if save_supabase_series(supabase_client, region_id, geom, start, end, nasa_result, monthly_frame):
-                    cache_status = "stored"
+            if (
+                not direct_nasa
+                and supabase_client is not None
+                and request.region is None
+                and os.environ.get("IYOK_ALLOW_WRITE", "true").strip().lower() != "false"
+                and save_supabase_series(supabase_client, region_id, geom, start, end, nasa_result, monthly_frame)
+            ):
+                cache_status = "stored"
         except EarthdataAuthenticationRequired:
             raise HTTPException(
                 status_code=503,
@@ -605,7 +607,7 @@ def run_exploration(
             )
         except HTTPException:
             raise
-        except Exception:
+        except Exception:  # noqa: BLE001 - boundary fallback
             raise HTTPException(
                 status_code=502,
                 detail="No se pudo completar la consulta de datos NASA. Revise el acceso del servidor.",
@@ -688,7 +690,7 @@ def run_exploration(
         unit_conversion=nasa_result.unit_conversion if nasa_result else cached.metadata["unit_conversion"],
         weighting_method=nasa_result.weighting_method if nasa_result else cached.metadata["weighting_method"],
         source_granule_ids=list(nasa_result.granule_ids) if nasa_result else cached.metadata["source_granule_ids"],
-        data_accessed_at=datetime.now(timezone.utc) if nasa_result else cached.metadata["created_at"],
+        data_accessed_at=datetime.now(UTC) if nasa_result else cached.metadata["created_at"],
         cache_status=cache_status,
         limitations=[
             "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",

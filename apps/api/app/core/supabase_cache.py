@@ -106,7 +106,7 @@ def load_supabase_series(client: Any, public_id: str, geom: GeoJSONPolygon, star
             if frame is None:
                 continue
             return CachedSeries(frame.loc[start.isoformat():end.isoformat()].copy(), run)
-    except Exception:
+    except Exception:  # noqa: BLE001 - boundary fallback
         logger.warning("No se pudo leer la caché Supabase; se consultará la fuente de datos.")
     return None
 
@@ -142,6 +142,6 @@ def save_supabase_series(client: Any, public_id: str, geom: GeoJSONPolygon, star
         stored = (client.table("processed_data").select("observed_month,precipitation_mm,coverage_fraction,quality_flag")
             .eq("ingestion_run_id", run_id).order("observed_month").limit(1000).execute()).data
         return _rows_to_frame(stored, start, end) is not None
-    except Exception:
+    except Exception:  # noqa: BLE001 - boundary fallback
         logger.warning("No se pudo guardar la serie en la caché Supabase.")
         return False

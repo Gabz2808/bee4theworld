@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import calendar
+import logging
 import os
 import tempfile
 from contextlib import ExitStack
 from dataclasses import dataclass
-from datetime import date, datetime, time, timezone
+from datetime import UTC, date, datetime, time
 from pathlib import Path
 from typing import TypedDict
 
@@ -20,6 +21,8 @@ from shapely.geometry import Polygon
 from shapely.validation import explain_validity
 
 from app.models.geojson import GeoJSONPolygon
+
+logger = logging.getLogger(__name__)
 
 CMR_GRANULES_URL = "https://cmr.earthdata.nasa.gov/search/granules.json"
 CMR_SHORT_NAME = "GPM_3IMERGM"
@@ -102,8 +105,8 @@ class GPMIMERGConnector:
             collection=Collection(id=collection_ids.pop()),
             spatial=_bounding_box(geometry),
             temporal={
-                "start": datetime.combine(start, time.min, tzinfo=timezone.utc),
-                "stop": datetime.combine(end, time.max, tzinfo=timezone.utc),
+                "start": datetime.combine(start, time.min, tzinfo=UTC),
+                "stop": datetime.combine(end, time.max, tzinfo=UTC),
             },
             granule_id=[granule["id"] for granule in granules],
             format="application/x-netcdf4",
@@ -200,7 +203,7 @@ class GPMIMERGConnector:
                     if candidate.data_vars:
                         ds = candidate
                 except Exception:
-                    pass
+                    logger.debug("No se pudo abrir el grupo Grid; se intentar? la ra?z.", exc_info=True)
                 if ds is None:
                     ds = stack.enter_context(
                         xr.open_dataset(path, engine="netcdf4")

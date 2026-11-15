@@ -6,11 +6,9 @@ con datos satelitales en vivo de NASA Earthdata, polígono personalizado y cach�
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import sys
 import time
-from datetime import date
 from pathlib import Path
 
 # Añadir raíz de apps/api al PYTHONPATH
@@ -25,9 +23,8 @@ for candidate in (api_root / ".env", api_root.parent.parent / ".env"):
         load_dotenv(candidate)
         break
 
-from fastapi.testclient import TestClient
 from app.main import app
-from app.models.geojson import GeoJSONPolygon
+from fastapi.testclient import TestClient
 
 
 def main() -> None:
@@ -82,9 +79,9 @@ def main() -> None:
     print("=" * 70)
     print("🌍 PRUEBA DE ENDPOINT POST /api/v1/explorations (NASA IMERG EN VIVO)")
     print("=" * 70)
-    print(f"📍 Región: Polígono personalizado (Cuenca del Canal de Panamá)")
+    print("📍 Región: Polígono personalizado (Cuenca del Canal de Panamá)")
     print(f"📅 Período: {start_date} al {end_date} ({args.periodo})")
-    print(f"🛰️  Variable: precipitation (NASA GPM IMERG Final V07)")
+    print("🛰️  Variable: precipitation (NASA GPM IMERG Final V07)")
     print("-" * 70)
 
     # 1. Primera consulta: Descarga y cálculo satelital en vivo
@@ -112,7 +109,7 @@ def main() -> None:
     if data['trend_analysis']['methodological_note']:
         print(f"   - Nota metodológica: {data['trend_analysis']['methodological_note']}")
 
-    if "interpretation" in data and data["interpretation"]:
+    if data.get("interpretation"):
         interp = data["interpretation"]
         print("\n🧠 INTERPRETACIÓN CIENTÍFICA COMPRENSIBLE Y PRUDENTE:")
         print(f"   📌 Titular: {interp['headline']}")
@@ -139,7 +136,7 @@ def main() -> None:
         print(f"❌ Error en consulta de caché HTTP {resp_cached.status_code}")
         sys.exit(1)
 
-    data_cached = resp_cached.json()
+    resp_cached.json()
     print(f"✅ Respuesta desde CACHÉ recibida en {elapsed_2 * 1000:.1f} milisegundos ({elapsed_2:.4f} s).")
     aceleracion = elapsed_1 / elapsed_2 if elapsed_2 > 0 else 999.0
     print(f"⚡ Aceleración de respuesta: {aceleracion:.1f}x más rápido.")

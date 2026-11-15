@@ -2,7 +2,6 @@ import unittest
 from datetime import date
 
 import numpy as np
-
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
 from app.services.precipitation_processing import (

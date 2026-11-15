@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import math
-from typing import Sequence
+from collections.abc import Sequence
 
 import pandas as pd
+
 from app.models.exploration import (
     AnnualPrecipitation,
     ExplorationMetadata,

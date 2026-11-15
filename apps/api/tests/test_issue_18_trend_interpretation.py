@@ -19,7 +19,6 @@ from datetime import date
 
 import numpy as np
 import pandas as pd
-
 from app.models.exploration import (
     AnnualPrecipitation,
     DateRange,
@@ -121,8 +120,8 @@ class Issue18TrendInterpretationTests(unittest.TestCase):
     def test_modified_mann_kendall_adjusts_variance_for_positive_autocorrelation(self) -> None:
         """Cuando se detecta autocorrelación positiva estadísticamente significativa, la varianza de Mann-Kendall es ajustada hacia arriba."""
         y = np.array([10.0, 12.0, 11.0, 14.0, 13.0, 16.0, 15.0, 18.0, 17.0, 20.0], dtype=float)
-        s, var_unadj, p_unadj, _ = mann_kendall_test(y, apply_autocorrelation_correction=False)
-        s_adj, var_adj, p_adj, _ = mann_kendall_test(y, apply_autocorrelation_correction=True, r1=0.55)
+        s, var_unadj, _p_unadj, _ = mann_kendall_test(y, apply_autocorrelation_correction=False)
+        s_adj, var_adj, _p_adj, _ = mann_kendall_test(y, apply_autocorrelation_correction=True, r1=0.55)
         self.assertEqual(s, s_adj)
         # La varianza ajustada debe ser mayor que la no ajustada
         self.assertGreater(var_adj, var_unadj)

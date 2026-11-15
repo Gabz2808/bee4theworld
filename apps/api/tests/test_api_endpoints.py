@@ -2,12 +2,11 @@ import unittest
 from datetime import date
 from unittest.mock import MagicMock, patch
 
-from fastapi.testclient import TestClient
-
 from app.api.routes import get_connector, get_optional_supabase
 from app.main import app
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
+from fastapi.testclient import TestClient
 
 
 class APIEndpointsTests(unittest.TestCase):

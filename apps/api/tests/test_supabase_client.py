@@ -16,12 +16,11 @@ class SupabaseClientTests(unittest.TestCase):
         get_supabase_client.cache_clear()
 
     def test_requires_url_and_secret_key(self) -> None:
-        with patch.dict(os.environ, {}, clear=True):
-            with self.assertRaisesRegex(
-                SupabaseConfigurationError,
-                "SUPABASE_URL, SUPABASE_SECRET_KEY",
-            ):
-                get_supabase_client()
+        with patch.dict(os.environ, {}, clear=True), self.assertRaisesRegex(
+            SupabaseConfigurationError,
+            "SUPABASE_URL, SUPABASE_SECRET_KEY",
+        ):
+            get_supabase_client()
 
     @patch("app.core.supabase_client.create_client")
     def test_creates_and_reuses_client_from_server_credentials(

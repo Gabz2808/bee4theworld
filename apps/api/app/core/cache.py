@@ -8,10 +8,11 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+
+from app.core.security import is_write_authorized
 from app.models.exploration import ExplorationRequest
 from app.models.geojson import GeoJSONPolygon, are_geometries_equal
 from app.services.gpm_imerg import GPMIMERGResult
-from app.core.security import is_write_authorized
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ def load_from_cache(
             logger.info("Cache hit para clave %s", cache_key)
             return df
         return None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         logger.warning("Error leyendo archivo de caché %s: %s", cache_file, e)
         return None
 
@@ -84,7 +85,7 @@ def save_to_cache(
         df.to_json(temp_file, orient="table", date_format="iso", indent=2)
         temp_file.replace(cache_file)
         logger.info("Datos guardados en caché local %s", cache_file)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         logger.warning("Error guardando en caché %s: %s", cache_file, e)
         if temp_file.exists():
             temp_file.unlink(missing_ok=True)
@@ -263,8 +264,8 @@ def save_to_supabase(
             )
             try:
                 supabase.table("ingestion_runs").delete().eq("id", run_id).execute()
-            except Exception as rollback_err:
+            except Exception as rollback_err:  # noqa: BLE001 - boundary fallback
                 logger.error("Error durante rollback de ingestion_run %s: %s", run_id, rollback_err)
             raise
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         logger.warning("No se pudo persistir en Supabase: %s", e)

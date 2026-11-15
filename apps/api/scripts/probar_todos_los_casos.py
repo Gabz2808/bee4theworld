@@ -6,8 +6,6 @@ validando la integridad de contratos, respuestas, interpretación científica y 
 """
 from __future__ import annotations
 
-import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -23,8 +21,8 @@ for candidate in (api_root / ".env", api_root.parent.parent / ".env"):
         load_dotenv(candidate)
         break
 
-from fastapi.testclient import TestClient
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -281,7 +279,7 @@ def main() -> None:
         400,
         resp.status_code,
         ok,
-        f"Exige día 1 del mes para preservar la agregación mensual IMERG",
+        "Exige día 1 del mes para preservar la agregación mensual IMERG",
     )
 
     # Caso 4.3: Error 400 - Fecha final no alineada a último día de mes (ej. día 20)
@@ -302,7 +300,7 @@ def main() -> None:
         400,
         resp.status_code,
         ok,
-        f"Exige último día de mes para evitar meses truncados",
+        "Exige último día de mes para evitar meses truncados",
     )
 
     # Caso 4.4: Error 400 - Fecha final anterior a la inicial

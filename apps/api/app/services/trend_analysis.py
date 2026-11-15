@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
@@ -346,7 +346,7 @@ def analyze_annual_trend(
         )
 
     alpha = 1.0 - confidence_level
-    _, var_s_adjusted, p_value, is_significant = mann_kendall_test(
+    _, _var_s_adjusted, p_value, is_significant = mann_kendall_test(
         values, alpha=alpha, r1=r1, apply_autocorrelation_correction=True
     )
 

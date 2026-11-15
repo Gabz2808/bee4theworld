@@ -11,7 +11,7 @@ from app.core.cache import (
     save_to_cache,
     save_to_supabase,
 )
-from app.models.exploration import DateRange, ExplorationRequest
+from app.models.exploration import ExplorationRequest
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
 
@@ -50,7 +50,7 @@ class CacheTests(unittest.TestCase):
         self.assertTrue(key1.endswith(".json"))
 
     def test_save_and_load_cache(self) -> None:
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory() as tmpdir:  # noqa: SIM117 - keep the test setup readable
             with patch("app.core.cache.get_cache_dir", return_value=Path(tmpdir)):
                 # Cache miss
                 miss = load_from_cache("precipitation", "cr", self.geom, self.start, self.end)

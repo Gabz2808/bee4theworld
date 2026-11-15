@@ -1,9 +1,9 @@
 import os
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
-from app.core.supabase_client import SupabaseConfigurationError, get_supabase_client
+from app.core.supabase_client import get_supabase_client
 from app.models.catalog import CatalogResponse
 from app.models.errors import ErrorResponse
 from app.models.exploration import ExplorationRequest, ExplorationResponse
@@ -25,7 +25,7 @@ def get_optional_supabase() -> Any | None:
         raise HTTPException(status_code=503, detail="Configuración de fuente de datos no válida.")
     try:
         return get_supabase_client()
-    except (SupabaseConfigurationError, Exception):
+    except Exception:  # noqa: BLE001 - boundary fallback
         return None
 
 
@@ -52,7 +52,7 @@ def ping() -> dict[str, str]:
     },
 )
 def get_v1_catalog(
-    supabase: Any | None = Depends(get_optional_supabase),
+    supabase: Annotated[Any | None, Depends(get_optional_supabase)],
 ) -> CatalogResponse:
     return get_catalog(supabase_client=supabase)
 
@@ -80,8 +80,8 @@ def get_v1_catalog(
 def post_v1_explorations(
     request: ExplorationRequest,
     request_http: Request,
-    connector: GPMIMERGConnector = Depends(get_connector),
-    supabase: Any | None = Depends(get_optional_supabase),
+    connector: Annotated[GPMIMERGConnector, Depends(get_connector)],
+    supabase: Annotated[Any | None, Depends(get_optional_supabase)],
 ) -> ExplorationResponse:
     return run_exploration(
         request,

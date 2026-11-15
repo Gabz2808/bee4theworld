@@ -1,12 +1,9 @@
 import unittest
-from datetime import date
 
 import numpy as np
 import pandas as pd
-
 from app.models.exploration import AnnualPrecipitation
 from app.services.trend_analysis import (
-    TrendAnalysisError,
     analyze_annual_trend,
     calculate_climatology_and_anomalies,
     calculate_ols_trend,
@@ -21,7 +18,6 @@ class TrendAnalysisServiceTests(unittest.TestCase):
         dates = pd.date_range("2021-01-01", periods=24, freq="MS")
         # Año 1: enero 100, febrero 200...
         # Año 2: enero 120, febrero 180...
-        base_values = [100.0, 200.0] * 12
         # Para 2021: [100, 200, 100, 200...]
         # Para 2022: [120, 180, 120, 180...]
         values = [100.0, 200.0] * 6 + [120.0, 180.0] * 6
@@ -86,7 +82,7 @@ class TrendAnalysisServiceTests(unittest.TestCase):
     def test_mann_kendall_test_significant_increasing(self) -> None:
         # Serie creciente estricta
         y = np.array([10, 15, 20, 25, 30, 35, 40, 45, 50, 55], dtype=float)
-        s, var_s, p_val, is_sig = mann_kendall_test(y, alpha=0.05)
+        s, _var_s, p_val, is_sig = mann_kendall_test(y, alpha=0.05)
         self.assertGreater(s, 0)
         self.assertLess(p_val, 0.05)
         self.assertTrue(is_sig)

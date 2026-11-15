@@ -12,10 +12,7 @@ Verifica:
 """
 from __future__ import annotations
 
-import json
 import logging
-import os
-import shutil
 import sys
 import time
 from datetime import date
@@ -25,6 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from app.core.cache import get_cache_dir

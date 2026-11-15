@@ -1,17 +1,14 @@
 import tempfile
 import unittest
-from unittest.mock import patch
 from datetime import date
 from pathlib import Path
+from unittest.mock import patch
 
-import httpx
 import cftime
+import httpx
 import numpy as np
 import pandas as pd
 import xarray as xr
-from pydantic import ValidationError
-from shapely.geometry import Polygon
-
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import (
     DataUnavailableError,
@@ -19,6 +16,8 @@ from app.services.gpm_imerg import (
     _aggregate_dataset,
     _area_weights,
 )
+from pydantic import ValidationError
+from shapely.geometry import Polygon
 
 
 def _region(coordinates: list[list[list[float]]]) -> GeoJSONPolygon:

@@ -27,9 +27,9 @@ else:
     load_dotenv()
 
 import httpx
-from harmony import Client
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGConnector
+from harmony import Client
 
 
 def verificar_credenciales() -> str:
@@ -64,7 +64,7 @@ def verificar_cmr() -> None:
             feed = resp.json().get("feed", {})
             total_hits = resp.headers.get("CMR-Hits", len(feed.get("entry", [])))
             print(f"✅ Conexión exitosa a NASA CMR. Granules totales encontrados en CMR: {total_hits}")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         print(f"❌ Error al consultar NASA CMR: {e}")
         sys.exit(1)
 
@@ -75,7 +75,7 @@ def verificar_harmony(token: str) -> Client:
         client = Client(token=token)
         print("✅ Cliente Harmony inicializado correctamente.")
         return client
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         print(f"❌ Error inicializando cliente Harmony: {e}")
         sys.exit(1)
 
@@ -88,13 +88,13 @@ def prueba_extraccion_region(nombre: str, geom: GeoJSONPolygon, start: date, end
     connector = GPMIMERGConnector()
     try:
         resultado = connector.fetch_monthly_precipitation(geom, start, end)
-        print(f"✅ ¡Extracción exitosa!")
+        print("✅ ¡Extracción exitosa!")
         print(f"   Dataset: {resultado.dataset}")
         print(f"   Unidades obtenidas: {resultado.source_units}")
         print(f"   Meses procesados: {len(resultado.monthly_values)}")
         for val in resultado.monthly_values:
             print(f"   - Mes {val.month:%Y-%m}: {val.value:.2f} mm/hr (Cobertura territorial: {val.coverage_fraction*100:.1f}%)")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - boundary fallback
         print(f"❌ Error durante la extracción de datos satelitales: {e}")
 
 

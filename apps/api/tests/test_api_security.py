@@ -16,20 +16,16 @@ import unittest
 from datetime import date
 from unittest.mock import MagicMock, patch
 
-from fastapi.testclient import TestClient
-
 from app.api.routes import get_connector, get_optional_supabase
 from app.core.security import (
-    DEFAULT_CORS_ORIGINS,
     InMemoryRateLimiter,
-    get_cors_origins,
     is_write_authorized,
     rate_limiter,
-    validate_polygon_complexity_and_area,
 )
 from app.main import app
 from app.models.geojson import GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
+from fastapi.testclient import TestClient
 
 
 class APISecurityTests(unittest.TestCase):

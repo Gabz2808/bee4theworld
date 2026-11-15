@@ -15,9 +15,6 @@ from datetime import date
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
-from fastapi import HTTPException
-from fastapi.testclient import TestClient
-
 from app.core.cache import save_to_supabase
 from app.main import app
 from app.models.exploration import ExplorationRequest
@@ -31,6 +28,8 @@ from app.services.exploration_service import (
     validate_exploration_request,
 )
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
+from fastapi import HTTPException
+from fastapi.testclient import TestClient
 
 
 class Issue17RegionGeometryTests(unittest.TestCase):
@@ -197,7 +196,7 @@ class Issue17RegionGeometryTests(unittest.TestCase):
                 }
             ]
         )
-        geom, public_id, name, src, ver, internal_uuid = resolve_region(req, mock_supabase)
+        geom, public_id, name, _src, _ver, internal_uuid = resolve_region(req, mock_supabase)
         self.assertEqual(public_id, self.mock_cr_uuid)
         self.assertEqual(internal_uuid, self.mock_cr_uuid)
         self.assertEqual(name, "Costa Rica Continental")
@@ -231,7 +230,7 @@ class Issue17RegionGeometryTests(unittest.TestCase):
         )
         # No debe lanzar excepción
         validate_exploration_request(req)
-        geom, public_id, name, src, ver, _ = resolve_region(req)
+        geom, public_id, _name, _src, _ver, _ = resolve_region(req)
         self.assertEqual(public_id, "costa-rica-continental")
         self.assertTrue(are_geometries_equal(geom, DEFAULT_COSTA_RICA_GEOM))
 

@@ -4,17 +4,16 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
-from fastapi.testclient import TestClient
-from shapely.geometry import mapping
-from shapely import from_wkt
-
+from app.api.routes import get_connector, get_optional_supabase
 from app.core.supabase_cache import load_supabase_series, save_supabase_series
+from app.main import app
 from app.models.exploration import ExplorationRequest
 from app.models.geojson import GeoJSONPolygon
-from app.api.routes import get_connector, get_optional_supabase
-from app.main import app
 from app.services.exploration_service import run_exploration
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
+from fastapi.testclient import TestClient
+from shapely import from_wkt
+from shapely.geometry import mapping
 
 
 class FakeQuery:
@@ -102,7 +101,7 @@ class SupabaseCacheTests(unittest.TestCase):
         app.dependency_overrides[get_connector] = lambda: connector
         app.dependency_overrides[get_optional_supabase] = lambda: self.client
         try:
-            with patch.dict("os.environ", {"IYOK_DATA_SOURCE": "auto"}), patch("app.services.exploration_service.resolve_region", return_value=region):
+            with patch.dict("os.environ", {"IYOK_DATA_SOURCE": "auto"}), patch("app.services.exploration_service.resolve_region", return_value=region):  # noqa: SIM117 - keep the test setup readable
                 with TestClient(app) as client:
                     first = client.post("/api/v1/explorations", json=payload)
                     second = client.post("/api/v1/explorations", json=payload)

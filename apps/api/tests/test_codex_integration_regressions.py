@@ -3,14 +3,13 @@ from datetime import date
 from unittest.mock import MagicMock
 
 import pandas as pd
-from fastapi.testclient import TestClient
-
 from app.core.security import rate_limiter
 from app.main import app
 from app.models.exploration import ExplorationRequest
 from app.models.geojson import are_geometries_equal
 from app.services.exploration_service import get_catalog, resolve_region
 from app.services.trend_analysis import analyze_annual_trend
+from fastapi.testclient import TestClient
 
 
 def test_missing_years_are_inconclusive():

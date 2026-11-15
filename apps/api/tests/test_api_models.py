@@ -3,8 +3,6 @@ import json
 import unittest
 from pathlib import Path
 
-from pydantic import ValidationError
-
 from app.models.catalog import CatalogResponse
 from app.models.errors import ErrorResponse
 from app.models.exploration import (
@@ -13,6 +11,7 @@ from app.models.exploration import (
     TrendAnalysis,
 )
 from app.models.geojson import GeoJSONPolygon
+from pydantic import ValidationError
 
 
 class APIContractModelTests(unittest.TestCase):
@@ -60,7 +59,7 @@ class APIContractModelTests(unittest.TestCase):
         )
 
     def test_error_envelopes_validate(self) -> None:
-        for err_key, err_mock in self.errors.items():
+        for err_mock in self.errors.values():
             parsed = ErrorResponse.model_validate(err_mock)
             self.assertEqual(parsed.model_dump(mode="json"), err_mock)
 
