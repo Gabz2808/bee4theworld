@@ -137,6 +137,27 @@ try {
   assert.doesNotMatch(await unreviewed.locator(".trend-status").innerText(), /123[.,]456|0[.,]001/);
   await unreviewed.close();
 
+  // Aunque el catálogo anuncie meses fuera de la serie SNIT, el selector se limita a 2001-2024.
+  const wide = await browser.newPage();
+  await wide.route("**/api/backend/catalog", async (route) => {
+    const response = await route.fetch();
+    const data = await response.json();
+    data.combinations.find((x) => x.region_id === "costa-rica-snit-continental-v1").available_interval = { start: "1998-01-01", end: "2025-06-30" };
+    await route.fulfill({ response, json: data });
+  });
+  await ready(wide);
+  assert.equal(await wide.locator("#period-start").getAttribute("min"), "2001-01");
+  assert.equal(await wide.locator("#period-end").getAttribute("max"), "2024-12");
+  assert.match(await wide.locator(".control-note").innerText(), /Período disponible: 2001-01 a 2024-12/);
+  let wideRequests = 0;
+  wide.on("request", (request) => { if (request.url().includes("/api/backend/explorations")) wideRequests += 1; });
+  await period(wide, "1998-01", "1998-12");
+  await button(wide).click();
+  assert.equal(await wide.locator("#period-start").evaluate((input) => input.validity.rangeUnderflow), true);
+  await wide.waitForTimeout(1000);
+  assert.equal(wideRequests, 0);
+  await wide.close();
+
   const loading = await browser.newPage();
   await loading.route("**/api/backend/explorations", async (route) => { await new Promise((resolve) => setTimeout(resolve, 1000)); await route.continue(); });
   await ready(loading); await period(loading); await button(loading).click();

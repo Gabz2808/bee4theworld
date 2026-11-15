@@ -10,6 +10,11 @@ const PrecipitationMap = dynamic(() => import("./precipitation-map"), { ssr: fal
 
 const api = createApiV1Client("/api/backend");
 const regionId = "costa-rica-snit-continental-v1";
+// La serie SNIT reprocesada (y sus capas de mapa) cubre solo 2001-2024, aunque el catálogo anuncie más.
+const snitRange = { start: "2001-01-01", end: "2024-12-31" };
+function snitInterval(interval: { start: string; end: string }) {
+  return { start: interval.start > snitRange.start ? interval.start : snitRange.start, end: interval.end < snitRange.end ? interval.end : snitRange.end };
+}
 
 function monthEnd(month: string) {
   const [year, number] = month.split("-").map(Number);
@@ -60,7 +65,7 @@ export function Explorer() {
       if (controller.signal.aborted) return;
       const combination = data.combinations.find((c) => c.region_id === regionId && c.variable_id === "precipitation" && c.is_ready_for_exploration === true);
       if (!combination) { setCatalogError("La serie inicial no está disponible. Solicita al equipo que revise los archivos o reintenta la conexión."); return; }
-      const interval = combination.available_interval as { start: string; end: string };
+      const interval = snitInterval(combination.available_interval as { start: string; end: string });
       const months = completeMonths(interval);
       if (!months) { setCatalogError("El servicio no indica meses completos disponibles. Vuelve a intentarlo más tarde."); return; }
       const endMonth = months.end;
@@ -72,7 +77,7 @@ export function Explorer() {
   }, [reload]);
 
   const combination = catalog?.combinations.find((c) => c.region_id === regionId && c.variable_id === "precipitation" && c.is_ready_for_exploration === true);
-  const interval = combination?.available_interval as { start: string; end: string } | undefined;
+  const interval = combination ? snitInterval(combination.available_interval as { start: string; end: string }) : undefined;
   const coverage = interval ? completeMonths(interval) : null;
 
   async function explore(event: React.FormEvent<HTMLFormElement>) {
@@ -109,7 +114,7 @@ export function Explorer() {
         <label htmlFor="period-start">Desde<input id="period-start" type="month" value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setStart(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
         <label htmlFor="period-end">Hasta<input id="period-end" type="month" value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setEnd(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
         {periodError && <p id="period-error" className="period-error" role="alert">{periodError}</p>}
-        <p className="control-note">{coverage ? `Período indicado por el servicio: ${coverage.start.slice(0, 7)} a ${coverage.end.slice(0, 7)}. Frontera continental IGN/SNIT; componentes separados excluidos.` : catalogError || "Consultando disponibilidad del servicio…"}</p>
+        <p className="control-note">{coverage ? `Período disponible: ${coverage.start.slice(0, 7)} a ${coverage.end.slice(0, 7)}. Frontera continental IGN/SNIT; componentes separados excluidos.` : catalogError || "Consultando disponibilidad del servicio…"}</p>
         {catalogError ? <button type="button" className="button" onClick={() => { setCatalogError(""); setReload((n) => n + 1); }}>Reintentar conexión <span aria-hidden="true">→</span></button> : <button className="button" disabled={!coverage || status === "loading"}>{status === "loading" ? "Consultando…" : "Consultar serie"}<span aria-hidden="true">→</span></button>}
       </form>
       <div className="results" aria-busy={status === "loading"}><p className="sr-only" role="status">{status === "loading" ? "Consultando serie" : message}</p><div className="result-header"><div><span className="result-kicker">SERIE TEMPORAL</span><h3 ref={resultHeading} tabIndex={-1}>{status === "loading" ? "Consultando la serie" : status === "error" ? "No se pudo obtener la serie" : result ? "Precipitación mensual" : "Aquí comienza la exploración"}</h3></div><span className="status-pill">{status === "loading" ? "EN CURSO" : status === "error" ? "ERROR" : result ? "SIN VALIDAR" : "A LA ESPERA DE DATOS"}</span></div>
