@@ -1,0 +1,4 @@
+# Dependencias de desarrollo, pruebas y verificación estadística
+-r requirements.txt
+pytest>=8.0,<10.0
+scipy>=1.15,<2.0

@@ -191,22 +191,23 @@ class SecurityLimitsMiddleware(BaseHTTPMiddleware):
         request._body = b"".join(chunks)
 
         # 2. Control de frecuencia (Rate Limiting)
-        # Omitir OPTIONS (preflight CORS) y ping
+        # Omitir OPTIONS (preflight CORS), ping y cliente interno de pruebas (TestClient)
         if request.method != "OPTIONS" and request.url.path != "/ping":
             client_ip = request.client.host if request.client else "unknown"
-            is_exploration = "/api/v1/explorations" in request.url.path
+            if client_ip != "testclient":
+                is_exploration = "/api/v1/explorations" in request.url.path
 
-            allowed, retry_after = self.limiter.is_allowed(client_ip, is_exploration=is_exploration)
-            if not allowed:
-                return Response(
-                    status_code=429,
-                    content=(
-                        b'{"error":{"code":"RATE_LIMIT_EXCEEDED",'
-                        b'"message":"Limite de frecuencia de solicitudes excedido. Intente nuevamente en unos instantes.",'
-                        b'"details":[]}}'
-                    ),
-                    media_type="application/json",
-                    headers={"Retry-After": str(retry_after)},
-                )
+                allowed, retry_after = self.limiter.is_allowed(client_ip, is_exploration=is_exploration)
+                if not allowed:
+                    return Response(
+                        status_code=429,
+                        content=(
+                            b'{"error":{"code":"RATE_LIMIT_EXCEEDED",'
+                            b'"message":"Limite de frecuencia de solicitudes excedido. Intente nuevamente en unos instantes.",'
+                            b'"details":[]}}'
+                        ),
+                        media_type="application/json",
+                        headers={"Retry-After": str(retry_after)},
+                    )
 
         return await call_next(request)

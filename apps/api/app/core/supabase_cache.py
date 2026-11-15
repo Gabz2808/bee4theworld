@@ -22,6 +22,11 @@ REGION_SOURCE = "Iyök: geometría aproximada no verificada; NASA CMR/Harmony"
 REGION_VERSION = "provisional; cache-nasa-v1"
 
 
+class SupabaseCacheOperationalError(RuntimeError):
+    """Fallo operativo de conexión o consulta en Supabase (distinto de un miss normal)."""
+    pass
+
+
 @dataclass(frozen=True)
 class CachedSeries:
     frame: pd.DataFrame
@@ -106,9 +111,11 @@ def load_supabase_series(client: Any, public_id: str, geom: GeoJSONPolygon, star
             if frame is None:
                 continue
             return CachedSeries(frame.loc[start.isoformat():end.isoformat()].copy(), run)
-    except Exception:  # noqa: BLE001 - boundary fallback
-        logger.warning("No se pudo leer la caché Supabase; se consultará la fuente de datos.")
-    return None
+    except SupabaseCacheOperationalError:
+        raise
+    except Exception as e:  # noqa: BLE001 - boundary fallback
+        logger.warning("Fallo operativo al consultar la caché Supabase: %s", type(e).__name__)
+        raise SupabaseCacheOperationalError(f"Error operativo en Supabase: {type(e).__name__}") from e
 
 
 def save_supabase_series(client: Any, public_id: str, geom: GeoJSONPolygon, start: date, end: date, result: GPMIMERGResult, frame: pd.DataFrame) -> bool:

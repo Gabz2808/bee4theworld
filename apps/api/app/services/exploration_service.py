@@ -15,7 +15,11 @@ from fastapi import HTTPException
 # Codex (Manuel): la validación espacial se mantiene; la caché se gobierna internamente.
 from app.core.cache import load_from_cache, save_to_cache, save_to_supabase
 from app.core.security import is_write_authorized, validate_polygon_complexity_and_area
-from app.core.supabase_cache import load_supabase_series, save_supabase_series
+from app.core.supabase_cache import (
+    SupabaseCacheOperationalError,
+    load_supabase_series,
+    save_supabase_series,
+)
 from app.models.catalog import (
     CatalogCombination,
     CatalogRegion,
@@ -380,6 +384,7 @@ def resolve_region(
             raise HTTPException(
                 status_code=404,
                 detail=f"La región con identificador '{request.region_id}' no existe en el catálogo.",
+                headers={"X-Iyok-Error-Code": "NOT_FOUND"},
             )
 
         # Criterio 3: Si se envía geometría y region_id, verificar compatibilidad estricta
@@ -391,6 +396,7 @@ def resolve_region(
                         f"Incompatibilidad geométrica: La geometría provista en 'region' no coincide "
                         f"con la geometría oficial declarada para la región '{request.region_id}'."
                     ),
+                    headers={"X-Iyok-Error-Code": "GEOMETRY_INCOMPATIBLE"},
                 )
             resolved_geom = request.region
 
@@ -478,6 +484,7 @@ def validate_exploration_request(request: ExplorationRequest) -> None:
                             f"Incompatibilidad geométrica: La geometría provista en 'region' no coincide "
                             f"con la geometría oficial declarada para la región '{request.region_id}'."
                         ),
+                        headers={"X-Iyok-Error-Code": "GEOMETRY_INCOMPATIBLE"},
                     )
                 break
 
@@ -684,6 +691,7 @@ def run_exploration(
     provenance_info: dict[str, Any] | None = None
     preprocessed = False
     cached = None
+    operational_cache_error: str | None = None
 
     direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower() == "nasa"
     cache_status = "disabled" if direct_nasa else "unavailable" if supabase_client is None else "miss"
@@ -736,37 +744,42 @@ def run_exploration(
 
     # 2. Si no hay serie preprocesada y se pasó supabase_client, consultar Supabase
     if monthly_frame is None and not direct_nasa and supabase_client is not None and request.region is None:
-        supabase_cached = load_supabase_series(supabase_client, region_id, geom, start, end)
-        if supabase_cached:
-            monthly_frame = supabase_cached.frame
-            cache_status = "hit"
-            cached = supabase_cached
-            provenance_info = {
-                "effective_origin": "NASA Harmony",
-                "source": "Supabase: serie previamente procesada desde NASA CMR y Harmony",
-                "dataset": supabase_cached.metadata.get("dataset_id", "GPM_3IMERGM.07"),
-                "product_version": supabase_cached.metadata.get("dataset_version", "07"),
-                "processing_version": "1.0",
-                "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
-                "source_units": supabase_cached.metadata.get("source_units", "mm/hr"),
-                "output_units": supabase_cached.metadata.get("output_units", "mm/month"),
-                "unit_conversion": (
-                    supabase_cached.metadata.get("unit_conversion")
-                    or "Multiplicación por horas del mes calendario según año bisiesto"
-                ),
-                "spatial_resolution": "0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
-                "weighting_method": (
-                    supabase_cached.metadata.get("weighting_method")
-                    or "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
-                ),
-                "source_granule_ids": supabase_cached.metadata.get("source_granule_ids", []),
-                "data_accessed_at": (
-                    supabase_cached.metadata.get("created_at")
-                    or datetime.now(timezone.utc).isoformat()
-                ),
-                "quality_method": "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
-                "region_geometry_snapshot": geom.model_dump(),
-            }
+        try:
+            supabase_cached = load_supabase_series(supabase_client, region_id, geom, start, end)
+            if supabase_cached:
+                monthly_frame = supabase_cached.frame
+                cache_status = "hit"
+                cached = supabase_cached
+                provenance_info = {
+                    "effective_origin": "NASA Harmony",
+                    "source": "Supabase: serie previamente procesada desde NASA CMR y Harmony",
+                    "dataset": supabase_cached.metadata.get("dataset_id", "GPM_3IMERGM.07"),
+                    "product_version": supabase_cached.metadata.get("dataset_version", "07"),
+                    "processing_version": "1.0",
+                    "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+                    "source_units": supabase_cached.metadata.get("source_units", "mm/hr"),
+                    "output_units": supabase_cached.metadata.get("output_units", "mm/month"),
+                    "unit_conversion": (
+                        supabase_cached.metadata.get("unit_conversion")
+                        or "Multiplicación por horas del mes calendario según año bisiesto"
+                    ),
+                    "spatial_resolution": "0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
+                    "weighting_method": (
+                        supabase_cached.metadata.get("weighting_method")
+                        or "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+                    ),
+                    "source_granule_ids": supabase_cached.metadata.get("source_granule_ids", []),
+                    "data_accessed_at": (
+                        supabase_cached.metadata.get("created_at")
+                        or datetime.now(timezone.utc).isoformat()
+                    ),
+                    "quality_method": "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
+                    "region_geometry_snapshot": geom.model_dump(),
+                }
+        except SupabaseCacheOperationalError as e:
+            operational_cache_error = str(e)
+            logger.warning("Fallo operativo en caché Supabase (no es un miss normal): %s", e)
+            cache_status = "unavailable"
 
     # 3. Intentar caché local con procedencia (cuando no se delega a Supabase para regiones de catálogo)
     if monthly_frame is None and not direct_nasa and (supabase_client is None or request.region is not None):
@@ -1048,7 +1061,8 @@ def run_exploration(
             "IMERG no sustituye mediciones de estaciones en superficie.",
             "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida.",
             *(["Serie SNIT preprocesada con precisión conservada; componentes separados excluidos del ámbito del MVP."] if is_snit else ["Serie preprocesada con valores redondeados a dos decimales; geometría y método pendientes de validación."] if preprocessed else []),
-            *(["La caché Supabase no está disponible en esta ejecución."] if cache_status == "unavailable" else []),
+            *(["La caché Supabase no está disponible en esta ejecución."] if cache_status == "unavailable" and not operational_cache_error else []),
+            *(["Fallo operativo al consultar la caché Supabase; se recurrió a la fuente directa."] if operational_cache_error else []),
             *(["La serie no pudo guardarse en la caché Supabase."] if cache_status == "miss" else []),
         ],
     )

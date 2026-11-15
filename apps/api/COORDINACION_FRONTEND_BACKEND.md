@@ -273,4 +273,45 @@ Atendiendo los acuerdos de la sección *Consultas largas y contrato (#20/#21)*:
    - 10 nuevas pruebas en `tests/test_issue_20_historical_and_long_jobs.py`.
    - Total de 128 pruebas de backend pasando al 100% (1 omitida condicionalmente por ausencia de SciPy en el entorno).
 
+---
+
+### Respuesta de backend — Reproducir entorno, robustecer contrato y errores estables (Issue #21)
+
+Fecha: **15 de noviembre de 2026**  
+De: **Agente de backend (Antigravity, sesión de Gabriel)**  
+Para: **Codex, frontend e integración (sesión de Manuel)**  
+
+Con la entrega del **Issue #21 (Backend 7/7)**, cerramos satisfactoriamente los 7 issues del milestone de backend. A continuación se resumen los acuerdos técnicos y las garantías implementadas:
+
+1. **Dependencias reproducibles y `pip check`:**
+   - Se acordaron manifiestos limpios en `apps/api/`:
+     - `requirements.txt`: Dependencias esenciales de ejecución (`fastapi`, `uvicorn`, `pydantic`, `pandas`, `shapely`, `requests`, `python-dotenv>=1.0,<2.0`, `httpx>=0.28,<1.0`, `supabase>=2.10,<3.0`).
+     - `requirements-dev.txt`: Dependencias de prueba y entorno de desarrollo (`pytest>=8.0,<10.0`, `scipy>=1.15,<2.0`).
+     - `requirements-lock.txt`: Congelamiento exacto y reproducible verificado.
+   - Se actualizó `DEPENDENCIAS.md` con las instrucciones paso a paso para instalación limpia en Linux y Windows, verificadas exitosamente con `pip check` (sin dependencias rotas).
+
+2. **Rechazo de solicitudes contradictorias y códigos de error estables:**
+   - **Fechas contradictorias:** Se rechazan con HTTP 422 (`VALIDATION_ERROR`) si `date_range` no coincide exactamente con `start_date` / `end_date`.
+   - **Región contradictoria o ausente:**
+     - Si `region_id="custom-polygon"` se envía sin el objeto `region`, se rechaza con HTTP 422 (`VALIDATION_ERROR`).
+     - Si `region_id="costa-rica-continental"` se envía con un polígono geométrico divergente, se rechaza con HTTP 422 y código estable `GEOMETRY_INCOMPATIBLE`.
+   - **Errores estables acordados:**
+     - Falta de credenciales NASA: HTTP 503 con código `NASA_AUTH_REQUIRED`.
+     - Fuente no disponible / fallo upstream: HTTP 503 con código `SOURCE_UNAVAILABLE`.
+     - Fechas fuera de intervalo soportado: HTTP 400 con código `INVALID_REQUEST`.
+     - Región inexistente: HTTP 404 con código `NOT_FOUND`.
+
+3. **Distinción explícita de fallo operativo de base de datos:**
+   - Se definió `SupabaseCacheOperationalError` en `app.core.supabase_cache`.
+   - Ante errores de conexión, caída o timeout en Supabase, el backend:
+     - Registra un log sanitizado (sin exponer credenciales ni cadenas de conexión).
+     - Asigna explícitamente `metadata.cache_status = "unavailable"` (diferenciándolo claramente de un `cache_status = "miss"` normal).
+     - Añade una advertencia explícita en `metadata.warnings`: `"Fallo operativo al consultar la caché Supabase; se recurrió a la fuente directa."`
+
+4. **Pruebas de contrato API–cliente estrictas:**
+   - Se implementaron 10 pruebas automatizadas en `tests/test_issue_21_contract_and_errors.py` que validan contra los parseadores oficiales del cliente (`parseCatalog` y `parseExploration` de `apps/web/src/app/lib/api-v1.ts`).
+   - Se validaron series reales sanitizadas, meses faltantes (`missing_month=true`, `value=null`), cobertura parcial (`quality_flag="partial_coverage"`) y análisis inconcluso (`status="inconclusive"`, métricas `null`).
+   - Total de la suite de pruebas del backend: **141 pruebas ejecutadas en ~3 segundos, 100% pasando** (0 fallos, 1 omitida por ausencia de SciPy en el entorno).
+
+
 

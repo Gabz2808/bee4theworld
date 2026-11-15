@@ -42,10 +42,19 @@ class ExplorationRequest(APIModel):
         if not self.region_id and not self.region:
             raise ValueError("Debe especificarse 'region_id' o una geometría 'region'")
 
-        # Normalizar fechas entre start_date/end_date y date_range
+        if self.region_id == "custom-polygon" and self.region is None:
+            raise ValueError("Debe proporcionar la geometría 'region' cuando region_id es 'custom-polygon'")
+
+        # Normalizar y verificar consistencia de fechas entre start_date/end_date y date_range
         if self.start_date is not None and self.end_date is not None:
             if self.end_date < self.start_date:
                 raise ValueError("La fecha final debe ser igual o posterior a la inicial")
+            if self.date_range is not None:
+                if self.date_range.start != self.start_date or self.date_range.end != self.end_date:
+                    raise ValueError(
+                        f"Solicitud contradictoria de fechas: 'date_range' [{self.date_range.start}, {self.date_range.end}] "
+                        f"no coincide con 'start_date' ({self.start_date}) y 'end_date' ({self.end_date})"
+                    )
         elif self.date_range is not None:
             self.start_date = self.date_range.start
             self.end_date = self.date_range.end

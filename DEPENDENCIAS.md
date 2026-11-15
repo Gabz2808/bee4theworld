@@ -21,23 +21,38 @@ Playwright está instalado como dependencia de desarrollo para comprobaciones en
 
 Inicializar Next.js con TypeScript y Tailwind mediante el generador oficial; fijar versiones y guardar `package-lock.json`. Añadir cuando el código las requiera: `maplibre-gl`, `echarts`, `@tanstack/react-query`; seguir documentación oficial para shadcn/ui, que añade componentes al código y no es solo una dependencia. Para instalaciones reproducibles posteriores usar `npm ci` en `apps/web` cuando exista el lockfile.
 
-## Backend, al crear `apps/api`
+## Backend (`apps/api`)
 
-Estado del 14 de noviembre de 2026: se creó `apps/api/.venv` con Python 3.12.14 del entorno local y se instalaron las dependencias base. `apps/api/requirements-lock.txt` registra las versiones resueltas en Windows; el compañero debe revisarlas y acordar su mantenimiento y compatibilidad con otras plataformas. El entorno virtual no se versiona y depende del Python con el que fue creado.
+Actualizado al 15 de noviembre de 2026 (Issue #21):
+- `apps/api/requirements.txt`: Manifiesto de ejecución en producción con rangos compatibles (`fastapi`, `uvicorn`, `pandas`, `pydantic`, `supabase`, `harmony-py`, `netCDF4`, `numpy`, `pyproj`, `shapely`, `xarray`, `python-dotenv`, `httpx`).
+- `apps/api/requirements-dev.txt`: Dependencias de desarrollo, pruebas y verificación estadística (`pytest`, `scipy`).
+- `apps/api/requirements-lock.txt`: Registro reproducible de versiones exactas fijadas, verificado libre de conflictos con `pip check`.
 
-Para recrearlo con Python 3.12 disponible en Windows:
+### Instalación limpia y verificación:
 
+En Linux / macOS:
+```bash
+python3 -m venv apps/api/.venv
+source apps/api/.venv/bin/activate
+pip install --upgrade pip
+pip install -r apps/api/requirements.txt
+pip install -r apps/api/requirements-dev.txt
+python -m pip check
+```
+
+En Windows:
 ```powershell
 py -3.12 -m venv apps/api/.venv
-apps/api/.venv/Scripts/python.exe -m pip install -r apps/api/requirements-lock.txt
+apps/api/.venv/Scripts/python.exe -m pip install --upgrade pip
+apps/api/.venv/Scripts/python.exe -m pip install -r apps/api/requirements.txt
+apps/api/.venv/Scripts/python.exe -m pip install -r apps/api/requirements-dev.txt
 apps/api/.venv/Scripts/python.exe -m pip check
 ```
 
-No se ha implementado API ni acordado contrato. La selección de bibliotecas de análisis adicionales corresponde al método y formatos que acuerde el equipo.
-
-Crear un entorno virtual (`python -m venv .venv`; en Windows `py -3.12 -m venv .venv`) e instalar mediante un manifiesto y lockfile fijados por el equipo. Base esperada: `fastapi`, `pydantic`, `uvicorn`, `numpy`, `pandas`, `scipy`; para pruebas `pytest`. Evaluar `statsmodels` y `pymannkendall` si el método seleccionado los necesita. Incorporar `xarray`, `rasterio` y motor NetCDF/HDF apropiado solo para el formato real. Evitar instalar librerías geoespaciales pesadas si la demo usa series preprocesadas.
-
-Una vez creados y revisados los archivos de dependencias, instalar conforme a ellos, por ejemplo `python -m pip install -r requirements.txt` desde `apps/api`. No existe tal archivo todavía. Fijar versiones después de comprobar compatibilidad, licencia y vulnerabilidades; no inventar versiones verificadas.
+Para verificar suite completa de pruebas:
+```bash
+PYTHONPATH=apps/api .venv/bin/python -m unittest discover -s apps/api/tests -v
+```
 
 ## Impeccable y herramientas reutilizables
 
