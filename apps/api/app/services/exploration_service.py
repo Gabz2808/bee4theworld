@@ -352,26 +352,24 @@ def _fetch_from_supabase(
     if not supabase:
         return None
 
+    # Criterio 1: Polígono personalizado nunca se consulta en Supabase sin identidad verificada de catálogo
+    if region_identifier == "custom-polygon" or request.region is not None:
+        return None
+
     try:
         region_uuid: str | None = None
         if region_identifier and len(region_identifier) == 36 and "-" in region_identifier:
-            region_uuid = region_identifier
-        elif (region_identifier == "custom-polygon" or request.region) and geom is not None:
-            geom_hash = hashlib.sha256(
-                json.dumps(geom.coordinates, sort_keys=True).encode("utf-8")
-            ).hexdigest()[:12]
-            custom_name = f"Polígono Personalizado ({geom_hash})"
             res = (
                 supabase.table("regions")
-                .select("id")
-                .eq("name", custom_name)
+                .select("id, name, geom")
+                .eq("id", region_identifier)
                 .limit(1)
                 .execute()
             )
             if res.data:
                 region_uuid = str(res.data[0]["id"])
         elif region_identifier:
-            name_candidates = [region_identifier]
+            name_candidates = []
             if region_identifier in ("costa-rica-continental", "costa-rica"):
                 name_candidates = ["Costa Rica Continental"]
             elif region_identifier in ("cuenca-canal-panama", "panama-canal", "panama"):
@@ -382,7 +380,7 @@ def _fetch_from_supabase(
             for candidate in name_candidates:
                 res = (
                     supabase.table("regions")
-                    .select("id")
+                    .select("id, name, geom")
                     .eq("name", candidate)
                     .limit(1)
                     .execute()
@@ -397,6 +395,7 @@ def _fetch_from_supabase(
         start_str = start.isoformat()
         end_str = end.isoformat()
 
+        # Selección determinista: buscar runs que cubran el intervalo ordenados por created_at desc
         query = (
             supabase.table("ingestion_runs")
             .select("id")
@@ -406,54 +405,62 @@ def _fetch_from_supabase(
             .gte("requested_end", end_str)
             .order("created_at", desc=True)
         )
-        runs_query = query.limit(1).execute()
+        runs_query = query.execute()
         if not runs_query.data:
             return None
 
-        run_id = runs_query.data[0]["id"]
-        data_query = (
-            supabase.table("processed_data")
-            .select("observed_month, precipitation_mm, coverage_fraction, quality_flag")
-            .eq("ingestion_run_id", run_id)
-            .gte("observed_month", start_str)
-            .lte("observed_month", end_str)
-            .order("observed_month")
-            .execute()
-        )
-        rows = data_query.data
-        if not rows:
-            return None
-
         expected_months = pd.date_range(start=start, end=end, freq="MS")
-        if len(rows) != len(expected_months):
-            return None
 
-        records = {}
-        for row in rows:
-            m = pd.Timestamp(row["observed_month"])
-            val = (
-                float(row["precipitation_mm"])
-                if row["precipitation_mm"] is not None
-                else float("nan")
+        # Evaluar candidatos de forma determinista para descartar cualquier ingesta incompleta
+        for run_candidate in runs_query.data:
+            run_id = run_candidate["id"]
+            data_query = (
+                supabase.table("processed_data")
+                .select("observed_month, precipitation_mm, coverage_fraction, quality_flag")
+                .eq("ingestion_run_id", run_id)
+                .gte("observed_month", start_str)
+                .lte("observed_month", end_str)
+                .order("observed_month")
+                .execute()
             )
-            cov = float(row["coverage_fraction"])
-            qual = str(row["quality_flag"])
-            records[m] = (val, cov, qual)
+            rows = data_query.data
+            if not rows or len(rows) != len(expected_months):
+                logger.warning(
+                    "Ingestion run %s incompleto (%d meses de %d esperados); omitiendo.",
+                    run_id,
+                    len(rows) if rows else 0,
+                    len(expected_months),
+                )
+                continue
 
-        df = pd.DataFrame.from_dict(
-            records,
-            orient="index",
-            columns=("precipitation_mm", "coverage_fraction", "quality_flag"),
-        ).reindex(expected_months)
-        df.index.name = "month"
-        logger.info(
-            "Caché Supabase HIT para region_uuid %s en rango [%s, %s] (run_id: %s)",
-            region_uuid,
-            start_str,
-            end_str,
-            run_id,
-        )
-        return df
+            records = {}
+            for row in rows:
+                m = pd.Timestamp(row["observed_month"])
+                val = (
+                    float(row["precipitation_mm"])
+                    if row["precipitation_mm"] is not None
+                    else float("nan")
+                )
+                cov = float(row["coverage_fraction"])
+                qual = str(row["quality_flag"])
+                records[m] = (val, cov, qual)
+
+            df = pd.DataFrame.from_dict(
+                records,
+                orient="index",
+                columns=("precipitation_mm", "coverage_fraction", "quality_flag"),
+            ).reindex(expected_months)
+            df.index.name = "month"
+            logger.info(
+                "Caché Supabase HIT para region_uuid %s en rango [%s, %s] (run_id: %s)",
+                region_uuid,
+                start_str,
+                end_str,
+                run_id,
+            )
+            return df
+
+        return None
     except Exception as e:
         logger.warning("Error consultando caché en Supabase: %s", e)
         return None

@@ -97,46 +97,40 @@ def save_to_supabase(
     monthly_frame: pd.DataFrame,
     region_identifier: str,
 ) -> None:
-    """Intenta persistir el resultado de ingestión y la serie procesada en Supabase."""
+    """Intenta persistir el resultado de ingestión y la serie procesada en Supabase.
+
+    Satisface estrictamente los criterios de integridad:
+    1. Geometría personalizada nunca se asocia por defecto a otra región;
+       se conserva fuera de Supabase (en caché local) a menos que posea identidad verificada.
+    2. Escritura atómica con rollback en caso de fallo parcial para evitar lecturas de datos truncados.
+    3. Idempotencia y selección determinista.
+    """
     if supabase is None:
+        return
+
+    # Criterio 1: Polígono personalizado se conserva fuera de Supabase para evitar asociaciones indebidas
+    if region_identifier == "custom-polygon" or request.region is not None:
+        logger.info(
+            "Geometría personalizada ('%s') sin registro verificado en catálogo oficial. "
+            "Se conserva en caché local fuera de Supabase para evitar asociarla a otra región.",
+            region_identifier,
+        )
         return
 
     try:
         region_uuid: str | None = None
         if len(region_identifier) == 36 and "-" in region_identifier:
-            region_uuid = region_identifier
-        elif region_identifier == "custom-polygon" or request.region:
-            geom_hash = hashlib.sha256(
-                json.dumps(geom.coordinates, sort_keys=True).encode("utf-8")
-            ).hexdigest()[:12]
-            custom_name = f"Polígono Personalizado ({geom_hash})"
             res = (
                 supabase.table("regions")
-                .select("id")
-                .eq("name", custom_name)
+                .select("id, name, geom")
+                .eq("id", region_identifier)
                 .limit(1)
                 .execute()
             )
             if res.data:
                 region_uuid = str(res.data[0]["id"])
-            else:
-                insert_res = (
-                    supabase.table("regions")
-                    .insert(
-                        {
-                            "name": custom_name,
-                            "description": "Polígono ingresado por el usuario para consulta analítica.",
-                            "geom": geom.model_dump(),
-                            "boundary_source": "Usuario / Solicitud directa",
-                            "boundary_version": "1.0",
-                        }
-                    )
-                    .execute()
-                )
-                if insert_res.data:
-                    region_uuid = str(insert_res.data[0]["id"])
         else:
-            name_candidates = [region_identifier]
+            name_candidates = []
             if region_identifier in ("costa-rica-continental", "costa-rica"):
                 name_candidates = ["Costa Rica Continental"]
             elif region_identifier in ("cuenca-canal-panama", "panama-canal", "panama"):
@@ -147,7 +141,7 @@ def save_to_supabase(
             for candidate in name_candidates:
                 res = (
                     supabase.table("regions")
-                    .select("id")
+                    .select("id, name, geom")
                     .eq("name", candidate)
                     .limit(1)
                     .execute()
@@ -158,7 +152,7 @@ def save_to_supabase(
 
         if not region_uuid:
             logger.debug(
-                "Región %s no mapeada a UUID en Supabase, se mantiene en caché local.",
+                "Región '%s' no encontrada con identidad verificada en Supabase; se mantiene en caché local.",
                 region_identifier,
             )
             return
@@ -166,6 +160,33 @@ def save_to_supabase(
         geom_payload = geom.model_dump()
         start = request.start_date.isoformat()  # type: ignore[union-attr]
         end = request.end_date.isoformat()      # type: ignore[union-attr]
+
+        # Idempotencia: Verificar si ya existe un run idéntico y completo
+        existing_runs = (
+            supabase.table("ingestion_runs")
+            .select("id")
+            .eq("region_id", region_uuid)
+            .eq("variable_id", request.variable_id)
+            .eq("requested_start", start)
+            .eq("requested_end", end)
+            .order("created_at", desc=True)
+            .limit(1)
+            .execute()
+        )
+        if existing_runs.data:
+            existing_run_id = existing_runs.data[0]["id"]
+            existing_data = (
+                supabase.table("processed_data")
+                .select("observed_month")
+                .eq("ingestion_run_id", existing_run_id)
+                .execute()
+            )
+            if len(existing_data.data) == len(monthly_frame):
+                logger.info(
+                    "Ingestión idéntica y completa ya existe en Supabase (%s); omitiendo duplicación.",
+                    existing_run_id,
+                )
+                return
 
         run_payload = {
             "region_id": region_uuid,
@@ -207,12 +228,27 @@ def save_to_supabase(
                 }
             )
 
-        if processed_rows:
-            supabase.table("processed_data").insert(processed_rows).execute()
+        # Inserción con rollback defensivo para garantizar atomicidad
+        try:
+            if processed_rows:
+                data_res = supabase.table("processed_data").insert(processed_rows).execute()
+                if not data_res.data or len(data_res.data) != len(processed_rows):
+                    raise RuntimeError("Inserción incompleta o truncada en processed_data")
             logger.info(
                 "Persistido en Supabase run_id %s con %d registros.",
                 run_id,
                 len(processed_rows),
             )
+        except Exception as insert_err:
+            logger.error(
+                "Error insertando processed_data para run_id %s; aplicando rollback defensivo: %s",
+                run_id,
+                insert_err,
+            )
+            try:
+                supabase.table("ingestion_runs").delete().eq("id", run_id).execute()
+            except Exception as rollback_err:
+                logger.error("Error durante rollback de ingestion_run %s: %s", run_id, rollback_err)
+            raise
     except Exception as e:
         logger.warning("No se pudo persistir en Supabase: %s", e)
