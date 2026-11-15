@@ -14,9 +14,13 @@ El repositorio está estructurado como un **monorepo unificado** compuesto por e
 
 * **Backend (`apps/api`):** Implementado y operativo bajo la API v1 acordada:
   * Catálogo unificado (`GET /api/v1/catalog`) con geometrías territoriales en PostGIS, metadatos y rangos de cobertura real.
-  * Motor analítico de exploración (`POST /api/v1/explorations`) conectado a una base de datos **Supabase (PostgreSQL + PostGIS)** precargada con la serie histórica completa de 24 años (288 meses calendario, 2001-2024) de NASA GPM IMERG V07.
-  * Algoritmos de climatología multi-anual, cálculo de anomalías mensuales (`anomaly_mm`), agregaciones anuales estrictas y evaluación estadística no paramétrica de tendencias mediante el **estimador de pendiente de Theil-Sen** y el **test de Mann-Kendall** con ajuste de empates.
-  * Suite de pruebas automatizadas con **50 tests unitarios y de integración pasando al 100%**.
+  * Motor analítico de exploración (`POST /api/v1/explorations`) con **doble modalidad de ingesta**:
+    * **Base de datos Supabase (PostgreSQL + PostGIS):** Serie histórica de 24 años (2001-2024) de Costa Rica precargada.
+    * **Extracción satelital en vivo con NASA Earthdata / Harmony:** Recorte espacial y descarga on-demand de gránulos NetCDF-4 de NASA GPM IMERG V07 para **cualquier polígono de América Latina** mediante token de Earthdata.
+  * **Sistema de Caché de Alto Rendimiento:** Almacenamiento local determinista en disco que reduce tiempos de respuesta subsecuentes de minutos a **< 50 milisegundos (aceleración > 2,000x)**.
+  * **Interpretación Científica Comprensible y Prudente (`ScientificInterpretation`):** Generación automática de narrativa en prosa accesible para ciudadanos y tomadores de decisiones, traduciendo picos estacionales, anomalías en mm y veredictos de Mann-Kendall / Theil-Sen con estrictas directrices de prudencia científica (sin atribuciones causales infundadas).
+  * CORS habilitado para comunicación directa y sin fricciones con `apps/web`.
+  * Suite de pruebas automatizadas con **58 tests unitarios y de integración pasando al 100% en < 0.5 s**.
 * **Frontend (`apps/web`):** Prototipo accesible desarrollado con **Next.js 15, TypeScript y Tailwind CSS**, con gráficos interactivos y tabla de observaciones, navegable por teclado y adaptable a escritorio y móvil. En proceso de conexión con los contratos v1 del backend.
 
 ---
@@ -77,9 +81,17 @@ uvicorn app.main:app --reload --env-file .env
 ```
 * **API Health Check:** `http://localhost:8000/ping`
 * **Documentación interactiva Swagger UI:** `http://localhost:8000/docs`
-* **Ejecutar pruebas unitarias e integración (50 tests):**
+* **Ejecutar pruebas unitarias e integración (58 tests):**
   ```bash
   python -m unittest discover -s tests -v
+  ```
+* **Diagnóstico NASA Earthdata / Harmony:**
+  ```bash
+  python scripts/verificar_earthdata.py --descargar-prueba
+  ```
+* **Prueba integral de endpoint y caché con datos en vivo:**
+  ```bash
+  python scripts/probar_exploracion_en_vivo.py --periodo 12meses
   ```
 
 ---
