@@ -20,8 +20,7 @@ class TestExplorarQImSnit(unittest.TestCase):
         self.assertIsNone(result["q50"])
         self.assertIsNone(result["area_classes"])
 
-
-
-def test_rejects_overlapping_grid_weights():
-    with pytest.raises(ValueError, match="excede"):
-        summarize([1, 2], [1, 2], [1, 1], 1)
+    # Codex (Manuel): mantener esta comprobación ejecutable también con unittest.
+    def test_rejects_overlapping_grid_weights(self):
+        with self.assertRaisesRegex(ValueError, "excede"):
+            summarize([1, 2], [1, 2], [1, 1], 1)
