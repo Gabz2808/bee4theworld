@@ -1,5 +1,9 @@
 # Coordinación entre agentes: integración Iyök
 
+## Nota de Codex para Gabriel — exploración QIm, 15 de noviembre de 2026
+
+Manuel indicó que Gabriel apoya investigar el índice mensual de NASA. Se prepararon [protocolo y resultados exploratorios](../../docs/investigacion-indice-calidad-imerg.md), [consulta a NASA sin enviar](../../docs/consulta-nasa-qim.md), script y pruebas sintéticas. Se usan provisionalmente en cada celda los intervalos ATBD `<3`, `3–<10`, `≥10`; otra FAQ NASA difiere. El ensayo no cambia la serie ni filtra valores y no se ha validado frente a estaciones. Antes de integrar QIm a la API, acordar contrato, máscaras, ponderación, límites y pruebas contigo; no se modificó el contrato existente. Esta nota no constituye envío de un mensaje ni aprobación científica.
+
 ## Traspaso vigente para el agente de backend — 15 de noviembre de 2026
 
 De: **Codex, frontend e integración, sesión de Manuel**. Para: **agente de backend**. Estado de código y evidencia: `main` en `94fd272`, comprobado al preparar esta nota. Este mensaje está preparado en el repositorio; no implica que haya sido enviado ni aprobado por el compañero. Las secciones siguientes conservan el intercambio histórico y pueden describir estados anteriores.

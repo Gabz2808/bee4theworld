@@ -18,14 +18,19 @@ try {
   for (const width of [1280, 390]) {
     const page = await browser.newPage({ viewport: { width, height: 800 } });
     await ready(page);
+    assert.equal(await page.getByRole("link", { name: "Investigación", exact: true }).getAttribute("href"), "#investigacion");
+    assert.equal(await page.getByRole("heading", { name: "Pruebas y resultados inconclusos" }).count(), 1);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await period(page);
     await button(page).click();
     await page.getByRole("heading", { name: "Precipitación mensual" }).waitFor({ timeout: 30000 });
     assert.equal(await page.getByText("MVP · serie en revisión").isVisible(), true);
-    assert.equal(await page.getByText(/La calidad informada en la tabla describe cobertura espacial/).isVisible(), true);
+    assert.equal(await page.getByText(/El índice de calidad de NASA aún no se muestra/).isVisible(), true);
     assert.equal(await page.getByText(/Su procedencia, calidad y procesamiento siguen en revisión científica/).isVisible(), true);
     assert.equal(await page.locator("tbody tr").count(), 12);
     await page.getByText("Ver valores y cobertura en una tabla").click();
+    assert.equal(await page.getByRole("columnheader", { name: "Estado de cobertura" }).isVisible(), true);
+    assert.match(await page.locator("tbody tr").first().innerText(), /Parcial/);
     assert.match(await page.locator("tbody tr").first().innerText(), /70[.,]38/);
     assert.match(await page.locator("tbody tr").first().innerText(), />99 %/);
     assert.equal(await page.locator("#period-start").getAttribute("min"), "2001-01");
@@ -75,6 +80,8 @@ try {
     const response = await route.fetch();
     const data = await response.json();
     data.timeseries[0].value = 0;
+    data.timeseries[0].coverage_fraction = 1;
+    data.timeseries[0].quality_flag = "ok";
     data.timeseries[1].value = null;
     data.timeseries[1].quality_flag = "missing_value";
     await route.fulfill({ response, json: data });
@@ -83,7 +90,9 @@ try {
   await missing.getByRole("heading", { name: "Precipitación mensual" }).waitFor();
   await missing.getByText("Ver valores y cobertura en una tabla").click();
   assert.match(await missing.locator("tbody tr").nth(0).innerText(), /2024-01\s+0/);
+  assert.match(await missing.locator("tbody tr").nth(0).innerText(), /Completa/);
   assert.match(await missing.locator("tbody tr").nth(1).innerText(), /2024-02\s+Sin dato/);
+  assert.match(await missing.locator("tbody tr").nth(1).innerText(), /Sin valor/);
   assert.match(await missing.locator("thead").innerText(), /Valor \(.+\)/);
   await missing.close();
 

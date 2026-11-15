@@ -1,0 +1,14 @@
+{
+  "months": 288,
+  "geometry_sha256": "ea5ab8413ca2b1af4fc6602cffd08ae4e2c956a6d901a45e2ece4dbd25c6cfcb",
+  "exactextract_version": "0.3.0",
+  "exactextract_area_m2": 51415837272.006836,
+  "iyok_area_m2": 51092133650.22745,
+  "region_area_m2_epsg6933": 51092240877.63613,
+  "normalized_weight_l1": 4.69585995209774e-05,
+  "normalized_weight_l1_regularized": 4.606545106562218e-05,
+  "max_cell_weight_abs_difference": 2.9993517430197507e-07,
+  "median_qim_abs_difference_max": 0.09000015258789062,
+  "median_qim_different_months": 2,
+  "class_fraction_abs_difference_max": 1.633044819082663e-05
+}
