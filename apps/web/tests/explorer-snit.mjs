@@ -19,7 +19,7 @@ try {
     const page = await browser.newPage({ viewport: { width, height: 800 } });
     await ready(page);
     assert.equal(await page.getByRole("link", { name: "Investigación", exact: true }).getAttribute("href"), "#investigacion");
-    assert.equal(await page.getByRole("heading", { name: "Pruebas y resultados inconclusos" }).count(), 1);
+    assert.equal(await page.getByRole("heading", { name: "Pruebas y alcance técnico" }).count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await period(page);
     await button(page).click();
@@ -27,6 +27,9 @@ try {
     assert.equal(await page.getByText("MVP · serie en revisión").isVisible(), true);
     assert.equal(await page.getByText(/El índice de calidad de NASA aún no se muestra/).isVisible(), true);
     assert.equal(await page.getByText(/Su procedencia, calidad y procesamiento siguen en revisión científica/).isVisible(), true);
+    assert.equal(await page.getByRole("heading", { name: "Estado del análisis de tendencia" }).isVisible(), true);
+    assert.equal(await page.getByText("Inconcluso", { exact: true }).isVisible(), true);
+    assert.match(await page.locator(".evidence-list").innerText(), /GPM_3IMERGM\.07/);
     assert.equal(await page.locator("tbody tr").count(), 12);
     await page.getByText("Ver valores y cobertura en una tabla").click();
     assert.equal(await page.getByRole("columnheader", { name: "Estado de cobertura" }).isVisible(), true);
@@ -117,6 +120,20 @@ try {
   await ready(mismatch); await period(mismatch); await button(mismatch).click();
   await mismatch.getByText(/respuesta no tiene el formato esperado/).first().waitFor();
   await mismatch.close();
+
+  // Respuesta sintética: no habilita inferencias antes de la revisión científica.
+  const unreviewed = await browser.newPage();
+  await unreviewed.route("**/api/backend/explorations", async (route) => {
+    const response = await route.fetch();
+    const data = await response.json();
+    data.trend_analysis = { status: "conclusive", method: "Método sintético", summary: "Ejemplo", slope: 123.456, slope_unit: "mm/año", p_value: 0.001, confidence_level: 0.95, is_significant: true };
+    await route.fulfill({ response, json: data });
+  });
+  await ready(unreviewed); await period(unreviewed); await button(unreviewed).click();
+  await unreviewed.getByRole("heading", { name: "Precipitación mensual" }).waitFor();
+  assert.equal(await unreviewed.getByText("Resultado en revisión", { exact: true }).isVisible(), true);
+  assert.doesNotMatch(await unreviewed.locator(".trend-status").innerText(), /123[.,]456|0[.,]001/);
+  await unreviewed.close();
 
   const loading = await browser.newPage();
   await loading.route("**/api/backend/explorations", async (route) => { await new Promise((resolve) => setTimeout(resolve, 1000)); await route.continue(); });

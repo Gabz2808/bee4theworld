@@ -10,7 +10,7 @@ Para desarrollo, iniciar la API en `127.0.0.1:8000` y el frontend desde `apps/we
 
 Para consultar NASA directamente desde el backend, ver [acceso NASA directo](acceso-nasa-directo.md). Este mecanismo usa CMR y Harmony, no Giovanni, y necesita autenticación Earthdata en el servidor.
 
-Las rutas del frontend únicamente reenvían catálogo y exploración; no comprueban que el backend haya seleccionado la ingesta geográfica correcta. La procedencia que aparece es la declarada por el servicio, no una validación independiente de Giovanni. La validación científica sigue pendiente antes de su uso en la demo.
+Las rutas del frontend únicamente reenvían catálogo y exploración; no comprueban que el backend haya seleccionado la ingesta geográfica correcta. La procedencia que aparece es la declarada por el servicio, no una validación independiente de Giovanni. Por decisión de Manuel, la validación científica completa queda fuera del alcance del MVP; la demo debe mantener visible que está pendiente y no presentar inferencias no revisadas como concluyentes.
 
 ### Comprobación de integración — 15 de noviembre de 2026
 

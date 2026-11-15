@@ -15,6 +15,9 @@ export type Exploration = {
   points: { date: string; value: number | null; coverageFraction: number; qualityFlag: string }[];
   // La interpretación científica del resultado permanece pendiente de revisión.
   analysisStatus: "conclusive" | "inconclusive" | "not_computed";
+  analysisMethod: string;
+  analysisNote: string;
+  evidence: { doi: string | null; weighting: string | null; granules: string[] };
 };
 
 export interface ExplorationSource {
@@ -148,7 +151,17 @@ export function parseExploration(input: unknown, request: ExplorationRequest): E
   }
   if (previous.slice(0, 7) !== request.end_date.slice(0, 7)) return invalid();
   array(data.annual_totals).forEach((raw) => { const a = object(raw); if (!Number.isInteger(a.year) || finite(a.annual_precipitation_mm) < 0 || a.months_reported !== 12) invalid(); });
-  return { kind: "api_unverified", metadata, points, analysisStatus: analysis.status };
+  // Codex: presentar solo procedencia declarada y enlaces HTTPS, sin asumir que están verificados.
+  let doi: string | null = null;
+  if (metadata.doi_or_link != null) {
+    const raw = string(metadata.doi_or_link);
+    try { const url = new URL(raw); if (url.protocol === "https:" && !url.username && !url.password) doi = url.href; } catch { /* Enlace no utilizable. */ }
+  }
+  const weighting = metadata.weighting_method == null ? null : string(metadata.weighting_method);
+  const granules = metadata.source_granule_ids == null ? [] : array(metadata.source_granule_ids).map(string);
+  return { kind: "api_unverified", metadata, points, analysisStatus: analysis.status,
+    analysisMethod: string(analysis.method), analysisNote: analysis.status === "conclusive" ? string(analysis.summary) : string(analysis.methodological_note),
+    evidence: { doi, weighting, granules } };
 }
 
 /** La URL y el transporte se inyectan; no se incluyen claves en el cliente. */

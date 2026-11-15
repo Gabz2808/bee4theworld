@@ -50,6 +50,20 @@ test("conserva cero, faltante, cobertura parcial y análisis inconcluso", () => 
   equal(result.kind, "api_unverified"); equal(result.analysisStatus, "inconclusive");
   deepStrictEqual(result.points.map((p) => p.value), [0, null]);
   equal(result.points[1].coverageFraction, 0.5);
+  equal(result.analysisNote, "Ejemplo");
+});
+test("expone procedencia disponible y descarta enlaces inseguros", () => {
+  const response = exploration();
+  response.metadata.doi_or_link = "https://doi.org/10.5067/example";
+  response.metadata.weighting_method = "Ponderación de ejemplo";
+  response.metadata.source_granule_ids = ["granulo-sintetico"];
+  const result = parseExploration(response, request);
+  equal(result.evidence.doi, response.metadata.doi_or_link);
+  deepStrictEqual(result.evidence.granules, ["granulo-sintetico"]);
+  response.metadata.doi_or_link = "javascript:alert(1)";
+  equal(parseExploration(response, request).evidence.doi, null);
+  response.metadata.source_granule_ids = [42];
+  throws(() => parseExploration(response, request), ApiClientError);
 });
 test("rechaza fechas, selección, unidad, cobertura y estados incompatibles", () => {
   for (const mutate of [

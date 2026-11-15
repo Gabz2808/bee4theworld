@@ -29,3 +29,6 @@ button:disabled:hover{background:#244f3c}
 @media(prefers-reduced-motion:reduce){.research-links a{transition:none}}
 
 /* Mantener los iconos proporcionados durante la carga de estilos. */
+.trend-status h4{font:400 20px Georgia,serif;margin:0 0 10px}.trend-status p+p{margin-top:8px}.evidence-list span{gap:20px;align-items:baseline}.evidence-list b{text-align:right;max-width:65%;overflow-wrap:anywhere;color:#53665e;font-size:12px}.evidence-list a{text-decoration:underline;text-underline-offset:3px}.evidence-list details{border-bottom:1px solid #ceddce;padding:10px 0}.evidence-list summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700}.evidence-list ul{max-height:180px;overflow:auto;padding-left:20px;overflow-wrap:anywhere;line-height:1.6}
+
+/* Ficha de evidencia del resultado. */
