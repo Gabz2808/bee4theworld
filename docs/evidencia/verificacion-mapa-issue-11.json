@@ -1,0 +1,11 @@
+{
+  "months": 288,
+  "cells_per_month": 520,
+  "null_cells": 0,
+  "max_cell_error_mm_month": 0.00010572051996859955,
+  "max_regional_error_mm_month": 7.89648983072766e-05,
+  "worst_regional_month": "2016-11",
+  "boundary_area_km2": 51092.24087763613,
+  "simplified_area_difference_pct": 0.20384760771934365,
+  "simplified_hausdorff_deg": 0.0019994545360551945
+}

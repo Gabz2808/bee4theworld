@@ -145,7 +145,7 @@ try {
   assert.equal(await loading.locator("#period-start").isDisabled(), true);
   assert.equal(await loading.locator("#period-end").isDisabled(), true);
   await loading.getByRole("heading", { name: "Precipitación mensual" }).waitFor({ timeout: 30000 });
-  assert.match(await loading.locator(".chart-caption").innerText(), /2024-01 a 2024-12/);
+  assert.match(await loading.locator(".chart-caption").first().innerText(), /2024-01 a 2024-12/);
   await loading.close();
   console.log("Límite, red, disponibilidad, vacío, geometría y carga OK");
 } finally {

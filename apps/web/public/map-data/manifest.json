@@ -1,0 +1,2036 @@
+{
+ "status": "capa derivada para visualización; revisión científica y de distribución pendientes",
+ "dataset": "GPM_3IMERGM.07",
+ "doi": "10.5067/GPM/IMERG/3B-MONTH/07",
+ "source": "NASA GES DISC / Harmony, recortes locales verificados por huella",
+ "harmony_job_id": "054695e5-f58a-47f6-a365-bf600d9d0b6d",
+ "geometry_sha256": "ea5ab8413ca2b1af4fc6602cffd08ae4e2c956a6d901a45e2ece4dbd25c6cfcb",
+ "geometry_file": "datos/fuentes/snit-provincial-2026-11-15/continental-principal.geojson.gz",
+ "geometry_attribution": "IGN / Registro Nacional / SNIT",
+ "source_units": "mm/hr",
+ "unit": "mm/month",
+ "unit_conversion": "tasa mm/hr multiplicada por las horas del mes; redondeo a tres decimales",
+ "cell_selection": "celdas completas de la cuadrícula IMERG que intersectan la frontera; incluyen área fuera de ella",
+ "cell_format": "[oeste, sur, este, norte, valor o null]",
+ "boundary_file": "boundary.json",
+ "boundary_sha256": "59553f79bc009d64d28551f194ed95d0110eb2fc7c0cae5c49fb55032289957d",
+ "boundary_simplification": "shapely simplify 0.002° con topología preservada; solo visualización, el cálculo usa la frontera original",
+ "months": [
+  {
+   "month": "2001-01",
+   "file": "2001-01.json",
+   "sha256": "48a3405f76f0e2351adc828dfafe39e18d91d8fba8d8cba1340dc2872f7c1100",
+   "source_file": "467718942_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "f16c6ad4ca02562290700cee26c93f98f6dd0ccec3c86c20cf062ef2f14b3741"
+  },
+  {
+   "month": "2001-02",
+   "file": "2001-02.json",
+   "sha256": "1e800f70d39b32f3d42d83ec1f38def44b052f83063af158c2d78c3ef6a6090a",
+   "source_file": "467718943_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "8fb229e81535aeeef2ab1b7f5eed7d140624061430d221391ae74b64f110aa8c"
+  },
+  {
+   "month": "2001-03",
+   "file": "2001-03.json",
+   "sha256": "5d1c201cab25686c6bc9ace46ff5e349c87b5521164c7e94e2f5b1e9fe6e7468",
+   "source_file": "467718944_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "1717f1d99bb0708d2d010243818f472d3fc044996e20224f265df450ce55b6b0"
+  },
+  {
+   "month": "2001-04",
+   "file": "2001-04.json",
+   "sha256": "2fbcdceb9a75769b86d40add2c104ff0e1718a3e6fa7aaec836a16e6cc1f18ea",
+   "source_file": "467718945_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "eeec9597a19c35d793b1a005eb8241ed50abfa85f7d56421c46aa708111ddb69"
+  },
+  {
+   "month": "2001-05",
+   "file": "2001-05.json",
+   "sha256": "a5bdfab93173329b74cde8de0ef3edd01f9e8da3b24b14621007b8b9564a573f",
+   "source_file": "467718946_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "813170d2422ac065a9e410f8c55ee79cfbe053f8911a11c9582e1b20f2a127d1"
+  },
+  {
+   "month": "2001-06",
+   "file": "2001-06.json",
+   "sha256": "f7cdf3cab37169f3798fdc24d1fe136196f16a894a998b8207c5e43a509b548d",
+   "source_file": "467718947_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "4eaadc88d2bacfbda5da71652601f717353e913ce573ff48a926d6691a1054a7"
+  },
+  {
+   "month": "2001-07",
+   "file": "2001-07.json",
+   "sha256": "48de3e7c2175336781a4e27032355b31cb521f9d34e1cd140985fda396aef700",
+   "source_file": "467718948_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "2b080bbb2a4f84188b64ad844faedfbde0e0fd03d815792954ed33f620bcef3f"
+  },
+  {
+   "month": "2001-08",
+   "file": "2001-08.json",
+   "sha256": "bd5458b7a5c25b88c711308a39c76bf638fdee0c03710a3a98ec116574c9b544",
+   "source_file": "467718949_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "df682ba48121b91a4476a9c47067edb7e16e69cea0bd0f352c0f80074905d98a"
+  },
+  {
+   "month": "2001-09",
+   "file": "2001-09.json",
+   "sha256": "cbcc2fe97d4597affada49ee77a3c34758a416ad7aa947e4278d1f9efbc56125",
+   "source_file": "467718950_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20010901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "c0c71ea7310bcd0546b6714695d078d8f485cc1e96863d867eb216c15066d340"
+  },
+  {
+   "month": "2001-10",
+   "file": "2001-10.json",
+   "sha256": "05fdea772dc32d33ea5cf354346ab680c0edda6ed76a2d97fd548b6dfe7b4111",
+   "source_file": "467718951_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20011001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "d15db561e4c0495d388a51b2c8cffcba60d37f9aee22b89fd4123ae552ddc5d1"
+  },
+  {
+   "month": "2001-11",
+   "file": "2001-11.json",
+   "sha256": "b4e0b14538e7efb76f8168588c859b4f1fb5edc9e743fbbbf83bf4234a8261a1",
+   "source_file": "467718952_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20011101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "a2396af8c7b724ab3dd37c08812836a614c20f5f1c7d90f8a619f1229b7c513c"
+  },
+  {
+   "month": "2001-12",
+   "file": "2001-12.json",
+   "sha256": "a3c4e688ccf9366c00d0d8d6e2fe97675b48f32472d13fb035f0ab205d334e2d",
+   "source_file": "467718953_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20011201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "c8047695d1ca2f0291012a6a13f8cff3d097e1d31b60d960056fbf167c137cb0"
+  },
+  {
+   "month": "2002-01",
+   "file": "2002-01.json",
+   "sha256": "09e4465c359795a0cdc1c633e1b521f14d59bf7b7f671e02f874e498bfd9aeca",
+   "source_file": "467718954_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "417c20eae9a22cb095499e50eee7b185f59b76007d12fb9d987d7ae74819f5d3"
+  },
+  {
+   "month": "2002-02",
+   "file": "2002-02.json",
+   "sha256": "51f8d2506c1bfa239b166667b2d933a3f608b4838c7fabfd37188960d2ec88e4",
+   "source_file": "467718955_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "8d66ce0c8624f36baa5347a2c3d0b796e370ba26ee0a80d380b3332c5c64ec75"
+  },
+  {
+   "month": "2002-03",
+   "file": "2002-03.json",
+   "sha256": "2f1e803d0dd74df33f564ed75d4332eeb6561d710c08c2ca7ef8c2d12f60beaf",
+   "source_file": "467718956_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "4bc39f0f28170c8b2de6b24619f99b6b4070da5a3e3d5598b5d8278af529c52e"
+  },
+  {
+   "month": "2002-04",
+   "file": "2002-04.json",
+   "sha256": "6b53f4f41c83d844da475d8b878e6db9b930b3ad4d4d9b1a636a794c7e8facf3",
+   "source_file": "467718957_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "381aeebe536124bf2b08c598dec8281d25f9134eb21358d3071b6ab6e18342c3"
+  },
+  {
+   "month": "2002-05",
+   "file": "2002-05.json",
+   "sha256": "fbef84088d0a61630d2d53b7e19b5ecc1d348b920e4866313161e7549b44f043",
+   "source_file": "467718958_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "ddd1fe0905354fa9895c0dd0f321b3fd0f75156bdaabdf9d071f8290bb41df94"
+  },
+  {
+   "month": "2002-06",
+   "file": "2002-06.json",
+   "sha256": "76bd043c9d885638d014a371d7cb82ec92824b359c0833e5e8fd06a7079c2c20",
+   "source_file": "467718959_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "31156035b363a84d0ea0f411c10fa62de38772733a9419b821bd8016ed41240d"
+  },
+  {
+   "month": "2002-07",
+   "file": "2002-07.json",
+   "sha256": "621d6a163fa5e7a2866b6e713e548b408b69060cbed2aee368b3bc544c7d7420",
+   "source_file": "467718960_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "832bf74625ceecbc7c59982c96119304becac0a6ece86ab033d055791634e8f5"
+  },
+  {
+   "month": "2002-08",
+   "file": "2002-08.json",
+   "sha256": "03226933af6b46607ee81571d6586dd926159fe7d7144fb802184fc7615eb338",
+   "source_file": "467718961_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "073ab480b31074bf4637cfbfff1bb2a0fd1f4158a7993494f401901eb82be45d"
+  },
+  {
+   "month": "2002-09",
+   "file": "2002-09.json",
+   "sha256": "057b72f9f22f22a5a2e9084ea7fb9ab72c33a6dd96ea895890a43ec9a94996d0",
+   "source_file": "467718962_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20020901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "fd9058c589d64ae03d0e9a26dbde0303529105723408158824e0c65b74261998"
+  },
+  {
+   "month": "2002-10",
+   "file": "2002-10.json",
+   "sha256": "de98eb71b8b0065305098b8cd07cf9bb5b1da2653bd756f501d8a3b3c994abcc",
+   "source_file": "467718963_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20021001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "fef5746f20898d21e97f4438bfc85669c12557d3e8c7b6778d18e2001ac9a563"
+  },
+  {
+   "month": "2002-11",
+   "file": "2002-11.json",
+   "sha256": "30858d807cb9df0c3275f276defc03ee3c40b928323ce02f05cbda203e314312",
+   "source_file": "467718964_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20021101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "0a1fd8106f345109026a38f661d8ba4a95a52d9baafda71f9a085aa1db865d98"
+  },
+  {
+   "month": "2002-12",
+   "file": "2002-12.json",
+   "sha256": "07d37d3729db94bb1028d34da12e81f89cfdd271cab2b692635d951df2a95c77",
+   "source_file": "467718965_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20021201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "ef5f449fa4e29940ecc7ac906257d614a0bb96d967bda74e861aea675ae40047"
+  },
+  {
+   "month": "2003-01",
+   "file": "2003-01.json",
+   "sha256": "95a20c7822f0b1412395f66f012cc357a8dffd6b80afc1082bd1ea8d69ddf9bf",
+   "source_file": "467718966_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "a2fbc3185c82bb492140b6efbf27278db0dce195f69df7df089c4bc5db4cb4b9"
+  },
+  {
+   "month": "2003-02",
+   "file": "2003-02.json",
+   "sha256": "c245ab9c986f3e6754344da1571d2e042cf02266daf8af3d10d7e877933fe715",
+   "source_file": "467718967_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "04001679dd7bd5d60387abad61cca1e5f4ecce198bcc5243fdffc6b67a3efaba"
+  },
+  {
+   "month": "2003-03",
+   "file": "2003-03.json",
+   "sha256": "6670ebca5a697f3bf17c45dff15600b7f5f0e2d4088b8b093c7a265fd9b77bde",
+   "source_file": "467718968_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "709effcee2af1fed0fe227447ca8c91aa139a057daf48edeb7bebeb833730508"
+  },
+  {
+   "month": "2003-04",
+   "file": "2003-04.json",
+   "sha256": "4b9a2511bd3a6cd2d6730b86ab43c00194c8574d6cd717de36c1266fc006d942",
+   "source_file": "467718969_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "7e1af084e89e07d629244cdd5ee8590f48df7bd293482e77587cd52d7a2ac371"
+  },
+  {
+   "month": "2003-05",
+   "file": "2003-05.json",
+   "sha256": "1a8109bbfdd19fb76136d612f9b9e96d924e70d14fdd40ffd75ce04ae007bf94",
+   "source_file": "467718970_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "688fa0f6dbc3bfe5fb5f76db9b21fe5fe88db2e520d61b0a8e194cd7d66278e0"
+  },
+  {
+   "month": "2003-06",
+   "file": "2003-06.json",
+   "sha256": "5b098a8bd6b774ee3159f6dea21ad37af1ab7ba0b3f6fcc5d53b63f6ecd92253",
+   "source_file": "467718971_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "4904492894595215d171c0173d579fdc05b257f46356f80f7c2c2c941f1b59b0"
+  },
+  {
+   "month": "2003-07",
+   "file": "2003-07.json",
+   "sha256": "e280d5837d7518ec2a9ea751fd8fe68588c18e0066fde40783ec4becccc93924",
+   "source_file": "467718972_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "e6ac658b1072b7c6b8aff5a8722c208654474a779e96aa6c58f89386e8813008"
+  },
+  {
+   "month": "2003-08",
+   "file": "2003-08.json",
+   "sha256": "264ab816c1bca6d1a54a016a2a2bb030e25649f4f30c21219c39cb4841256528",
+   "source_file": "467718973_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "b765b2557ade24ec8d28e6052b2f389c43ba9e8c5a6665009605f322153de622"
+  },
+  {
+   "month": "2003-09",
+   "file": "2003-09.json",
+   "sha256": "568f6d2917f2335a39a058eae5d0f1d491cc082428771836407095ee26ee7760",
+   "source_file": "467718974_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20030901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "cdc523f257a8e86346cf5dd6871572f20da3d8c853eca410d4acf3244b578341"
+  },
+  {
+   "month": "2003-10",
+   "file": "2003-10.json",
+   "sha256": "595a164dcbf5c051c99fcfe5270da72aa61db5019fb48a9f933c21863c86e1cf",
+   "source_file": "467718975_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20031001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "4b61c0fe5130a0c704193d7fd8eaa3e2082c1c24cdbccdc312dcb246a5bbdb8b"
+  },
+  {
+   "month": "2003-11",
+   "file": "2003-11.json",
+   "sha256": "ecf5b46ffcb5700347879a5483b2d371978d7edbb6a5c727b35d38d9e491ca06",
+   "source_file": "467718976_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20031101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "b35d88406b7b206f4bc19bb85c886ab7337f7004c2ab48873b057f6ec146dfec"
+  },
+  {
+   "month": "2003-12",
+   "file": "2003-12.json",
+   "sha256": "a0d5de3e7ff5b97cfa9a873145f10a9475627f76f1e59a052ef75d50bac56fe8",
+   "source_file": "467718977_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20031201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "69476c60edd69c1fe70336dafa6d5cd4525e1120b9a0ce5197c3c968cbc96033"
+  },
+  {
+   "month": "2004-01",
+   "file": "2004-01.json",
+   "sha256": "1f28b678786cf65df25aa5268b627c2acadb387cdecdf915d8942424c2aa2c1a",
+   "source_file": "467718978_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "14bc549b09fcdbcb4eed200315a57c4e3f7567f576ec9e65462227c821fc05cd"
+  },
+  {
+   "month": "2004-02",
+   "file": "2004-02.json",
+   "sha256": "b8a95faee20c1aeabfccac9d6249a299d2e092f3194bf6b798c1bd11a4137701",
+   "source_file": "467718979_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "2814ba16bcf61406d7797967e1233199b7eb32448278574342443d70b494e2ed"
+  },
+  {
+   "month": "2004-03",
+   "file": "2004-03.json",
+   "sha256": "2d6d661817730d86a59059d9f0daf24151e0440f24f7116606ce9cb7a3d659b5",
+   "source_file": "467718980_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "c9111ecd35ce42dcadce5d4c5fd8a71edf8d46ec50defc3025b6e464e6274a43"
+  },
+  {
+   "month": "2004-04",
+   "file": "2004-04.json",
+   "sha256": "1ed8381449ff4e81dd3aa7340efea8f66f7f41a102062651267eaa0aa06913a6",
+   "source_file": "467718981_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "3877850a0365bb0529f45241f49a447c8a859eeef38187bd7bab3848c108d22e"
+  },
+  {
+   "month": "2004-05",
+   "file": "2004-05.json",
+   "sha256": "70b46bfd685a075134119f5150dfc9b0da2f0f56b742fb200bb332d700648d5d",
+   "source_file": "467718982_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "8b28a42ecce64c3485efb6d10cc05eaa1e3f622b8ec20ef13972a174d5825dc7"
+  },
+  {
+   "month": "2004-06",
+   "file": "2004-06.json",
+   "sha256": "731ffa35a112d328d0ef4f481b65d2c1cc280af89bdf45b5de7ae43cca8622bf",
+   "source_file": "467718983_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "2dea947657721dfbbb6e1cb2b9a6957e122c90cf88eb351a044d1f2316546a92"
+  },
+  {
+   "month": "2004-07",
+   "file": "2004-07.json",
+   "sha256": "cd6f65942bde5588e3859f7fc6047f857a365c3e21b2880efc8210d3af435830",
+   "source_file": "467718984_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "77c4cdaff19d7606504565a694afcf473d4fdcb914001b2ad1a22c94b0d55535"
+  },
+  {
+   "month": "2004-08",
+   "file": "2004-08.json",
+   "sha256": "2deabbd733123fb5d8fe42c5476c5b2ea9eae430d1d1288a254a535c15c03f6e",
+   "source_file": "467718985_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "edeed814234ca4b00df02206c3bf0b767bfa4b03401ecac236f6b77636eb34e6"
+  },
+  {
+   "month": "2004-09",
+   "file": "2004-09.json",
+   "sha256": "32eaab128c0b397e72862b6d193a5ad5b3c67250bbccaf5280fa851280266225",
+   "source_file": "467718986_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20040901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "b70f50218cf23ad63bd7d98f64830475bf588ee9d47b91d41698563f0a39ab4a"
+  },
+  {
+   "month": "2004-10",
+   "file": "2004-10.json",
+   "sha256": "c015f44276b4c3253b36d1d3df8eb4df1ced162be6c7ae2a49d796c0d72153a6",
+   "source_file": "467718987_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20041001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "6977b0a56ccaf5a45305823dc78178d9b6f781ba5b07f2c9b196fd7067d223be"
+  },
+  {
+   "month": "2004-11",
+   "file": "2004-11.json",
+   "sha256": "90863d585da473025d83690df85915a5c0078c1db80dc3251e3d4d8d0fbf5c73",
+   "source_file": "467718988_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20041101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "2a10a19bb9260ae39d134281969c78bafeb4b672e372602770171ca64fb4d6ed"
+  },
+  {
+   "month": "2004-12",
+   "file": "2004-12.json",
+   "sha256": "344c7699d493adbdc0962e08d09c94e63fcc67aa175095cb029aa323c4f070b4",
+   "source_file": "467718989_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20041201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "46afab9d3f415b3db2f13b64221457ea349c29d44587412685e7781ea530450d"
+  },
+  {
+   "month": "2005-01",
+   "file": "2005-01.json",
+   "sha256": "ff48a0400eaeb625a071143fe244b0498b2a3cc057891422b80af6b2236184ef",
+   "source_file": "467718990_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "9f5af71795a7ac0b31776c0682b7786bbf4897b9e2ef9359db3e4d14e7d41f49"
+  },
+  {
+   "month": "2005-02",
+   "file": "2005-02.json",
+   "sha256": "00613ec05e2e3d2bacfb4505dcfdaf33ffa6c007c15c8ef689e106c2cad5afd8",
+   "source_file": "467718991_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "9c30afd55b390ec76b560a4f56b2621a4d187657bff50bd63737ce3298fcb962"
+  },
+  {
+   "month": "2005-03",
+   "file": "2005-03.json",
+   "sha256": "6ef8595c542770d35b14c0e11b92fb5fa0816e1650058eccdf074dbee6424aaf",
+   "source_file": "467718992_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "239664d329551586b98fff19ce0adb23793ee2fd4d8eb36fd224f33182d79ba0"
+  },
+  {
+   "month": "2005-04",
+   "file": "2005-04.json",
+   "sha256": "feb201503385f62a08f35ddf6df4b3cb35ac144de8048b8c00bb2ba450f37d53",
+   "source_file": "467718993_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "6ba3484821f9317a090d69a610cdbf8f9a559cb70a3d726305c2c40bb47121cf"
+  },
+  {
+   "month": "2005-05",
+   "file": "2005-05.json",
+   "sha256": "c23b88744befa918dc44e2fe384e4c74073f07de75b84a244f6e15d59eaed268",
+   "source_file": "467718994_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "e56498e77116a12cd190edbbc76687f12497bcda787b1fc0392273ea6c646237"
+  },
+  {
+   "month": "2005-06",
+   "file": "2005-06.json",
+   "sha256": "e3e3801884a45f02905576584525a9925483c201a3ad9572401209dddd4a66df",
+   "source_file": "467718995_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "14cc238e8b1f6136a20e0fbcbde008ad62cba1c2fd3a4b9e43cc3f6618fb94a0"
+  },
+  {
+   "month": "2005-07",
+   "file": "2005-07.json",
+   "sha256": "925d057a83f81d1f155f831929e9df440848e32fdff4208178d356c3ea59dfe2",
+   "source_file": "467718996_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "dec3790dd7a7ca15ff673062ff7e9bc5d1471b2f2e255432a8ac898bcffc301a"
+  },
+  {
+   "month": "2005-08",
+   "file": "2005-08.json",
+   "sha256": "554f1b232a8bf6fd5a169c48db2147eff3f19fd5413343aa40ca036be2a073f7",
+   "source_file": "467718997_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "8ce39e442099677421da4967e9f8b3eb98e52d4b968e91517ec5c18394b9151c"
+  },
+  {
+   "month": "2005-09",
+   "file": "2005-09.json",
+   "sha256": "a22ffda3bf8f5c2fd587a825684b9c400fd1bad4aa6d5e8946ac39e26ed66b24",
+   "source_file": "467718998_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20050901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "d5b73467976a98a95703e8142a5b8fde14d159779f8ec01cbf614e6390b3b5a7"
+  },
+  {
+   "month": "2005-10",
+   "file": "2005-10.json",
+   "sha256": "47f839d4a4c531451e926de7a0cab332b61ea729da5143baad4f821efb1edc2e",
+   "source_file": "467718999_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20051001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "c9f88142e38b45c246efd48ecf18b961d4f8be43f9bf4067c9e130275b94e342"
+  },
+  {
+   "month": "2005-11",
+   "file": "2005-11.json",
+   "sha256": "11cc603d8a5ece56d9290e481e15f7187607205668c8d203ebaac2eacb3bd10d",
+   "source_file": "467719000_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20051101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "4d30d0e3991295ce3cfae68d4e4cd9341df7553fa209d4643e96d84886208ac5"
+  },
+  {
+   "month": "2005-12",
+   "file": "2005-12.json",
+   "sha256": "0fa79b9ee05dcf607a454bee930a3251a1cf26d8a0a4f9d0d3227d754ca25962",
+   "source_file": "467719001_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20051201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "d90204e42a406e9047175b75bb2ba80a5961d5e08eb2f2047ec8d55c41bee05f"
+  },
+  {
+   "month": "2006-01",
+   "file": "2006-01.json",
+   "sha256": "d8d17df0551216b0dbce72d47f41faa98f9eeea8ed1eeb5dc193ce00672fc956",
+   "source_file": "467719002_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "458f92b7bdbb5b729118582b19f23e380b2819fc21424b835a2557d0a9cc6c3b"
+  },
+  {
+   "month": "2006-02",
+   "file": "2006-02.json",
+   "sha256": "cb18c4204b12befcab6bd6e650acc570d2e9337803bd457494e82c02f730c357",
+   "source_file": "467719003_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "61ad81191bc5ba6cc97d590e3e8dc08cabfbffb313c64d3f103c017b866f39b8"
+  },
+  {
+   "month": "2006-03",
+   "file": "2006-03.json",
+   "sha256": "a59f42b12ccd7e80c719cea2ddda9e2b201959ea4a55479bc127180f39a56d1c",
+   "source_file": "467719004_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "1ccc8c8767eff0fa208987493b08cf57d0733b3e64977f5537104611cefeef6d"
+  },
+  {
+   "month": "2006-04",
+   "file": "2006-04.json",
+   "sha256": "2ba9bd55f6125848ac28e3b1cff33412c5563397860a46c11347e1859b81f7ac",
+   "source_file": "467719005_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "b7c9ff595aaafc831477296578151b6cf30997f9ad4584cb3760e3d75aac7532"
+  },
+  {
+   "month": "2006-05",
+   "file": "2006-05.json",
+   "sha256": "9be7dc11312f804c2c8c2f528bb3d24a8b9eac8b3c312c13051b7d2aaaa97567",
+   "source_file": "467719006_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "a172efbf3fd4c5ae2a16665dc411a2a9d0b4daff364719144bad81eee3837e72"
+  },
+  {
+   "month": "2006-06",
+   "file": "2006-06.json",
+   "sha256": "3189e5eaad2fcc1c54f9aa0396aa52811013b7bc4300ac82ef76a82f955073fd",
+   "source_file": "467719007_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "373d56aac15b2cab713639893157e434389bae31af17543e0e46f022c4d7efdf"
+  },
+  {
+   "month": "2006-07",
+   "file": "2006-07.json",
+   "sha256": "2da7835d278b1b615939887f42d984240c4af81d0a07749a593f140461e61c48",
+   "source_file": "467719008_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "fd0f1de849db66a97aca6e5ca7b48118ddd8f2664ee760f373a6c2cf8becc5dd"
+  },
+  {
+   "month": "2006-08",
+   "file": "2006-08.json",
+   "sha256": "53025b78fd05114d28dec5cb63904b18ae5f1cb6fc67ba800f416d7b2605feb1",
+   "source_file": "467719009_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "e6cb2e64e040c30fce78aada7f38a55f6a19df864a74f412d5c3079de2db72d1"
+  },
+  {
+   "month": "2006-09",
+   "file": "2006-09.json",
+   "sha256": "1416d5313acdf22ae136793f21974722ef9b8761cd9322a3efe0cdae66e29ac5",
+   "source_file": "467719010_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20060901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "5547c445a12d89ff337cfeeaefe80d3e8be5f3002622e754884d358e7960da7d"
+  },
+  {
+   "month": "2006-10",
+   "file": "2006-10.json",
+   "sha256": "ee620a8dd437125a8a254fc47a624dc832158166a579ea49698a70b922092058",
+   "source_file": "467719011_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20061001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "cad390b0bef8ef0394c42ad9a98825be9b753edee43476f58d5637aff856c959"
+  },
+  {
+   "month": "2006-11",
+   "file": "2006-11.json",
+   "sha256": "6f62fded5564960cda4aa43288d795a74cde0489f42df7fe68992ad2b4daee9a",
+   "source_file": "467719012_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20061101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "a5ff74ac8f9ff987f6c5a7b711f2efcf0594f15ade83f31723297fec7ad8994d"
+  },
+  {
+   "month": "2006-12",
+   "file": "2006-12.json",
+   "sha256": "caa52c5e1b1e07b424fdf914912b5b357ba8aae3814ef7f1d981116afa770703",
+   "source_file": "467719013_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20061201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "069708a4e02d848ef7dcf6f9241974cf1f903e25f9278036225235776a0116a9"
+  },
+  {
+   "month": "2007-01",
+   "file": "2007-01.json",
+   "sha256": "d88f7bce82553978c82a52e744b617d3a7bacf2d573af7f075ed77fec7cb06b1",
+   "source_file": "467719014_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "2cd9dba49907413be147191ab03fe94d1045f2e05e53232fbd794cf3e71bdd80"
+  },
+  {
+   "month": "2007-02",
+   "file": "2007-02.json",
+   "sha256": "051a79617c1fa49b8f74e9f06685fbbb3a37b35390bcbff7efd0821227f2e28c",
+   "source_file": "467719015_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "2abde31743deaaed77706940ee0d70fc6e9d52d855a21d877e066a016eb038fe"
+  },
+  {
+   "month": "2007-03",
+   "file": "2007-03.json",
+   "sha256": "022c55246418cca89c93a87d9e06fc65598c934e05150eb19c53e1805a4654df",
+   "source_file": "467719016_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "f8c26af2ecb83604e77e6b1fc5491481a0d2ad38139c7d8cef5dd7f8be7715a4"
+  },
+  {
+   "month": "2007-04",
+   "file": "2007-04.json",
+   "sha256": "79747a115302147a17f53c8385da583455f9c9d0115a8d1eef50d5fa27fa4caa",
+   "source_file": "467719017_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "2da31cd72eaae83db541cf94c738a9cec089d389cbd85fb94938f1ddcd433cf5"
+  },
+  {
+   "month": "2007-05",
+   "file": "2007-05.json",
+   "sha256": "e964a3b4ef8feba98fa8d4b301408670136db1833ad9a26a8d537e57855c19cd",
+   "source_file": "467719018_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "b07c07252b49fbc1c44ec44026ad262d49c5bec27445e0120e9ac9dee7f27d91"
+  },
+  {
+   "month": "2007-06",
+   "file": "2007-06.json",
+   "sha256": "ecc6f0e94f66dd2063d2ce1154f39fa989d8183bc98232e53c5ead2f30121c7a",
+   "source_file": "467719019_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "989988fb4bcd157bf437a4f6ca8ef8e8857c7f3ab5d50b1ee9213e00df724de7"
+  },
+  {
+   "month": "2007-07",
+   "file": "2007-07.json",
+   "sha256": "c979c17a78571db9d0e49de0cb47f8ff18d68dd012c7f1d1fdcb045154ffd017",
+   "source_file": "467719020_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "68d8c7cb3713d6536821511d5921aee7e293469ef5e79c6dd956e78293046e8d"
+  },
+  {
+   "month": "2007-08",
+   "file": "2007-08.json",
+   "sha256": "b3bc5bd7ee196de1899a8a90a7e566a7af4d888c2eb6cc80412a09dad539dde9",
+   "source_file": "467719021_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "9cc7cce905240176f8d186d313c7404e0f666d6968c741128d13cb121c2e5e87"
+  },
+  {
+   "month": "2007-09",
+   "file": "2007-09.json",
+   "sha256": "57d306ed5b250ce29d23fc2838ca87b4052f210083cbb98d2a78b2da3c051d3d",
+   "source_file": "467719022_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20070901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "5fd1b2fb6811628b397a5844807ffe951a0f2c1663b01fa5d0dbae16fe45efe6"
+  },
+  {
+   "month": "2007-10",
+   "file": "2007-10.json",
+   "sha256": "64327ef79e9abe907455b8cd9483b9ce226fad80a6fd04bdef84005f04950dff",
+   "source_file": "467719023_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20071001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "2362fa0fb6be2ce12e13f744d10d76c81f6d1dbf33bc1a53ad4e4c7de524af36"
+  },
+  {
+   "month": "2007-11",
+   "file": "2007-11.json",
+   "sha256": "19846967845f1737da974e30162440298a9f88c4e2a824973d2a22ed42fd3ac4",
+   "source_file": "467719024_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20071101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "cbdad37767cb4b86a79c48fd57a3d2b55bd49b30d616fc390d325d47fe286867"
+  },
+  {
+   "month": "2007-12",
+   "file": "2007-12.json",
+   "sha256": "61017179de37bd10e179d835003c334493afdc1311daef7a0658c04fa38ac304",
+   "source_file": "467719025_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20071201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "296f4aabb08d5116ce987059318a662601bc6c1a71c36dff6219433dba25ba2c"
+  },
+  {
+   "month": "2008-01",
+   "file": "2008-01.json",
+   "sha256": "ddce32ab71b30e35d928b9c8beffd37b24095a24b27ee38382322040ec6372c7",
+   "source_file": "467719026_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "b38f1bc4614183e5340adf0ef68ec17c0c40ef011087df4e0085a2812ffce8a6"
+  },
+  {
+   "month": "2008-02",
+   "file": "2008-02.json",
+   "sha256": "7b8cd39e16bce9c458037045e06b682a8f81ddb0e6007054ea23a60aadb15d56",
+   "source_file": "467719027_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "9ebaee9e93ef85476efb5d8d44617d8a56130245c4a0966aae0aae833d127022"
+  },
+  {
+   "month": "2008-03",
+   "file": "2008-03.json",
+   "sha256": "63a464db54f56c2e9583bf1e983e0fdde402d0de89d92fedff9184d5252499fc",
+   "source_file": "467719028_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "10b4f7d65979aae1fe39a1a675eea84e7f790007e20a3427a385feba223f13cd"
+  },
+  {
+   "month": "2008-04",
+   "file": "2008-04.json",
+   "sha256": "2fdda9028dd1ecb02684a77b916b29d808d95f3d611cec955873f1574723a29e",
+   "source_file": "467719029_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "9a9b50d1e4beda8e077d1484b81f8f02557fcef29e7b0c88d2430339c1b21348"
+  },
+  {
+   "month": "2008-05",
+   "file": "2008-05.json",
+   "sha256": "71d8c66dd94a86b24df518e86ca732106b7da37563f06bdeb4c601f85a5399c4",
+   "source_file": "467719030_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "de6d71b8b3a32e345592cc76dd7a626e2da04025c4ed03ab7384f5caf9a27f85"
+  },
+  {
+   "month": "2008-06",
+   "file": "2008-06.json",
+   "sha256": "73e62924ab77afce0d6f19e8cef131fc6c52ae95ae08767ff0a7c02f1c270030",
+   "source_file": "467719031_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "68412190226c85921b6a84c009b7a2f7242e091b5eac7d0573c8ccbeed4cb911"
+  },
+  {
+   "month": "2008-07",
+   "file": "2008-07.json",
+   "sha256": "0e5b7117e5dc845f8e82381437f7080f09734fa38b1f16db892e322135ec820f",
+   "source_file": "467719032_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "5f7bb5a80ef0c22c73ae17158c1085075caf72ba48cad54dd3d317592643194b"
+  },
+  {
+   "month": "2008-08",
+   "file": "2008-08.json",
+   "sha256": "9dc8e3e906907da31159ab7576022507017ad556a0bfc509c4ec4a13a7bfc408",
+   "source_file": "467719033_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "669ab88f339fdcf7ba783951aa9305e960b42935fba67e1d8265f2658b494870"
+  },
+  {
+   "month": "2008-09",
+   "file": "2008-09.json",
+   "sha256": "ed9ab21779a30ba969d85d48f395637563bdbafc1f698fef23841336164b683f",
+   "source_file": "467719034_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20080901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "3f89e7781f66bd2c776e2b0488745e0886e76f3aeb7b8dab4c80c3bc6ba6600c"
+  },
+  {
+   "month": "2008-10",
+   "file": "2008-10.json",
+   "sha256": "b9f54c16c78b1ba9c1b11f9e5b26afb8e6158d44ba64bbcd48a98eee2c9d5ce1",
+   "source_file": "467719035_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20081001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "9b01a2a6d409fcdb2bca83cc053254c9f0822179568051a54bf5bc612a382c7b"
+  },
+  {
+   "month": "2008-11",
+   "file": "2008-11.json",
+   "sha256": "234e9a63f4c6317a58deddac82778d7a2c1bb79fdf4b5535967a22e9156cc946",
+   "source_file": "467719036_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20081101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "5d624dd9a95fd06a7dc6abc431b3eda6a37c7c42ecf1fc03a4345ec145f00ff7"
+  },
+  {
+   "month": "2008-12",
+   "file": "2008-12.json",
+   "sha256": "eb75ec581e3e6ecaf2ee97feb91c022702f95aa940675d3acf7138fc21365e43",
+   "source_file": "467719037_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20081201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "79342e86a4670906d53923a9f9ca6e5490f7c5bc8f35878382815e4553dba540"
+  },
+  {
+   "month": "2009-01",
+   "file": "2009-01.json",
+   "sha256": "46d06b4ad7005f16ab366180410d546abf076fc7ee9407fbdaf4949d687bf86e",
+   "source_file": "467719038_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "de63372be1300e02d5996007ea8b0f9b941badef39c8b1f40f4bb25c1f53a8a2"
+  },
+  {
+   "month": "2009-02",
+   "file": "2009-02.json",
+   "sha256": "87568ccca1dc22c25cda2305b42b2cdd93c2d4fcceb2132568b25a9aa1599dd9",
+   "source_file": "467719039_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "392185103eb221a22766a04526349d7e764f97247dd9b43e93b1a1209a3ae504"
+  },
+  {
+   "month": "2009-03",
+   "file": "2009-03.json",
+   "sha256": "d75be60746fff86d8e609f198a91bfd98e7b0ee57cee12f5ae0de7db7fbf3b86",
+   "source_file": "467719040_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "0cc6422295472794a7f4ebf0041c9d43d5330201d116809fd3fea0b80c0f049c"
+  },
+  {
+   "month": "2009-04",
+   "file": "2009-04.json",
+   "sha256": "3915c02a49197c17838e3c78bc61e264df27d0b88c291b03ee4deafbf79bd4f4",
+   "source_file": "467719041_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "993e7edd90e998fdec1d5e6a6102691ded31eb44a997a18939e709be837dadd4"
+  },
+  {
+   "month": "2009-05",
+   "file": "2009-05.json",
+   "sha256": "2d8277bebeab77d8d4a7757485208e968cd97b1b753b57e176094e1a71c42a1e",
+   "source_file": "467719042_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "952d5193500849c22e8e1ca612860ab2ecdf2b47d668ee62ba2e4b6e72b74374"
+  },
+  {
+   "month": "2009-06",
+   "file": "2009-06.json",
+   "sha256": "b2ae49093c9d9611bea32a16f621ac3358db385c5db3a0dff0474ae84ec69ee5",
+   "source_file": "467719043_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "28a76f525382eb858b5a009c79b38b4796435750ba426ad51c0178faa50033c6"
+  },
+  {
+   "month": "2009-07",
+   "file": "2009-07.json",
+   "sha256": "60df0e0bf4ad553f1daed7c4e7dca1c41eb85207f59939444a29835649c81dc9",
+   "source_file": "467719044_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "27d82db77815997b03d1a70686d04ccbb04c042bf7749e022901a838f90ffe35"
+  },
+  {
+   "month": "2009-08",
+   "file": "2009-08.json",
+   "sha256": "f2eb742f88fe1f95f6c11a26e0d0a78a53a9cbbb4997c945706d1a9bdf695736",
+   "source_file": "467719045_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "8a257a8ec18fb0185e4427182ee2a0990b0ed9ea21aa3ef0dcdcf7568cd500aa"
+  },
+  {
+   "month": "2009-09",
+   "file": "2009-09.json",
+   "sha256": "7aac85a8e044c76b7dfa9b30f07ddc41d761748a2c1596ac89a0f3c7648f4d4b",
+   "source_file": "467719046_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20090901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "9d312be0c520b5cbf154d6bd5d88b205a2e40986d24950fee47cb0f226ca69c8"
+  },
+  {
+   "month": "2009-10",
+   "file": "2009-10.json",
+   "sha256": "599e1a9e58572bfff5cbea97bf8240d2246c23e8a143baea8e8ed640882c5fd5",
+   "source_file": "467719047_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20091001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "b4bdc7720d1f41bb2e085d6dca72b2655f9ef58ebb9f3764882706c57d767b00"
+  },
+  {
+   "month": "2009-11",
+   "file": "2009-11.json",
+   "sha256": "0deaefd0ea60bdf6af8b6bed77666bddef61ee1977cb1f179fd62c299a6d825f",
+   "source_file": "467719048_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20091101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "3cd644c9c2af8f2fed2fb5d6a5ca4facd3c8922d556c3a182100dc0838346f61"
+  },
+  {
+   "month": "2009-12",
+   "file": "2009-12.json",
+   "sha256": "c7663bbbe2c5184b9ddeb2f876bab3ad989ad8eaa9a90461feb1189fee5dd775",
+   "source_file": "467719049_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20091201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "3a9aa84774ffd9c19071950329e3e9e82d7b68ed9616d1f4318577ac3b77f9b8"
+  },
+  {
+   "month": "2010-01",
+   "file": "2010-01.json",
+   "sha256": "0996cd2e3c045cf3c77caf09703b012ab911fd6207ca0863e60997451be05ea9",
+   "source_file": "467719050_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "b8195a466fc9a55b281b4be0d3c2e08702e2ab8d3d30df8a9f487af6bc5bb0e7"
+  },
+  {
+   "month": "2010-02",
+   "file": "2010-02.json",
+   "sha256": "a9cc79b309ebd4e7920f06b85b5af46294dab2dcf1b8d4d6f5abc0161eed0122",
+   "source_file": "467719051_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "fe023a85a755adb3678d941645d30ec20443ad320edd09508371a7503c158988"
+  },
+  {
+   "month": "2010-03",
+   "file": "2010-03.json",
+   "sha256": "d17b4ea8080f25e15d13c28b77df51f61ac6fd7ea2ca179dcff7d36d00a94607",
+   "source_file": "467719052_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "a393484ad0ad832e30660fa757352b4556fcb4882eaf70a532ea57f36f454288"
+  },
+  {
+   "month": "2010-04",
+   "file": "2010-04.json",
+   "sha256": "fe0b7c1c8b86fe0717d6eb1b84ec9f9eb6b0fa7fe26d0003b083ceb798b20b9d",
+   "source_file": "467719053_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "5071f18a31b219ab8859e7fa9f342ffd8cf1309ff49c92d0d2e1713ffd5387d0"
+  },
+  {
+   "month": "2010-05",
+   "file": "2010-05.json",
+   "sha256": "43aebcb00a3d050753ab9dd0c62894fb600e0cb8fefda526ea60eb944637ac2e",
+   "source_file": "467719054_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "0b2ee701665071cc30f1a2c61adedfb841e7dc976d79aa706d8bb3216b45ae76"
+  },
+  {
+   "month": "2010-06",
+   "file": "2010-06.json",
+   "sha256": "2c8e4920cc09420f623be81043c0ecefebd022fcabbd452a93d7c1a425468ee6",
+   "source_file": "467719055_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "ceeb69522b2e8a74a9ee591341a335b2b1cc13909ddd65200b66c7f3cb5eb508"
+  },
+  {
+   "month": "2010-07",
+   "file": "2010-07.json",
+   "sha256": "873ca84ee0a1657a56f1e699faf2c59065ab359c8d653d046be94e187bc9ecaf",
+   "source_file": "467719056_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "40bffb951689a0fcc93b3a58943d7704efd99617e2b961c43d16b5ba6d756e4c"
+  },
+  {
+   "month": "2010-08",
+   "file": "2010-08.json",
+   "sha256": "633945e06a278829b748b015e8970777d6e2736367d0dd63535ad2b968d11354",
+   "source_file": "467719057_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "350b64e72cf30546aadc1cf94db4e9591da4511db7afaad328bb79dfbf6cdc3b"
+  },
+  {
+   "month": "2010-09",
+   "file": "2010-09.json",
+   "sha256": "ad113e69ecd9519922fd86c5e8de4f2bcc388063aeba0a2d3ad3d5cb84e7bef7",
+   "source_file": "467719058_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20100901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "7b47dd58497711170b0f135dfaf4019b98c0f05cc302dbed900102ac297f847d"
+  },
+  {
+   "month": "2010-10",
+   "file": "2010-10.json",
+   "sha256": "f50d897ff8c4d6c828ed69dd02c9eeb020732ec051b8203fa105d540cb21475e",
+   "source_file": "467719059_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20101001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "878705db48ad9179bf58d6bbe67ee543643a10b7f8e28778f5f6269a8b47880d"
+  },
+  {
+   "month": "2010-11",
+   "file": "2010-11.json",
+   "sha256": "4fc2c94e909defb05a025be806fa0071732cc4538043d882468ec5a37dd28d94",
+   "source_file": "467719060_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20101101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "9a5ff6963b95b24e8c54ae194eb614650f4e91a7abe823220f763b0d9c74e38c"
+  },
+  {
+   "month": "2010-12",
+   "file": "2010-12.json",
+   "sha256": "8e4b94de450d79a72a72e1260748f5ca115f94f377bb31673ed3439a62f87843",
+   "source_file": "467719061_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20101201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "e83ec88714d0ffaa0513d6a14f7cc7c96f1ee47133bfc67bf1f1f676b5cf1c91"
+  },
+  {
+   "month": "2011-01",
+   "file": "2011-01.json",
+   "sha256": "f22b376f97c3c844dced72345e2b277d571497b94ebca26438b3b9c1297401fc",
+   "source_file": "467719062_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "d44a0f9e3efa31c4ff4c56b42881587c716390d30d31cb48d640ad4f0f7311e2"
+  },
+  {
+   "month": "2011-02",
+   "file": "2011-02.json",
+   "sha256": "240b268ea246bad697ee133e07bd1df08b7405fcd65a6aee8924923418cbbe3d",
+   "source_file": "467719063_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "f689fb7d19630019bae68052dbe3071b4c6ade62148e79ed4eb8358cc0d266a6"
+  },
+  {
+   "month": "2011-03",
+   "file": "2011-03.json",
+   "sha256": "799e54c4dcad227afb91695cf22b24d361e9db5077852ee2fbd772c40fad1749",
+   "source_file": "467719064_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "be0d93491a90a5e9e611161e685ef959b294b10026bf3afc1ba2d545944fb0b1"
+  },
+  {
+   "month": "2011-04",
+   "file": "2011-04.json",
+   "sha256": "4c1f6072a4369f42bc4defc4a5cd5ed84f0e35a59d0f560979167594ee3eb496",
+   "source_file": "467719065_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "1758c352532c7948b17caf5d4bc7dc19c8bb52c961be235285123839caea7f85"
+  },
+  {
+   "month": "2011-05",
+   "file": "2011-05.json",
+   "sha256": "7fa31e244d883f5728547748a4bcfc2176829b9240b4dda1bd1a1ee791fdcf55",
+   "source_file": "467719066_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "e2636ad0e28ae0e90ef74d3c416996bb146935826c47e60a0b1c2b80f09e2c86"
+  },
+  {
+   "month": "2011-06",
+   "file": "2011-06.json",
+   "sha256": "6f44fac270183356f68492ee58d8894fe9bf4b576c7811e369114c5b98567def",
+   "source_file": "467719067_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "460c942c4e7361a1e5cf18c665e9519636e86ff7c8ff47295b96869c105d5654"
+  },
+  {
+   "month": "2011-07",
+   "file": "2011-07.json",
+   "sha256": "f18b2c184633743320118a8d1f082946eacb3f5f4902d592ed975e488170641b",
+   "source_file": "467719068_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "32175efb8b031087bed9d3ac62541c4baf1dbd6fc43a027673b49ffa26bc9c32"
+  },
+  {
+   "month": "2011-08",
+   "file": "2011-08.json",
+   "sha256": "2ada953a3f213641e7fe4f29b262b42052013d4e407a351abe239fd622be479a",
+   "source_file": "467719069_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "b85d0204de244e0480c655af14aa777a87cc91a5d64479f850f517e4d205df92"
+  },
+  {
+   "month": "2011-09",
+   "file": "2011-09.json",
+   "sha256": "952d6149fa2aef3e49725dd1103b6d874030b7821596ee07306be4c4cb790f45",
+   "source_file": "467719070_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20110901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "662f305d3bbfd383ecdd30b98edcc67195606f069c8a7e7c637e299e7b4baf87"
+  },
+  {
+   "month": "2011-10",
+   "file": "2011-10.json",
+   "sha256": "9d279815e6ec54b1d70d3118986822d678dc8045adf911a41c731305f2762108",
+   "source_file": "467719071_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20111001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "9e85d780feb0a3d9cc7bc6abe66462cc436cc30c14eec71cb2d0292b729eda44"
+  },
+  {
+   "month": "2011-11",
+   "file": "2011-11.json",
+   "sha256": "79011fbee23cdac404474baeffd3f4df3968bc184b1df1fbb9197f62fb365fd6",
+   "source_file": "467719072_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20111101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "be3bc1252cd377c56b4abd0419cd7b11a75f100b6915243cfb3d0a58230154f8"
+  },
+  {
+   "month": "2011-12",
+   "file": "2011-12.json",
+   "sha256": "d1428625c0ad26229dd805b670a0d1c8f6ea48446bebe412b8c80a725497a399",
+   "source_file": "467719073_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20111201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "4797c2443eaebf14c988fef8bd988198f6ab486195a0e0a08b0bef3677ce25d1"
+  },
+  {
+   "month": "2012-01",
+   "file": "2012-01.json",
+   "sha256": "a7796ff092d406bd3fc55e070d5514fb66b1d261a13be3c33cb6ea289e0e5b71",
+   "source_file": "467719074_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "788834b5032ccdb3bfe66b1922121f45031d7474979fc9e7da883d3cb95e9763"
+  },
+  {
+   "month": "2012-02",
+   "file": "2012-02.json",
+   "sha256": "806c0d70e82ad6ea6e2a6fe268a12cb5bf826ea66dd7476dff34bde20ce88a6c",
+   "source_file": "467719075_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "b7ebbcfc35259087eed592800e308bef66343152cb90de4a37982d456c10db4e"
+  },
+  {
+   "month": "2012-03",
+   "file": "2012-03.json",
+   "sha256": "9a41a896620dc179f358102656c4ad0534c2471dba7281ea91e70dc4980ee0f5",
+   "source_file": "467719076_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "1806565c36ee22a8750480ea27b8692595e02f6102fef6176b2612178672568b"
+  },
+  {
+   "month": "2012-04",
+   "file": "2012-04.json",
+   "sha256": "d346b358a16b4749daec9ddfb355e8c67525ed172f8a44cb456246ddafe0da79",
+   "source_file": "467719077_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "defc3cc0a949df0173bc0ce2d93f0643acce47f0d603c42c3a18200b4cc7a49d"
+  },
+  {
+   "month": "2012-05",
+   "file": "2012-05.json",
+   "sha256": "8441ba1c92d2a9d0ed611c956300626f91450d66cb2fa6ab54a8f5b337f374ad",
+   "source_file": "467719078_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "b1867617732bd30970424609a4932293cbd1192b39b215926628521bd5ed57d6"
+  },
+  {
+   "month": "2012-06",
+   "file": "2012-06.json",
+   "sha256": "ec90fc80529296ac81ef6f937f7a28710e1571066578796cd1dd44689b774ba6",
+   "source_file": "467719079_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "0b73b612c14778e302aec9227b46269d34e4b0a8e8adc92ec805b1b83f83c163"
+  },
+  {
+   "month": "2012-07",
+   "file": "2012-07.json",
+   "sha256": "40a7012ed703dd0fe7beae58425f39dca1b1805e42e6845523ed596ef3f21ec3",
+   "source_file": "467719080_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "0fb16fa58e6b0c7379a6a84a1622548c3bf94f20aef00ffa8fbfa29aa93ce62c"
+  },
+  {
+   "month": "2012-08",
+   "file": "2012-08.json",
+   "sha256": "0a58de7980ad800076ca9e6dfcb3133a0ea42ea7d0968e00a58c336851ffbe7d",
+   "source_file": "467719081_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "29eba45aa754176df3a0e27e4ccb7f9ef88eccc9ee13e19f7315dc9ca1ba97eb"
+  },
+  {
+   "month": "2012-09",
+   "file": "2012-09.json",
+   "sha256": "d4d52f6148ae0af1111520c03a3c35b9263b81f9bb99607e1ba07f224fe0b033",
+   "source_file": "467719082_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20120901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "b11b0fe8faa3eee9f425951516aad1462b0990124f56740826c6b0384ce66792"
+  },
+  {
+   "month": "2012-10",
+   "file": "2012-10.json",
+   "sha256": "19ac06c8e32395c6a5c8fe923d9c691bc3a90251e29795dcdb8402931539e271",
+   "source_file": "467719083_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20121001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "a91266411a833993456dd78d5a4710534c843a99107291e84f9e94e1127a2294"
+  },
+  {
+   "month": "2012-11",
+   "file": "2012-11.json",
+   "sha256": "669b04934328074849a495544adba2c7a023ce913abbfffe97ff344a237fd2a2",
+   "source_file": "467719084_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20121101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "c6553fde9a1099ee381de89fc1d9d3551b99ddcc7781248051fbb079c53369ee"
+  },
+  {
+   "month": "2012-12",
+   "file": "2012-12.json",
+   "sha256": "1f243d610011c1d172b02d8667ad2eb3726103c217984f017ee7f6ce5c6d9fd6",
+   "source_file": "467719085_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20121201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "ec5897acf5243fd0bd47b9de7efe70840aa27bcdfb3e91d6dfb4af7164998c19"
+  },
+  {
+   "month": "2013-01",
+   "file": "2013-01.json",
+   "sha256": "a35613f8400c8a3e429f48fb1837f805cb497e5b7d8f1baafa2a9c9d3fd2c505",
+   "source_file": "467719086_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "5c0df8eb2023b8b61f34e92beda2639292c3f844c1781abd01dc091b0925789b"
+  },
+  {
+   "month": "2013-02",
+   "file": "2013-02.json",
+   "sha256": "95de47f66c22ce2b04a76b65ed2612f8f9f6837c45352b97b1d8abb382055448",
+   "source_file": "467719087_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "5c249992a0c1e52dec662dfab88e5532b9ffa1b3047ca0d4c1d318d418094b16"
+  },
+  {
+   "month": "2013-03",
+   "file": "2013-03.json",
+   "sha256": "d5ee4c87ae9b8258aa05a8b9e7b5bd6d7a28d4797944f28452da08bb974131bb",
+   "source_file": "467719088_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "65243a9e081bdbe70e25ae72329493691b1d0335bd1b14bbe602db530fc8865e"
+  },
+  {
+   "month": "2013-04",
+   "file": "2013-04.json",
+   "sha256": "ef0a91c870b79ed9c614a86de96ece10fee7475f3fd5cddab3febf2e236cf214",
+   "source_file": "467719089_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "642a3d445dee2173cf7505154821f546620af71271f5f9b9f2f1bcb402093584"
+  },
+  {
+   "month": "2013-05",
+   "file": "2013-05.json",
+   "sha256": "4d697146376684470a24b3d3f1e607ac6e1d962b70004e9736ae21014569accc",
+   "source_file": "467719090_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "7eb9d9d1229d382f0cbdb6be2a5df746b694d277d0968f7fc43accef3bf5f334"
+  },
+  {
+   "month": "2013-06",
+   "file": "2013-06.json",
+   "sha256": "d0c94fe8eb5c5227ba3d831d25cc4c78b7494a4899417b3ad555f52822b43550",
+   "source_file": "467719091_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "a83f389de530877e39ea79f0ed92357517b53ded2e6247718436db9a0492cd01"
+  },
+  {
+   "month": "2013-07",
+   "file": "2013-07.json",
+   "sha256": "2050b8eb1036fe5c6c0c4d59bc15b8526e5939a4fe5175e5806d255b94d47eae",
+   "source_file": "467719092_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "70f4a08981cc3ca6853b8d33b1a0da952c3c0924a2f49b2de3c4396ee6d93534"
+  },
+  {
+   "month": "2013-08",
+   "file": "2013-08.json",
+   "sha256": "fa27b602a6b699ad5415f76a4fa5ce5882182e4f272d5b88b2bfdeb6ddef9813",
+   "source_file": "467719093_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "e2783a3c39f5d97297af382372f292a72fb154f5ef8fff6e268a5e23404341d7"
+  },
+  {
+   "month": "2013-09",
+   "file": "2013-09.json",
+   "sha256": "4809f275fc1e69fcdc8588e19f9900d65f3a4c0c2c5d3f7a79b84291d2ddda00",
+   "source_file": "467719094_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20130901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "18592b94d5cbe23baafd294acd6cea735ae275b706051e78ba786885eefcd941"
+  },
+  {
+   "month": "2013-10",
+   "file": "2013-10.json",
+   "sha256": "52a110dd03c9faef373d326ec89188eff4bee8fa1a0a6ba5c4ac3f36d045d9e8",
+   "source_file": "467719095_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20131001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "74785730257749e41eb392d789d6877eb32c81f2a9cc0c57036e65da2326bdcd"
+  },
+  {
+   "month": "2013-11",
+   "file": "2013-11.json",
+   "sha256": "46e9d6132dccc2ad2afdabe08b8ab06a3ca92cd1807f1e356d1af7ce8f8f132b",
+   "source_file": "467719096_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20131101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "5fe1d90d55c499d0d52cd4b19198873b142d6c4f0d4536f9f47a1425b6516bb0"
+  },
+  {
+   "month": "2013-12",
+   "file": "2013-12.json",
+   "sha256": "40d9211d73d93abe81441af0f94f90bd59f03273908018fee467be551bb82bd9",
+   "source_file": "467719097_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20131201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "cae0a56962946758a30a45a26d2bf07b160a61b2937afbab4f8ecb6a4d1d057e"
+  },
+  {
+   "month": "2014-01",
+   "file": "2014-01.json",
+   "sha256": "417c14092ad54f1532c304b914cc28b85adea554388fa752c38ae6f358bd3d01",
+   "source_file": "467719098_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "f24ec0c5c5e05c6498adcc4fdec58bdaf39dee124665fbe5c5834e4645e1d0e7"
+  },
+  {
+   "month": "2014-02",
+   "file": "2014-02.json",
+   "sha256": "39d0f82c52759e75caae3b43bbde7768da65536432090b71c887be6c2138cde0",
+   "source_file": "467719099_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "af23cfb66480491e76ad1f2c13886012b38f3c079e165c5063f4a8732302a86d"
+  },
+  {
+   "month": "2014-03",
+   "file": "2014-03.json",
+   "sha256": "0b722725069b193b0cf72e1ba84fc889c7f40ebc983e636404c63eb841329c37",
+   "source_file": "467719100_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "3d71fa44fc4337be181bb31d185568e5c5d1a8a77eca8e595cc9596d302ed49d"
+  },
+  {
+   "month": "2014-04",
+   "file": "2014-04.json",
+   "sha256": "0276dd2429dbf89ae0733ea5f06c530e2053f42d75f656b6603568b1d53ec03a",
+   "source_file": "467719101_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "150b7bb49d9b05fde6859043663eecc59f6cf9bc5c1718ed30129ee53b1e174a"
+  },
+  {
+   "month": "2014-05",
+   "file": "2014-05.json",
+   "sha256": "4d6690e323e8a6a6413ffac91bc36cef2dd0283ce2805e95bc0702374570b371",
+   "source_file": "467719102_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "8fbcce7bc712dca1870e905b30d8aecbe2b9d7256a0edfa4b750c93da1f0c98c"
+  },
+  {
+   "month": "2014-06",
+   "file": "2014-06.json",
+   "sha256": "d24eda7d582291b246a94018319fdd94a87330d4d9d369e553d56931d672ab44",
+   "source_file": "467719103_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "a87977de70f775d6735e3ea01f5f66b684ee146a52d0c2aa0c86948f9104eb14"
+  },
+  {
+   "month": "2014-07",
+   "file": "2014-07.json",
+   "sha256": "6490b55ced64840a602fd52603ad055d6441a1bc0b47bad80f725ef99bc4b181",
+   "source_file": "467719104_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "29c8f640288da4f1183d520d0bfc4f30939a353f5cae8e74385682ddd6535e87"
+  },
+  {
+   "month": "2014-08",
+   "file": "2014-08.json",
+   "sha256": "5ee639793c06bf54db741a4ce685bd983d7911894c55b3623a14c4db06153392",
+   "source_file": "467719105_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "6176de2caa65569da482756f1e7d337465d3060950adb3d839e6e93ecf0c52e2"
+  },
+  {
+   "month": "2014-09",
+   "file": "2014-09.json",
+   "sha256": "c00ae99ee1b384d409d4c8705b4b7a96d60b8e82d3fbb951890f8daf26652389",
+   "source_file": "467719106_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20140901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "e4490d874d91988db304b2c27ed4d55d8903d972d92c0745d8b9eefe40f1285b"
+  },
+  {
+   "month": "2014-10",
+   "file": "2014-10.json",
+   "sha256": "0a9c7fb8e1e5f69c4ebe4be12c3efe706abfdff10936fd4efbe7f48f5c01501c",
+   "source_file": "467719107_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20141001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "ad7c9ad8afecadbfc0c90aa3344d0ba8d968fed8c94bcfa8ca87337b2dd88af4"
+  },
+  {
+   "month": "2014-11",
+   "file": "2014-11.json",
+   "sha256": "4a1a7c193c88f187db8a92e1d403951a11d502cca251727f0d30effa1c01ae27",
+   "source_file": "467719109_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20141101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "0a6e8a4beb209712b6bc7796e71c1b71c7b3edca99c32a614d215163b525f584"
+  },
+  {
+   "month": "2014-12",
+   "file": "2014-12.json",
+   "sha256": "d2dd07b384306fad2c51ddd0a1577d1222c471b5b0a6ed95ab8e8e5bda5f4095",
+   "source_file": "467719110_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20141201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "a9b3e10649f61b114033b1ac0a0a7d945dcc7cb5a0ea7794e09b0b880a5bac95"
+  },
+  {
+   "month": "2015-01",
+   "file": "2015-01.json",
+   "sha256": "13df12d87ad5331b5b2d9fb8c0630c5092c930dc629d185a7949ac90a728b523",
+   "source_file": "467719111_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "1cd6f55ce8ecfa480b67a23632f93a8e79f89ea1202e095d58e054654e73b7ae"
+  },
+  {
+   "month": "2015-02",
+   "file": "2015-02.json",
+   "sha256": "99a227d845db846eb74636b937a5898d2d4f21a993a04f9ad1f975a614cf6607",
+   "source_file": "467719112_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "36044234f9754453e44f5d162f13a0237169f6769659928bf37c476e4554f735"
+  },
+  {
+   "month": "2015-03",
+   "file": "2015-03.json",
+   "sha256": "545e6c9f78fb85da613ad27aad923c32fdad81853d9d3d901c5da634012b7564",
+   "source_file": "467719113_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "cbba8daea5aeceb3874164f7e2329a28fd0a307f1c05a2c085f13f811442e3a6"
+  },
+  {
+   "month": "2015-04",
+   "file": "2015-04.json",
+   "sha256": "7f00a084834f34079e67a7403a48efa7f64a046ba5c71cf408024e274d9d4c2f",
+   "source_file": "467719114_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "9feb73120672d36db4ac439814b9f966744a2ba386788474e96e57539a780eba"
+  },
+  {
+   "month": "2015-05",
+   "file": "2015-05.json",
+   "sha256": "b8db57191c286a7a5915224f989899e343397d5a22365c74efc16e0ef9311b1a",
+   "source_file": "467719115_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "1d492df7c565e891c76132cdcde5f5138e6633fa5ade90fc7179b17f2bca1d9d"
+  },
+  {
+   "month": "2015-06",
+   "file": "2015-06.json",
+   "sha256": "d45aa6a91e232c314f76bfa1b68b1afa0588fb1f82ee9229cd4aadd934a9a508",
+   "source_file": "467719116_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "192e47a63b46d348116e6ab23511ab84296479c174a922fd7feab98dc8b40904"
+  },
+  {
+   "month": "2015-07",
+   "file": "2015-07.json",
+   "sha256": "e0a38c3d11f23d8e04995d1c4390c546592b73e47c72da21a5b918d25f057755",
+   "source_file": "467719117_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "be06e869e534ec7ac8713202765dfe224ea629f0252b4c008c88dff4d4072d55"
+  },
+  {
+   "month": "2015-08",
+   "file": "2015-08.json",
+   "sha256": "9caeba1a01dac59b0c0ae0c1543a4baf6ad2a283ae9628f35807b164cd76c4ae",
+   "source_file": "467719118_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "302e21baeaa876a33a55771a880662e2e5a5ebf991c26574a7eedf6faa0cffff"
+  },
+  {
+   "month": "2015-09",
+   "file": "2015-09.json",
+   "sha256": "1eecb768f447a0a9ce5fbda1bfd6fcb059b182b9bf9320875ec178ed9c3daad6",
+   "source_file": "467719119_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20150901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "640b25cf8f331217924f089b824044ba2fa3c1558b250786e966789255c64993"
+  },
+  {
+   "month": "2015-10",
+   "file": "2015-10.json",
+   "sha256": "20090655bc11109300d000453ca924c0f0733b5f0705f01ca80b782b17bbdc65",
+   "source_file": "467719120_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20151001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "dcde162d6a89f38a94987c0ac7e53587494d896ecb166acacfa46502ce2415e5"
+  },
+  {
+   "month": "2015-11",
+   "file": "2015-11.json",
+   "sha256": "c316e6056a7e5c10727880aad17854553e2800433b65bb06ba970563e1742b2d",
+   "source_file": "467719121_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20151101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "9fa26c36e096a788cdbcec52d92d496b1efad525cb09f7b503eb196dbfaf5010"
+  },
+  {
+   "month": "2015-12",
+   "file": "2015-12.json",
+   "sha256": "fb0131b620b9e599f4063294fea3130e73df79209d2fd4c0eea8a525c7a5a582",
+   "source_file": "467719122_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20151201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "0b5eadc6e417a438e34076798930b3317713d27dd3c44b212d8e56851b3d2c86"
+  },
+  {
+   "month": "2016-01",
+   "file": "2016-01.json",
+   "sha256": "a6757b2515dc4d5a0cee64d2a938cce2b519edaeba5524104dcee0b2e150e36a",
+   "source_file": "467719123_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "1b3bf905779b48662fba194ee6fa7d27404492465182002a291c116cf2aecc29"
+  },
+  {
+   "month": "2016-02",
+   "file": "2016-02.json",
+   "sha256": "23662f7ac5d681ccf87e90b549a45e4e664883863fe315d1441e25685bd707b4",
+   "source_file": "467719124_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "2a8f71f36fb2898ffe365180fe31fbce77c388e9a25fca88647d83a0d97910a5"
+  },
+  {
+   "month": "2016-03",
+   "file": "2016-03.json",
+   "sha256": "acfcf5cf992df24e2c6a5fc02257345f82f142815fb3c6f127e4e48ed0525149",
+   "source_file": "467719125_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "b5d73c3b98d2b118bdee94a7497e282e1ab3dbbfcb471fe5ce17bd11b4c96fd0"
+  },
+  {
+   "month": "2016-04",
+   "file": "2016-04.json",
+   "sha256": "12e5f8a13a4c75cc5379909c12d4e07431bbd163ca5fe6572eb5922b27f1fc32",
+   "source_file": "467719126_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "107b27de6f727054fedc814c25aa1a0efb0c86377a7f728c4cbdd860104e79ea"
+  },
+  {
+   "month": "2016-05",
+   "file": "2016-05.json",
+   "sha256": "ffc4396754b7f9b42745026e002cda6f8e7545de80448b0da778a51ff185c97e",
+   "source_file": "467719127_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "cbe4063040722faffbaf419226ec7f57178a6badb6f79cb9e430eba87ae3b0b8"
+  },
+  {
+   "month": "2016-06",
+   "file": "2016-06.json",
+   "sha256": "33cb375c66ad1b99572d1fcc10e57ce09cf0ea01730bbbbb44290c14a42c094f",
+   "source_file": "467719128_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "3b0fa5aa865097c90c3eba8e3bb7b55a821dad5b1f8c914cf4e7b3ec3a85344c"
+  },
+  {
+   "month": "2016-07",
+   "file": "2016-07.json",
+   "sha256": "9376a07739928540150a1687ee86ee4dbf0b07cb385d56f723f4843f7c5a59e5",
+   "source_file": "467719129_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "fd2a645dea24e0ef54c8544560e18b91ea702d11e703106386cebd1874047a60"
+  },
+  {
+   "month": "2016-08",
+   "file": "2016-08.json",
+   "sha256": "e6b0b117a557e8895d64a9f1cf3407007b6d430e03b3209e58fbe43e2092e05c",
+   "source_file": "467719130_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "23ac463abf486c8e570c46ed11566e8b8820906f4c2961aede6bea15da5e5005"
+  },
+  {
+   "month": "2016-09",
+   "file": "2016-09.json",
+   "sha256": "989af4fa21b6e8bfb18d53808cadd72f5918c049ed26738262b0f16b9c3faa51",
+   "source_file": "467719131_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20160901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "f7aecec00c4ceea6c9f625fbce1b0cb3e8aa892a6074c5e4052eaa0c2b3d7279"
+  },
+  {
+   "month": "2016-10",
+   "file": "2016-10.json",
+   "sha256": "cc053257f568d5177bead638f61a63bb2c067ee6cee24c34db7d34516c69b735",
+   "source_file": "467719132_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20161001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "1d19d8d5d40074ce459b54511df0449674a6ffadb11f43f2cd242bfab4a44e73"
+  },
+  {
+   "month": "2016-11",
+   "file": "2016-11.json",
+   "sha256": "e5555552597f9a181a347629fc3baee8c8515bd200fadaad3a998032f34221bd",
+   "source_file": "467719133_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20161101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "8fc26eed80c84578072d72bdcc0e6e9711687d03bfc42a017a51ae0224e0761c"
+  },
+  {
+   "month": "2016-12",
+   "file": "2016-12.json",
+   "sha256": "ec0a1d5a3b26b4df0879646f8d0b30841f2a05b8d67918068fea5ccd006b4f0a",
+   "source_file": "467719134_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20161201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "bf8ef38808b3930302da491a3ca2c6eae92c7657906a0ab6605e9305034d242d"
+  },
+  {
+   "month": "2017-01",
+   "file": "2017-01.json",
+   "sha256": "8ba081beee4fa5a9e4cd70d5f57666239d98d11d33d028f2d9ea54c4104ca3ca",
+   "source_file": "467719135_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "0b972be92dd70ba2c7726a95a101571426a3de3275f042cfb6a0da0a776456cd"
+  },
+  {
+   "month": "2017-02",
+   "file": "2017-02.json",
+   "sha256": "7fe521c3b3ad1ba1802b939ffecd1332d0e38278414921f380de68114ec6dfd6",
+   "source_file": "467719136_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "84aba954ebbc67beaea7630a228c1f9bfedc1e33bd5468767ca981b198832c72"
+  },
+  {
+   "month": "2017-03",
+   "file": "2017-03.json",
+   "sha256": "322c29e15ec0cf8a6bae67941499acd5541eac20d96f18889a28f05aa25b1024",
+   "source_file": "467719137_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "7ef76317b45f3a12576a4f55923954ac9ff248f39d9050102dc7df378fe21ad4"
+  },
+  {
+   "month": "2017-04",
+   "file": "2017-04.json",
+   "sha256": "dbfc9a7a7c2d951fec1648dd47ce404496187c0e78566b62fcbb6f65f385f569",
+   "source_file": "467719138_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "f01eae08d56a3722d8f0fc98c58929ec2d9ee1ce502aa616750662faa1362747"
+  },
+  {
+   "month": "2017-05",
+   "file": "2017-05.json",
+   "sha256": "02761086b60471f7804c807ca450de8ae0166f363bd516a7f3ac8cf7f5fddf96",
+   "source_file": "467719139_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "e78597315dc1b5176c0939f6294990c35f736503fc9db7e176b97ef9b7921cd1"
+  },
+  {
+   "month": "2017-06",
+   "file": "2017-06.json",
+   "sha256": "b9d4ebaaec02352d77be49f50f80fa274db94e7b02b941c9d6bd1ed26581dd51",
+   "source_file": "467719140_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "e24040a2913ad4ee4b4b42129811ce649647e09facd8989fe89a130b1eeb5895"
+  },
+  {
+   "month": "2017-07",
+   "file": "2017-07.json",
+   "sha256": "186e4f726d1e50ecf37777e37a19d8ceba0d3e4fc18c7fb03daf770da5489ed1",
+   "source_file": "467719141_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "a5562ce24674d2533f5037fb3c6cfee47b78142d8cfb09d6d15f1d9cf1a7e666"
+  },
+  {
+   "month": "2017-08",
+   "file": "2017-08.json",
+   "sha256": "316b3190f8e8ba66f233f9714f6c29622edfb65c3418db60b984bad8fcdfbf95",
+   "source_file": "467719142_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "259cc611ecd87dfa17315d7596a28e273d18dd1a5663ca6e63b54a99aba8f3a8"
+  },
+  {
+   "month": "2017-09",
+   "file": "2017-09.json",
+   "sha256": "5d9fa5aa2baa8954a43f4cf1991c3ecee10fab7afc483dd211f19d833b455d5c",
+   "source_file": "467719143_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20170901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "8710330cd54f0c6d1770c0615a88f711aac314917c3a5c4b9e3eb7b064b6a578"
+  },
+  {
+   "month": "2017-10",
+   "file": "2017-10.json",
+   "sha256": "d0df40eb0499063b3a716095cc1db9a48cf5167be212702e0bbec75db7a05eaa",
+   "source_file": "467719144_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20171001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "6bf0cb204a71f4383650cbe3a2b266d685df6ef1af99afbb235508220c3d7b62"
+  },
+  {
+   "month": "2017-11",
+   "file": "2017-11.json",
+   "sha256": "fec422394f8563486aa25ad10dc35440205a87e67089ddea17bf9e58280b7cde",
+   "source_file": "467719145_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20171101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "8fc030c72b741f13ad8a3a6e80a8e5d33805a2f13886c8e357e10117c398d759"
+  },
+  {
+   "month": "2017-12",
+   "file": "2017-12.json",
+   "sha256": "2daa1ee02c27924d2dda5784007d8b17f4c10d4df7793b7f4940462ec34ea36a",
+   "source_file": "467719146_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20171201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "6ed795f93372e16d560bb5d809bc5b50eb137b3990b5d57b7f12382b2d3f531a"
+  },
+  {
+   "month": "2018-01",
+   "file": "2018-01.json",
+   "sha256": "21061f76d0781ce5ed051cf4dc1d30432ad2776243dfbd603faf9b8dabf7afab",
+   "source_file": "467719147_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "ae4e5edad2d4df0acae781b6516ad63f69cace6364eac34bc89d1732a27ca5a8"
+  },
+  {
+   "month": "2018-02",
+   "file": "2018-02.json",
+   "sha256": "1cecb30b7c49e44759c5abf06843587afe341bfa09b9e65309b540b1cd230883",
+   "source_file": "467719148_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "9b8c0caa696f058e62998ac75151317b0e5a6568c0de7c861156e0310a45a9d1"
+  },
+  {
+   "month": "2018-03",
+   "file": "2018-03.json",
+   "sha256": "de7ba215026d8498c1bdf4bb75949ff839063d11f2059d43251de58e4b19678a",
+   "source_file": "467719149_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "7db17509f060dc96479b3dbd2713fd5fbe68c6cd36876c9fad833c0a807ed3d2"
+  },
+  {
+   "month": "2018-04",
+   "file": "2018-04.json",
+   "sha256": "ff22ff3fbfbddc31161290998c921857b6816b9bde544b6afeadada33923b48f",
+   "source_file": "467719150_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "b9d3de2f5b880fcbd75057ac77239ff3d3aa5917400c9e7569e95a5513ea1b75"
+  },
+  {
+   "month": "2018-05",
+   "file": "2018-05.json",
+   "sha256": "be86c2ec1d12bf31fe22768bb165abf0d348e94ecc76228e35262b89905ad6e7",
+   "source_file": "467719151_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "d93b908212ec072b260ecc54c4bcc928020c092c1ccbbb4913c7ae45f7217b8b"
+  },
+  {
+   "month": "2018-06",
+   "file": "2018-06.json",
+   "sha256": "ca1d1fb6c741097f0d4b745fd6f78af2d580678bcbeb676faf520e6b2cb0364c",
+   "source_file": "467719152_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "154af9c2f472bad758e4af9e993ea563cbe97952b7962c7aa28f127fd956ae58"
+  },
+  {
+   "month": "2018-07",
+   "file": "2018-07.json",
+   "sha256": "36cec003912eb56d136c1c91e8628a6a44fe16a564fba58e09d5956283243768",
+   "source_file": "467719153_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "214ca8cba4b4a33033af62f23c598cf4f5251510435bfef8260722622caf921b"
+  },
+  {
+   "month": "2018-08",
+   "file": "2018-08.json",
+   "sha256": "e3902000c5f872f128d8821b8c6d01ffdbea6528b8ded40094ff6427cb04be65",
+   "source_file": "467719154_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "39d4736c2584fe8f10cd49cef172cbc3b0aef5de73a5f4469d09120172f2bc21"
+  },
+  {
+   "month": "2018-09",
+   "file": "2018-09.json",
+   "sha256": "4c4732d749abab376a43607b65998b154d8d9ef0e63d439e3d48536105752470",
+   "source_file": "467719155_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20180901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "9d2145bd8b75fe7664afb9d14239d6c526eb134d2e72b09d100f9d3a49a610bb"
+  },
+  {
+   "month": "2018-10",
+   "file": "2018-10.json",
+   "sha256": "a6201a76693d6d2f3f9efe326f8b859295b37454c1e2c2b375f541092b714ffc",
+   "source_file": "467719156_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20181001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "651657cfae5c1312a0a691dac70e184d39647c3694906d5c4a91da13924a932e"
+  },
+  {
+   "month": "2018-11",
+   "file": "2018-11.json",
+   "sha256": "363fbe0d1ffacc9f93ad37ba635a01616ff55c1f3382a5e68b6a08cf15bf9323",
+   "source_file": "467719157_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20181101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "8f51d59e056baa9d6c74e42c498881549a6e9e8ea82048e3213934e7c61caa0d"
+  },
+  {
+   "month": "2018-12",
+   "file": "2018-12.json",
+   "sha256": "174a9e249683b184ba91fa91c223fea71c74632227380593e5bfc796c202dd4a",
+   "source_file": "467719158_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20181201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "3dc17ea88a689aa5a28d2f6efb5e3e16f8d36881ee453fd7116b7852d4826eae"
+  },
+  {
+   "month": "2019-01",
+   "file": "2019-01.json",
+   "sha256": "b3f785d93b4882ef52d62f0ce776bc10ea2f38a33ccb1ee2a2b030a747a58da4",
+   "source_file": "467719159_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "97f7754137c88e81e7013cd85d3cb86dcc88dd6773ba9ae76cdad4824d93f05c"
+  },
+  {
+   "month": "2019-02",
+   "file": "2019-02.json",
+   "sha256": "ccaea4d700868484925f2a65bbbfe7770f3e35ff914819b71f6f5582615c070c",
+   "source_file": "467719160_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "a7f83cd7031ea547c0b9bfa182afebc3a2ec9188a7f9e365e25b920c7625b07d"
+  },
+  {
+   "month": "2019-03",
+   "file": "2019-03.json",
+   "sha256": "d636a3b84c3f0fc2ddf1e2f3aa9f766b6277f1674e139ee6914d2e8522306758",
+   "source_file": "467719161_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "f0f00c278e7cf21c3ca0cb31ccc5195e673587e95dac9d5c24f721f2d5d8b560"
+  },
+  {
+   "month": "2019-04",
+   "file": "2019-04.json",
+   "sha256": "cdc84932634eb5d9f9b42c3e29a89dfcdd34461a12f19672000c3bfd225c6ae3",
+   "source_file": "467719162_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "326c274c20dc455b761496b6eeb61552b32ba4dda284cc59014a3ef98ade4338"
+  },
+  {
+   "month": "2019-05",
+   "file": "2019-05.json",
+   "sha256": "7d80a1f799a5e6c98cb064e8e425aa76ae8d952e159b3e1d685c78c7811187b0",
+   "source_file": "467719163_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "28c352e727842ba89c86c932c78ed8985dbac55ba9810f0fd9e11efc21f5395f"
+  },
+  {
+   "month": "2019-06",
+   "file": "2019-06.json",
+   "sha256": "755315c10099a7b708157e64359bbd0fd3766007e8b0b30fba7e826a24edc971",
+   "source_file": "467719164_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "4d9ed723b4895e46c810dbcba051c259560ad5e1b6d7df458f36c5c20d3f3593"
+  },
+  {
+   "month": "2019-07",
+   "file": "2019-07.json",
+   "sha256": "a7a4800a6ae3809545bb55d1a5f2947ea520f291134a09657fdb3dadd61145b3",
+   "source_file": "467719165_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "50a5f5d4024f26d75c3da833fb5f5031bc2ea4b794bbd78b5bb3739af8d5d2d8"
+  },
+  {
+   "month": "2019-08",
+   "file": "2019-08.json",
+   "sha256": "7445017472168e375f638f065d9f0ed73b5a383560b142854e43d7e5b0badfce",
+   "source_file": "467719166_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "37f9a9329594f6293ca1bf34bbe7ba416ec265fd76fc367838f30860d57dca7b"
+  },
+  {
+   "month": "2019-09",
+   "file": "2019-09.json",
+   "sha256": "c2ac007f590a98caeca8fb3227e6fa65c4b7215a267c557e5db2a07037a6be28",
+   "source_file": "467719167_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20190901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "1bd90bc7833f7df184ea6347f86e72056d49ae107996aba825ef252df1269232"
+  },
+  {
+   "month": "2019-10",
+   "file": "2019-10.json",
+   "sha256": "e4f31c120f44f2745bfa95022bab6e63c9a4a1b26e5f730b84a1f85140f046a4",
+   "source_file": "467719168_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20191001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "da9634ad2abc9a6e1badcd1b93b40fe552fd1215002efae6565ee6d97e2c9ed5"
+  },
+  {
+   "month": "2019-11",
+   "file": "2019-11.json",
+   "sha256": "d68a4f083fcb0299cc9486a1d77e54c9e067a4b3677faffffe3c8eed87482509",
+   "source_file": "467719169_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20191101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "71787ed10b82f3022e02fc7d49f391199095f2faeacbef85aa4ce015cd5d62f2"
+  },
+  {
+   "month": "2019-12",
+   "file": "2019-12.json",
+   "sha256": "1210816eea220bafb1f670f3a11580d26a0f4f729445a56d4817beab4580d2b4",
+   "source_file": "467719170_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20191201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "a4efdf2f394084363f0d60dd17cac9a3d5bc187261c808eeddf366c9d993ec49"
+  },
+  {
+   "month": "2020-01",
+   "file": "2020-01.json",
+   "sha256": "4f32983691cbbcda3116b2f3c75c24eaa47ef154dfd81698d86fda9644fddeda",
+   "source_file": "467719171_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "05201fdefe6f8bc73973a673f6c14f61603ea5cee17a25f79a35dfb924730417"
+  },
+  {
+   "month": "2020-02",
+   "file": "2020-02.json",
+   "sha256": "e5cb737b9ad3f5a3023d3b84d59119c33fe644bd9d51e2e603e77fdc7bbe8043",
+   "source_file": "467719172_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "688b9830b19de496b31c2e87df64673a192279a7eda5742171d19f65e16c19fd"
+  },
+  {
+   "month": "2020-03",
+   "file": "2020-03.json",
+   "sha256": "d46690a5bb882898861c4990734f12ed537e4ca38c38cb95c3130342a77f0f4b",
+   "source_file": "467719173_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "0438635bfbb01768c4e881901907026b4ba9946c5343efd86f047f66099f6e29"
+  },
+  {
+   "month": "2020-04",
+   "file": "2020-04.json",
+   "sha256": "84220bcde94bd155dd65a13ec127bc09deaaf418c792bb5455979625a6058c86",
+   "source_file": "467719174_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "d1694db748a1ba64621da13c4ea5ad19d3a7bae630b75f45f98f935afa23a008"
+  },
+  {
+   "month": "2020-05",
+   "file": "2020-05.json",
+   "sha256": "344aa778fcf8a258875d2740b82b44c8b28019a29a06587abb6c24acbde0c3c5",
+   "source_file": "467719175_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "796780edd757b8aa118072ecd2da06b765a033b9308610d21e60e3556abf7549"
+  },
+  {
+   "month": "2020-06",
+   "file": "2020-06.json",
+   "sha256": "ff65caf3b932e98015f6d05f7bbaaf1e6466e46df16ab3bc8b4bf5d5f39122b1",
+   "source_file": "467719176_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "c439ead0473d311529d1e8d659a6bb8c1658b5a6c327c2349aa29bdab06f20f2"
+  },
+  {
+   "month": "2020-07",
+   "file": "2020-07.json",
+   "sha256": "63644cb932a7daec7d3e12a2dd91ac709c1b8923c0e6aac555f90e233d93d446",
+   "source_file": "467719177_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "6179db791e38b04b4c8a05cb9d0c47ec80d0cd16569668ef76fbf8c360e645eb"
+  },
+  {
+   "month": "2020-08",
+   "file": "2020-08.json",
+   "sha256": "71fb574c3a5ae655088d05102b3f9c448c49914b319af4263ef843ca2a3f0dd0",
+   "source_file": "467719178_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "ae500d8f43227d9415ecedef910e0b358a7f742d10eb3751434b644231337e6b"
+  },
+  {
+   "month": "2020-09",
+   "file": "2020-09.json",
+   "sha256": "ff077b6014d8249f774c4ed3c0e761b2e3b60ba03314884a87d2342ac32d74eb",
+   "source_file": "467719179_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20200901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "7eb77e9167d972a84a0d806bde8f78f770a2972e669e052a9195bce689151d6a"
+  },
+  {
+   "month": "2020-10",
+   "file": "2020-10.json",
+   "sha256": "b50eca4b12daae28ae095325f84508bc0519fcc522d17047f915630ba14b8167",
+   "source_file": "467719180_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20201001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "37fa6c99853bce26564128e2a6a9f19f7da5ab41772b2cb972708f31236aae30"
+  },
+  {
+   "month": "2020-11",
+   "file": "2020-11.json",
+   "sha256": "9e95e134b79f497229f39b3bee27232a3a72d4c56d362705e024a4009014188d",
+   "source_file": "467719181_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20201101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "8db45ad7b3208a4834b1667f82dfef876318781ca6f9a23fa6b3ab099447ab1d"
+  },
+  {
+   "month": "2020-12",
+   "file": "2020-12.json",
+   "sha256": "cbcf59f2bfb2fb49f3cd0ae24b87e98031a05d3e509ce31ab539c5c737896324",
+   "source_file": "467719182_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20201201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "895524ad354face3843a48f8aa291dc272c99b6065bd617dc5b035249b2dfa05"
+  },
+  {
+   "month": "2021-01",
+   "file": "2021-01.json",
+   "sha256": "f120781368890127747dfabbc49739ae4be469eb81c99d46ddeee9b4fc02cd72",
+   "source_file": "467719183_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "a2341b257deba5f598a24808b92a5a42b4975d8f7582df93a092d6b4887cb868"
+  },
+  {
+   "month": "2021-02",
+   "file": "2021-02.json",
+   "sha256": "26875c6a1d4cc34de8b432bdb5c66c3798ab811a03f7668fe9276702f9919e88",
+   "source_file": "467719184_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "4311569dd3f32623aafa735911909dcd8c0d90fdfb825cc8b0c19a15059e6b2e"
+  },
+  {
+   "month": "2021-03",
+   "file": "2021-03.json",
+   "sha256": "b765d5ec59a65057a08c30c8d5208cca07b25d57bc3b472a8ec9b8ebcc541421",
+   "source_file": "467719185_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "5c550ba2bf299fb268d14f675d4eb922be2aafde6a6f8ce5d4975caafadf303f"
+  },
+  {
+   "month": "2021-04",
+   "file": "2021-04.json",
+   "sha256": "99f0cd2e7fd9e153d88e5360fdac819fe92632f8f0e056e1de5970ffb4f5cd4e",
+   "source_file": "467719186_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "72b06d9fcd1bfb3937a1dc8e8520a61d5572339e2e6a5f698802bb1dc0ad57fb"
+  },
+  {
+   "month": "2021-05",
+   "file": "2021-05.json",
+   "sha256": "da1845fbd8844038ea758aa01247e96649ea2f6bdba003fecc350872f85a505b",
+   "source_file": "467719187_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "8c7136450eb684b8c5011d518aac84c0b4a92faf4b8c0321a908b7a45852ae65"
+  },
+  {
+   "month": "2021-06",
+   "file": "2021-06.json",
+   "sha256": "9261abdada5ed0dc553c410a914d8f7a9719555c64c16dbcc425d55f8bd9e816",
+   "source_file": "467719188_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "1d641db902f82157fc3f5485c4279c3a1019d713de250c9c132b6567678b2e00"
+  },
+  {
+   "month": "2021-07",
+   "file": "2021-07.json",
+   "sha256": "fe0d4ddf903448180dbc6ea057be54c5161867bc4c78681225457090e32b1423",
+   "source_file": "467719189_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "7c421b61403932b9f16b4eddfaefb1700950b58e70808cb5697bed15104bc219"
+  },
+  {
+   "month": "2021-08",
+   "file": "2021-08.json",
+   "sha256": "999fcdd11565ea564c8de5fd219b29c4aa7a8b7102f6d258faf0fd46fb277f53",
+   "source_file": "467719190_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "310c877f8ce0d4acd49fce2a0a1a93f979eeb9c1f0441d358f3d3bbd2785dacf"
+  },
+  {
+   "month": "2021-09",
+   "file": "2021-09.json",
+   "sha256": "3517e82c16a52758e777d5e650c2b4353d4bd537d740063a3321512b159b1e6d",
+   "source_file": "467719191_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20210901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "f26a51eb25fcc045793e34ec2e9fafec38478e33380955c4bbe1c92b2bfa9050"
+  },
+  {
+   "month": "2021-10",
+   "file": "2021-10.json",
+   "sha256": "82240a54a6338f093cc2ae2f6a34dc958bac3a4e172d6bf31f77628790833a15",
+   "source_file": "467719192_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20211001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "6d8e24793c21d2b57e83c3c925f9f43fb7623fb5f25e0413ccde19155994f3d1"
+  },
+  {
+   "month": "2021-11",
+   "file": "2021-11.json",
+   "sha256": "e177b7ffa782773c6a2fe6829e00a3918495fdf5eedef66598d27e9518330580",
+   "source_file": "467719193_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20211101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "46b9820bb1a4dbe8a163ec97d675bde54b351b1c2387540578c9f6b8eaa72604"
+  },
+  {
+   "month": "2021-12",
+   "file": "2021-12.json",
+   "sha256": "cba10cb02b007db203aed1582e4cad2291518615d0084517a9035ea02712363d",
+   "source_file": "467719194_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20211201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "049327d3ba6fa07aa63d0b0d7b80f40706d680a74d695351b3c41c2b2ac2f589"
+  },
+  {
+   "month": "2022-01",
+   "file": "2022-01.json",
+   "sha256": "a9898fa3b2fb77be786f3ce3c5ac429e1f22b99576229f6faeb771fea21ea27c",
+   "source_file": "467719195_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "a8482f30a3ab8c72a999a2edd120ed49dcba4cd060908939b8aa360ab02a85a1"
+  },
+  {
+   "month": "2022-02",
+   "file": "2022-02.json",
+   "sha256": "f3ba83e48920c826fe47ca45cbd152296fbb173065791a566eaf14a20f31b98c",
+   "source_file": "467719196_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "2f407aea76929aaa8cd2620b7c44ce25a47edabb3d3b05f2b644091a289efa13"
+  },
+  {
+   "month": "2022-03",
+   "file": "2022-03.json",
+   "sha256": "77a7e7fb344befee0cea93a8513afe651d8ee52e7db431189d5d28245b9955f7",
+   "source_file": "467719197_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "cd72b1ca8c70c8fe63565de8ec53634d50b07d969367e9e3b6ca944a039538dd"
+  },
+  {
+   "month": "2022-04",
+   "file": "2022-04.json",
+   "sha256": "6589482a4d4893fa0432f763a202d43c41a08febccd7aa3869032b98df981831",
+   "source_file": "467719198_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "66031929b5883a7ba2179af72f0220c8a5d7defdcaff94d53b1271cbd8d53639"
+  },
+  {
+   "month": "2022-05",
+   "file": "2022-05.json",
+   "sha256": "5e844c0c6691a5c4abdb565242845157bf9617a739994f021b637e08d9616dd2",
+   "source_file": "467719199_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "825ac7dde4b3e60274a200ca6dc38650f2764d09ab813d23a1bc670ffa309ae6"
+  },
+  {
+   "month": "2022-06",
+   "file": "2022-06.json",
+   "sha256": "a2e1814b11a72b8c57d628d86d1d8a8b91f52fe443c024f2910da303af6b7a82",
+   "source_file": "467719200_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "85d373c90fda784247eedfc5ec77e99eb35fed09c0d49354a45d8decd9b04a48"
+  },
+  {
+   "month": "2022-07",
+   "file": "2022-07.json",
+   "sha256": "3dfd5bd18a860b27ce916888209ee34c765ee0d572785959e15da7026dfb35ed",
+   "source_file": "467719201_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "97b56c9e8f4d6c483f3cc40ddeca9ea671232874ba61188fc569de58c588a0c1"
+  },
+  {
+   "month": "2022-08",
+   "file": "2022-08.json",
+   "sha256": "8062bed210373b671930f917cf80a7bb0feb92ba5f80736e0dcfb6665a2489ec",
+   "source_file": "467719202_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "c0cd9a33dec70b8f8f8d6f8669e25569254b0f21aa0a78ba47458dd0187d1dca"
+  },
+  {
+   "month": "2022-09",
+   "file": "2022-09.json",
+   "sha256": "f46f501e72a59e2c7970c9d7484bc6db975888bb958d89bb92971bd85b8a6016",
+   "source_file": "467719203_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20220901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "2b89c778d43f5d7162ccb3723e559412407ec82be39949f2969178db308be826"
+  },
+  {
+   "month": "2022-10",
+   "file": "2022-10.json",
+   "sha256": "63bd0595bb547e998b00797998b8f37959f009a7cda7ea64149aa166645e8558",
+   "source_file": "467719204_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20221001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "efb45556e25f0e24d1e5ecda1f20dc333ea3cf7ef414e80c6cab4dfc10aebf4a"
+  },
+  {
+   "month": "2022-11",
+   "file": "2022-11.json",
+   "sha256": "1c7dfbe07cce928f19f5a7acbae954445cc1638d53e377f6e0f483a39a52692d",
+   "source_file": "467719205_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20221101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "9bcd4e5f1d3c2f2e22a1e19eb8be09057ff7f51f82b46fdcb138a0fb1825b515"
+  },
+  {
+   "month": "2022-12",
+   "file": "2022-12.json",
+   "sha256": "9a372a7024f7227f35aa86cc1079a3c8778767c6d9a153fbdf81728a5279de41",
+   "source_file": "467719206_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20221201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "9f0ea4a59aec3264e334c457549cf4545ec400a24fef65e858e2f770369f266b"
+  },
+  {
+   "month": "2023-01",
+   "file": "2023-01.json",
+   "sha256": "58d27c860050c423fec29589d83483e0d829a4c521505747657720db4375008b",
+   "source_file": "467719207_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "673b0e93264d5f6a4b9334f8fb571f6afbbd254d6070ea6047125d54949c7edd"
+  },
+  {
+   "month": "2023-02",
+   "file": "2023-02.json",
+   "sha256": "ab05fe79ce17d74eda2343adf1214fad9b6e6c6b92089e0591a794e2f3d9c6ab",
+   "source_file": "467719208_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "9b81b3de62c1cbcfe70db7f84a952f5988310bc3c95f619082e2d2afab3508a0"
+  },
+  {
+   "month": "2023-03",
+   "file": "2023-03.json",
+   "sha256": "4b1b65ef36a69ce31b3c210e33b2973026c62d25cfa3a4abbb1664070a378a7c",
+   "source_file": "467719209_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "14519a2aa9e682127ec42171035b25b755d8ecc12831a84d567b95676da2d218"
+  },
+  {
+   "month": "2023-04",
+   "file": "2023-04.json",
+   "sha256": "5c82652b954cee3e87ace856e29ff4a603572cb994fbcbc680e53076da6c1de5",
+   "source_file": "467719210_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "b00a1647f096810938966d43768f7ebaf52230c3839aa388e732bd9caca66b01"
+  },
+  {
+   "month": "2023-05",
+   "file": "2023-05.json",
+   "sha256": "5415a69a73d818ad3af55ba12182766106ae716e30c44dd09b437f60fc23abdc",
+   "source_file": "467719211_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "7fbd2e8654571bf117e9e069c820b799a42480f6a531ae0eebc3d93d86804ab0"
+  },
+  {
+   "month": "2023-06",
+   "file": "2023-06.json",
+   "sha256": "9765484a827db9d91c0bbed38428e0c3bf814af9960124db5a5c26298eeda800",
+   "source_file": "467719212_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "c26bc97b8db62af5f8f016102b6e56079c42102b95e5321ba8e2c90dfa7f5c31"
+  },
+  {
+   "month": "2023-07",
+   "file": "2023-07.json",
+   "sha256": "9c0473e5779a7ac81551a5b97d8dfa63c8135d30dc44b6ff3265fb198083646b",
+   "source_file": "467719213_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "d783ccdd8a432b9244f98899c2f01c5177ef04bf1a598d3b81eeb20f04014ad0"
+  },
+  {
+   "month": "2023-08",
+   "file": "2023-08.json",
+   "sha256": "30fe608b59e1b05350bf9bcd7b24fee0f9df7422e31bb79b4adfddcbd548d2f1",
+   "source_file": "467719214_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "edb053e0bf43e6ef2f2195117c6aae6bb50286d16ca32faa8f3328ee1c259c3f"
+  },
+  {
+   "month": "2023-09",
+   "file": "2023-09.json",
+   "sha256": "6e29862e1ae4bdf794b21d352bd0a1523fa3d0f80f1cbddd4232bb1d8e6478c5",
+   "source_file": "467719215_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20230901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "4070511313845eaf905d398cebb2983a0275cc1df14c84e12ac333dea085163f"
+  },
+  {
+   "month": "2023-10",
+   "file": "2023-10.json",
+   "sha256": "35fa90a487f40e825428b35f9a604cfaa0dcfc797f47a7626eec030dd820359c",
+   "source_file": "467719216_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20231001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "72d4c7f5dca106e9ce00920f25173d2b62df92cf80179bb3da4e995e1735fc87"
+  },
+  {
+   "month": "2023-11",
+   "file": "2023-11.json",
+   "sha256": "0cdc2aa7062000adc9f84ec582fc1634707976bac3c3f19b12e3054a557bddd3",
+   "source_file": "467719217_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20231101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "b717adc31acc9f5897b236a371470297f87ed2fa49cfc535342bf3a13026f2fd"
+  },
+  {
+   "month": "2023-12",
+   "file": "2023-12.json",
+   "sha256": "267efb3344419de224b4b0f96f39f0e5e17a232f30bab4d46179429afecb34cd",
+   "source_file": "467719218_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20231201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "80221ff3c4fb15b9221ad7045172b0b9034cec93eefbef954f6b5ff47e11cf7d"
+  },
+  {
+   "month": "2024-01",
+   "file": "2024-01.json",
+   "sha256": "9dd30ecbdc78c40185c875c9c3f0ad15080724907fe8b199a6a0e3abb0c37eec",
+   "source_file": "467719219_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240101-S000000-E235959.01.V07B_subsetted.nc4",
+   "source_sha256": "b91ae6f794f4956e15d21fa596cda2af86ef9a1c819a2da7334379534f5b637c"
+  },
+  {
+   "month": "2024-02",
+   "file": "2024-02.json",
+   "sha256": "f3446ffed30ef31fcf8a8983338bd02dd83b4dd36f59aabe18ffda20724ca929",
+   "source_file": "467719220_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240201-S000000-E235959.02.V07B_subsetted.nc4",
+   "source_sha256": "9452b45f35251caa7d0d3cee263c0a8b174b9e06f8b24cd24bf8cf47104c9cc3"
+  },
+  {
+   "month": "2024-03",
+   "file": "2024-03.json",
+   "sha256": "8dc3d81bfbba22f2e6a92521e51a9aa3f36d75c2e664c0aa15ca03777404a0c4",
+   "source_file": "467719221_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240301-S000000-E235959.03.V07B_subsetted.nc4",
+   "source_sha256": "9616afd1de9869d23d1e4920f98bb2504fec5afa8c8879b4a75b4b019cb4234a"
+  },
+  {
+   "month": "2024-04",
+   "file": "2024-04.json",
+   "sha256": "30ae74a4d9a21442c0d6546db1c8611b586e7d4925b8e6244c4b0bb4ffb4505b",
+   "source_file": "467719222_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240401-S000000-E235959.04.V07B_subsetted.nc4",
+   "source_sha256": "8bde15447a1d48722f34936157420c3bce5d01830f47a13227aad027c98e625d"
+  },
+  {
+   "month": "2024-05",
+   "file": "2024-05.json",
+   "sha256": "fd4f5f575a13879c896ea044fdc6d74b0acb2b3b08caa1c077dbb45da0ca6fef",
+   "source_file": "467719223_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240501-S000000-E235959.05.V07B_subsetted.nc4",
+   "source_sha256": "86bfc7058ce51b8c6e43fe04ac8df3dc1650465da9e05691dd1bbf32401fa82a"
+  },
+  {
+   "month": "2024-06",
+   "file": "2024-06.json",
+   "sha256": "d77231aff57f4ed79c0f20d4e4180693f29b021ca6c2dda56560b718e95c4691",
+   "source_file": "467719224_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240601-S000000-E235959.06.V07B_subsetted.nc4",
+   "source_sha256": "9d078ecbd661f7474aededdfcfd0d82fbf4e3656b7febdcedeed5b85043d6bb8"
+  },
+  {
+   "month": "2024-07",
+   "file": "2024-07.json",
+   "sha256": "c4cb71155a02f739d975bb7b4dce856b39141f06921fcbdec05202a64853c150",
+   "source_file": "467719225_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240701-S000000-E235959.07.V07B_subsetted.nc4",
+   "source_sha256": "8a5e9a46509ab88cd95a16ef95e5f54343aa8cf6291f7452867d6a9e3438c9ba"
+  },
+  {
+   "month": "2024-08",
+   "file": "2024-08.json",
+   "sha256": "c79a06d8bc6e54469d9179e32d71d4078eb79a4bd629cc326b769714e8903e7b",
+   "source_file": "467719226_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240801-S000000-E235959.08.V07B_subsetted.nc4",
+   "source_sha256": "8529668c8681e24a447ba662e996bb2d1ff7028b4877aa3ffa378853497742de"
+  },
+  {
+   "month": "2024-09",
+   "file": "2024-09.json",
+   "sha256": "65fabba6b457454f7ee896039f4002a8d7361d3178ae4152bb4e77839fc8c33c",
+   "source_file": "467719227_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20240901-S000000-E235959.09.V07B_subsetted.nc4",
+   "source_sha256": "8981e9e9bff7fd587975b7fc2177b07281b3062bb62cc26231a75c4fbaa67093"
+  },
+  {
+   "month": "2024-10",
+   "file": "2024-10.json",
+   "sha256": "6786122e27606aecd90ff18f5abf837aa9ceb8cda7fc5c596a7c754f72124cd4",
+   "source_file": "467719228_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20241001-S000000-E235959.10.V07B_subsetted.nc4",
+   "source_sha256": "a6902f2c69dec6d950dfeedd5f9dc037f16eb93f5ce3ea04782d17c71106d60b"
+  },
+  {
+   "month": "2024-11",
+   "file": "2024-11.json",
+   "sha256": "2d8a2b673c743c5795042ae5823ec373b0c79c58b94cfffadc585c20f611ccf5",
+   "source_file": "467719229_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20241101-S000000-E235959.11.V07B_subsetted.nc4",
+   "source_sha256": "809371562a8bbfd6e4aef6766e5abf7f0ed8c5ea05ad069d061bfdf08beb5ec5"
+  },
+  {
+   "month": "2024-12",
+   "file": "2024-12.json",
+   "sha256": "42dccbfe302acc631d1eabe5525d5173bdc2dda92c7615018bd566e185b20dc5",
+   "source_file": "467719230_GPM_3IMERGM.07_3B-MO.MS.MRG.3IMERG.20241201-S000000-E235959.12.V07B_subsetted.nc4",
+   "source_sha256": "5c1f1ef73baadd78c1ce10159274f4a98325ebbb677f461999ca43aa66f76ef2"
+  }
+ ]
+}
