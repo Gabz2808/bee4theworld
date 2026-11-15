@@ -148,9 +148,9 @@ export function createApiV1Client(baseUrl: string, transport: typeof fetch = fet
     return data;
   }
   return {
-    async catalog(signal) { return parseCatalog(await get("/api/v1/catalog", { signal })); },
+    async catalog(signal) { return parseCatalog(await get("/catalog", { signal })); },
     async explore(request, signal) {
-      return parseExploration(await get("/api/v1/explorations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request), signal }), request);
+      return parseExploration(await get("/explorations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request), signal }), request);
     },
   };
 }

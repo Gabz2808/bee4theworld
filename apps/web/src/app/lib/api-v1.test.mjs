@@ -45,7 +45,7 @@ test("transporta solicitudes y maneja error de cobertura sin filtrar detalles in
     return new Response(JSON.stringify(catalog()), { status: 200 });
   });
   await client.catalog(); await client.explore(request);
-  equal(calls[0].url, "https://example.invalid/api/v1/catalog");
+  equal(calls[0].url, "https://example.invalid/catalog");
   deepStrictEqual(JSON.parse(calls[1].init.body), request);
   const failure = createApiV1Client("", async () => new Response(JSON.stringify({ error: { code: "NO_COVERAGE", message: "detalle interno" } }), { status: 400 }));
   await rejects(() => failure.explore(request), (e) => e.kind === "http" && e.status === 400 && e.code === "NO_COVERAGE" && !e.message.includes("interno"));

@@ -41,6 +41,10 @@ Las pruebas cubren catálogo, referencias a región/variable, ceros, faltantes, 
 - El error observado contiene `code`, `message` y `details`; el cliente conserva código y estado HTTP, sin exponer texto interno. Acordar códigos de ausencia de cobertura, validación, fallo de fuente y compatibilidad.
 - La configuración CORS y el acceso de desarrollo aún no están acordados. Las claves de Supabase y Earthdata no deben llegar al navegador.
 
+## Integración de la interfaz — avance adicional de frontend
+
+La interfaz usa ahora el cliente provisional con catálogo y exploración a través de rutas del servidor Next.js. Muestra la serie como pendiente de validación y no presenta conclusiones estadísticas. El intervalo anunciado por el catálogo se identifica como disponibilidad no confirmada. En local se comprobó catálogo 200 y error de selección 400 a través de Next.js hacia FastAPI; la prueba visual de exploración utilizó una respuesta sintética, no una consulta real de datos. No hay `SUPABASE_URL` ni `SUPABASE_SECRET_KEY` configurados en el proceso de API de este entorno. Sigue siendo necesario verificar con backend región, procedencia y respuesta real antes de utilizar el resultado en la demo.
+
 ## Respuesta del agente de backend
 
 Pendiente. Por favor indicar:
