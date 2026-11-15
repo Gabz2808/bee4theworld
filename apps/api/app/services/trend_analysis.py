@@ -9,7 +9,7 @@ import pandas as pd
 from app.models.exploration import AnnualPrecipitation, TrendAnalysis
 
 DEFAULT_CONFIDENCE_LEVEL = 0.95
-DEFAULT_MIN_YEARS_FOR_TREND = 5
+DEFAULT_MIN_YEARS_FOR_TREND = 10
 
 
 class TrendAnalysisError(ValueError):
@@ -126,15 +126,53 @@ def calculate_ols_trend(
     return slope, intercept, r_squared
 
 
+def calculate_lag1_autocorrelation(
+    y: np.ndarray,
+    x: np.ndarray | None = None,
+    slope: float | None = None,
+) -> float:
+    """Calcula el coeficiente de autocorrelación serial de primer orden (lag-1 r1).
+
+    Si se proporciona slope (y opcionalmente x), se calcula sobre los residuos
+    desestacionalizados/sin tendencia (e_t = y_t - slope * x_t) según la metodología
+    de Yue & Wang (2002) y USGS para evitar que la tendencia lineal infle artificialmente
+    la autocorrelación.
+    """
+    n = len(y)
+    if n < 3:
+        return 0.0
+
+    if slope is not None and x is not None and len(x) == n:
+        residuals = y - slope * (x - x[0])
+    elif slope is not None:
+        residuals = y - slope * np.arange(n, dtype=float)
+    else:
+        residuals = y
+
+    r_mean = float(np.mean(residuals))
+    diff = residuals - r_mean
+    denom = float(np.sum(diff ** 2))
+    if denom <= 1e-12:
+        return 0.0
+    numer = float(np.sum(diff[:-1] * diff[1:]))
+    return float(numer / denom)
+
+
 def mann_kendall_test(
     y: np.ndarray,
     alpha: float = 0.05,
+    *,
+    r1: float | None = None,
+    apply_autocorrelation_correction: bool = True,
 ) -> tuple[int, float, float, bool]:
-    """Aplica la prueba no paramétrica de Mann-Kendall para detección de tendencias.
+    """Aplica la prueba no paramétrica de Mann-Kendall con corrección de empates
+
+    y ajuste de varianza por dependencia serial (Modified Mann-Kendall según
+    Hamed & Rao 1998 / Yue & Wang 2002 / USGS).
 
     Retorna:
     - s: estadístico de Mann-Kendall
-    - var_s: varianza ajustada por empates (ties)
+    - var_s: varianza ajustada por empates y autocorrelación
     - p_value: valor p bilateral
     - is_significant: True si p_value < alpha, False en caso contrario.
     """
@@ -157,6 +195,24 @@ def mann_kendall_test(
     if var_s <= 0:
         # Varianza nula (todos los valores son idénticos)
         return s, 0.0, 1.0, False
+
+    # Corrección por autocorrelación serial positiva lag-1 (Modified Mann-Kendall)
+    if apply_autocorrelation_correction and n >= 4:
+        if r1 is None:
+            # Calcular pendiente de Theil-Sen preliminar para evaluar autocorrelación residual
+            slopes = dy / (j_idx - i_idx)
+            median_slope = float(np.median(slopes))
+            r1 = calculate_lag1_autocorrelation(y, slope=median_slope)
+
+        # Límites críticos de Anderson (1941) al 95% de confianza bilateral
+        r_crit_upper = (-1.0 + 1.96 * math.sqrt(n - 2)) / (n - 1)
+        if r1 > r_crit_upper and 0.0 < r1 < 1.0:
+            # Factor de inflación de varianza de Hamed & Rao / Yue & Wang para AR(1)
+            eta = 1.0 + (2.0 * r1 / (n * ((1.0 - r1) ** 2))) * (
+                n * (1.0 - r1) - (1.0 - (r1 ** n))
+            )
+            eta = max(1.0, min(float(eta), 10.0))
+            var_s *= eta
 
     std_s = math.sqrt(var_s)
     if s > 0:
@@ -229,10 +285,11 @@ def analyze_annual_trend(
             p_value=None,
             is_significant=None,
             confidence_level=None,
-            summary="Serie de tiempo insuficiente para evaluar tendencias climáticas anuales.",
+            summary=f"Serie temporal insuficiente ({len(values)} años) para evaluar tendencias climáticas anuales con representatividad estadística.",
             methodological_note=(
                 f"Se requieren al menos {min_years} años calendario completos para evaluar "
-                f"tendencias con representatividad estadística. La serie contiene {len(values)} año(s)."
+                f"tendencias con representatividad estadística y distinguir tendencias de oscilaciones "
+                f"multianuales o decil (como El Niño-Oscilación del Sur). La serie contiene {len(values)} año(s)."
             ),
         )
 
@@ -252,8 +309,34 @@ def analyze_annual_trend(
 
     # Cálculo no paramétrico robusto
     slope = calculate_theil_sen_slope(years, values)
+
+    # Regla 3: Autocorrelación residual severa que invalida los supuestos de independencia
+    r1 = calculate_lag1_autocorrelation(values, x=years, slope=slope)
+    if r1 >= 0.60:
+        return TrendAnalysis(
+            status="inconclusive",
+            method=method_name,
+            slope=None,
+            slope_unit=None,
+            p_value=None,
+            is_significant=None,
+            confidence_level=None,
+            summary=(
+                f"La serie presenta una fuerte dependencia temporal serial en sus residuos (r₁ = {r1:.2f}) "
+                "que invalida el supuesto de observaciones independientes del análisis de tendencias."
+            ),
+            methodological_note=(
+                f"Autocorrelación serial residual severa detectada (r₁ = {r1:.2f} >= 0.60). "
+                "Según pautas de USGS (SIR 2004-5080), una persistencia temporal residual elevada infla "
+                "la varianza y produce tasas inaceptables de falsos positivos en Mann-Kendall. "
+                "Se requiere una serie temporal más extensa o modelos autorregresivos avanzados."
+            ),
+        )
+
     alpha = 1.0 - confidence_level
-    _, _, p_value, is_significant = mann_kendall_test(values, alpha=alpha)
+    _, var_s_adjusted, p_value, is_significant = mann_kendall_test(
+        values, alpha=alpha, r1=r1, apply_autocorrelation_correction=True
+    )
 
     # Redondeo para presentación científica clara
     rounded_slope = round(slope, 2)
@@ -263,15 +346,28 @@ def analyze_annual_trend(
         direction = "positiva (incremento)" if slope > 0 else "negativa (reducción)"
         summary = (
             f"Se detecta una tendencia {direction} estadísticamente significativa de "
-            f"{abs(rounded_slope):.2f} mm/año (p = {rounded_p_value:.4f}) con un nivel "
-            f"de confianza del {int(confidence_level * 100)}%."
+            f"{abs(rounded_slope):.2f} mm/año (p = {rounded_p_value:.4f} < {alpha:.2f}) "
+            f"con un nivel de confianza del {int(confidence_level * 100)}%. "
+            f"La significancia estadística describe la monotonicidad de la serie y no implica "
+            f"por sí sola atribución causal ni relevancia práctica."
         )
     else:
         summary = (
-            f"No se detecta una tendencia estadísticamente significativa en el período evaluado "
-            f"(p = {rounded_p_value:.4f} >= {alpha:.2f}). Las variaciones observadas son consistentes "
-            "con la variabilidad climática natural."
+            f"No se detecta una tendencia estadísticamente significativa (no se rechaza la hipótesis nula) "
+            f"en el período evaluado (pendiente de Theil-Sen = {rounded_slope:+.2f} mm/año, p = {rounded_p_value:.4f} >= {alpha:.2f}, "
+            f"nivel de confianza del {int(confidence_level * 100)}%). La evidencia estadística no es suficiente "
+            f"para afirmar una dirección de cambio sistemática; este resultado no demuestra ausencia de cambio "
+            f"ni autoriza inferir estabilidad o atribuciones no verificadas."
         )
+
+    methodological_note = None
+    if len(values) >= 4:
+        r_crit_upper = (-1.0 + 1.96 * math.sqrt(len(values) - 2)) / (len(values) - 1)
+        if r1 > r_crit_upper:
+            methodological_note = (
+                f"Autocorrelación serial residual lag-1 detectada (r₁ = {r1:.3f}); se aplicó la corrección de varianza "
+                f"de Hamed-Rao / Yue-Wang para controlar el riesgo de falsos positivos según pautas de USGS."
+            )
 
     return TrendAnalysis(
         status="conclusive",
@@ -282,5 +378,5 @@ def analyze_annual_trend(
         is_significant=is_significant,
         confidence_level=confidence_level,
         summary=summary,
-        methodological_note=None,
+        methodological_note=methodological_note,
     )

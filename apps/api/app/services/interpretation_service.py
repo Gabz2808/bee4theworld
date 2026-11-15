@@ -159,26 +159,30 @@ def generate_interpretation(
         unit = trend_analysis.slope_unit or "mm/año"
 
         if trend_analysis.is_significant:
-            dir_str = "un aumento promedio" if slope > 0 else "una reducción promedio"
+            dir_str = "un ritmo de incremento" if slope > 0 else "un ritmo de reducción"
             trend_verdict = (
-                f"La prueba estadística no paramétrica de Mann-Kendall confirma {dir_str} de {abs(slope):.2f} {unit} "
-                f"(valor p = {p_val:.4f}, inferior al umbral de significancia de 0.05). "
-                f"Esto indica que el patrón de cambio observado a lo largo de los {num_years} años tiene un respaldo estadístico "
-                f"robusto y es altamente improbable que se deba a simple variabilidad aleatoria del muestreo."
+                f"La prueba no paramétrica de Mann-Kendall rechaza la hipótesis nula de ausencia de tendencia "
+                f"(valor p = {p_val:.4f} < 0.05), con {dir_str} estimado por Theil-Sen de {abs(slope):.2f} {unit} "
+                f"durante los {num_years} años evaluados. Este resultado describe monotonicidad estadística en la "
+                f"serie observada, pero no demuestra por sí solo causalidad ni descarta la influencia de oscilaciones "
+                f"climáticas multianuales acopladas."
             )
         else:
             trend_verdict = (
-                f"Aunque el estimador robusto de Theil-Sen sugiere una variación nominal de {slope:+.2f} {unit}, "
-                f"la prueba de Mann-Kendall arrojó un valor p = {p_val:.4f} (mayor al umbral de 0.05). "
-                f"Por tanto, desde el punto de vista estadístico no se puede descartar que la variación sea fluctuación natural; "
-                f"la serie no muestra una tendencia direccional consistente ni concluyente."
+                f"El estimador de Theil-Sen calcula una tasa de cambio nominal de {slope:+.2f} {unit}, "
+                f"pero la prueba de Mann-Kendall no rechaza la hipótesis nula de ausencia de tendencia (valor p = {p_val:.4f} >= 0.05). "
+                f"Esto indica que la evidencia observada no es estadísticamente suficiente para afirmar una dirección "
+                f"sistemática de cambio; este resultado no demuestra ausencia de cambio (no debe interpretarse como prueba de que no haya cambio) "
+                f"ni autoriza inferir estabilidad o atribuirlo a causas no verificadas."
             )
     elif trend_analysis.status == "inconclusive":
+        note = f" Motivo metodológico: {trend_analysis.methodological_note}." if trend_analysis.methodological_note else ""
         trend_verdict = (
-            f"La serie disponible contiene {num_years} año(s) calendario completo(s). "
-            f"En ciencias de la atmósfera y el clima, los ciclos naturales de corto y mediano plazo (como El Niño, La Niña o la Oscilación del Sur) "
-            f"provocan oscilaciones interanuales marcadas. Afirmar una tendencia a largo plazo con menos de 5 años de datos "
-            f"sería metodológicamente imprudente, pues se corre el riesgo de confundir una variación cíclica transitoria con una tendencia permanente."
+            f"La serie disponible comprende {num_years} año(s) calendario completo(s).{note} "
+            f"En ciencias de la atmósfera y el clima, ciclos como El Niño-Oscilación del Sur (ENSO) "
+            f"provocan oscilaciones interanuales marcadas. Afirmar una tendencia a largo plazo con menos de 10 años "
+            f"de datos (o menos de 5 años sin control de variabilidad) sería metodológicamente imprudente, pues se corre "
+            f"el riesgo de confundir una variación cíclica transitoria con una tendencia permanente."
         )
     else:
         trend_verdict = (
@@ -196,6 +200,12 @@ def generate_interpretation(
             "Naturaleza de la medición satelital: El producto NASA GPM IMERG V07 combina mediciones de múltiples sensores de satélite "
             "con calibración mensual de pluviómetros. Al contar con una resolución espacial de 0.1° (~10 km), promedia áreas amplias y "
             "puede suavizar microclimas y lluvias orográficas locales en zonas montañosas o costeras."
+        ),
+        (
+            "Transición y homogeneidad de sensores: El producto NASA GPM IMERG V07 combina la misión TRMM (2000-2014) "
+            "con el satélite GPM Core Observatory (2014 al presente). Aunque los datos se calibran mensualmente "
+            "con estaciones terrestres (GPCC), la transición instrumental de 2014 puede introducir diferencias sutiles "
+            "en la sensibilidad ante eventos de lluvia orográfica o convectiva intensa."
         ),
         (
             "Contrastación en superficie: Para gestión operativa del agua o evaluación de riesgos locales, se recomienda contrastar "

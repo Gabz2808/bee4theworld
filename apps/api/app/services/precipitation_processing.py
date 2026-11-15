@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import calendar
+import logging
 import math
 from datetime import date
 
@@ -8,10 +9,14 @@ import pandas as pd
 
 from app.services.gpm_imerg import GPMIMERGResult
 
+logger = logging.getLogger(__name__)
+
 QUALITY_OK = "ok"
 QUALITY_PARTIAL_COVERAGE = "partial_coverage"
 QUALITY_MISSING_VALUE = "missing_value"
 QUALITY_MISSING_MONTH = "missing_month"
+
+DEFAULT_MIN_MONTHLY_COVERAGE = 0.70
 
 
 class PrecipitationProcessingError(ValueError):
@@ -135,7 +140,11 @@ def _monthly_unit_factor(units: str, month: date) -> float:
     )
 
 
-def aggregate_annual_precipitation(frame: pd.DataFrame) -> pd.DataFrame:
+def aggregate_annual_precipitation(
+    frame: pd.DataFrame,
+    *,
+    min_monthly_coverage: float = DEFAULT_MIN_MONTHLY_COVERAGE,
+) -> pd.DataFrame:
     if "precipitation_mm" not in frame.columns:
         raise PrecipitationProcessingError(
             "La serie debe incluir la columna precipitation_mm"
@@ -154,13 +163,27 @@ def aggregate_annual_precipitation(frame: pd.DataFrame) -> pd.DataFrame:
             periods=12,
             freq="MS",
         )
-        year_values = frame.loc[
-            frame.index.year == year,
-            "precipitation_mm",
-        ].sort_index()
-        if not year_values.index.equals(expected_months):
+        year_slice = frame.loc[frame.index.year == year].sort_index()
+        if not year_slice.index.equals(expected_months):
             continue
 
+        # Exigir cobertura espacial mínima en cada mes para evitar sesgo en el total acumulado
+        if "coverage_fraction" in year_slice.columns:
+            coverages = year_slice["coverage_fraction"].astype(float).tolist()
+            if any(cov < min_monthly_coverage for cov in coverages):
+                logger.info(
+                    "Año %d omitido del total anual: uno o más meses presentan cobertura espacial deficiente (< %.2f)",
+                    year,
+                    min_monthly_coverage,
+                )
+                continue
+
+        if "quality_flag" in year_slice.columns:
+            flags = year_slice["quality_flag"].astype(str).tolist()
+            if any(f in (QUALITY_MISSING_MONTH, QUALITY_MISSING_VALUE) for f in flags):
+                continue
+
+        year_values = year_slice["precipitation_mm"]
         try:
             values = year_values.astype(float).tolist()
         except (TypeError, ValueError) as error:
@@ -197,7 +220,7 @@ def aggregate_annual_precipitation(frame: pd.DataFrame) -> pd.DataFrame:
     annual["months_reported"] = annual["months_reported"].astype(int)
     annual.attrs.update(frame.attrs)
     annual.attrs["annual_aggregation_rule"] = (
-        "Solo se suman años calendario con 12 meses y 12 valores mensuales "
-        "finitos; la cobertura espacial parcial se conserva y no excluye el año."
+        f"Solo se suman años calendario con 12 meses observados completos y valores finitos; "
+        f"la cobertura espacial parcial se admite si cumple el umbral mínimo de {int(min_monthly_coverage * 100)}% en cada mes."
     )
     return annual
