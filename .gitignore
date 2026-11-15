@@ -24,6 +24,13 @@ dist/
 build/
 .npm/
 
+# Caching & Local Datasets
+.cache/
+*/.cache/
+data/cache/
+apps/api/data/cache/
+*.parquet
+
 # IDE, OS & Tooling
 *:Zone.Identifier
 .DS_Store

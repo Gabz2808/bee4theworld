@@ -205,7 +205,7 @@ class GPMIMERGConnector:
             dataset = (
                 datasets[0]
                 if len(datasets) == 1
-                else xr.concat(datasets, dim="time")
+                else xr.concat(datasets, dim="time", data_vars="minimal")
             )
             result = _aggregate_dataset(dataset, geometry, expected_months)
 

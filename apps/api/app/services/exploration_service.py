@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from fastapi import HTTPException
 
+from app.core.cache import load_from_cache, save_to_cache, save_to_supabase
 from app.models.catalog import (
     CatalogCombination,
     CatalogRegion,
@@ -257,6 +258,10 @@ def _fetch_from_supabase(
     end: date,
     region_uuid: str | None = None,
 ) -> pd.DataFrame | None:
+    # Solo consultar en Supabase si se trata de una región registrada con UUID válido
+    if not region_uuid or len(region_uuid) != 36:
+        return None
+
     try:
         start_str = start.isoformat()
         end_str = end.isoformat()
@@ -264,13 +269,11 @@ def _fetch_from_supabase(
         query = (
             supabase.table("ingestion_runs")
             .select("id")
+            .eq("region_id", region_uuid)
             .eq("variable_id", request.variable_id)
             .lte("requested_start", start_str)
             .gte("requested_end", end_str)
         )
-        if region_uuid and len(region_uuid) == 36:
-            query = query.eq("region_id", region_uuid)
-
         runs_query = query.limit(1).execute()
         if not runs_query.data:
             return None
@@ -333,13 +336,18 @@ def run_exploration(
 
     monthly_frame: pd.DataFrame | None = None
 
-    # 1. Intentar consultar datos procesados en Supabase
-    if supabase_client is not None:
+    # 1. Intentar consultar datos en caché local (disco/memoria)
+    monthly_frame = load_from_cache(
+        request.variable_id, region_id, geom, start, end
+    )
+
+    # 2. Si no está en caché local, intentar consultar en Supabase
+    if monthly_frame is None and supabase_client is not None:
         monthly_frame = _fetch_from_supabase(
             supabase_client, request, start, end, region_id
         )
 
-    # 2. Si no están en caché, obtener mediante el conector IMERG
+    # 3. Si no están en caché, obtener mediante el conector IMERG en vivo
     if monthly_frame is None:
         if connector is None:
             connector = GPMIMERGConnector()
@@ -351,6 +359,13 @@ def run_exploration(
                 end,
             )
             monthly_frame = prepare_monthly_precipitation(result, start, end)
+            save_to_cache(
+                request.variable_id, region_id, geom, start, end, monthly_frame
+            )
+            if supabase_client is not None:
+                save_to_supabase(
+                    supabase_client, request, geom, result, monthly_frame, region_id
+                )
         except (DataUnavailableError, DataIntegrityError) as e:
             raise HTTPException(
                 status_code=502,
