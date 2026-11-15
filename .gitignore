@@ -1,12 +1,32 @@
+# Python & Virtual Environments
+.venv/
+*/.venv/
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*.pyc
+.pytest_cache/
+
+# Environment Variables & Secrets
 .env
 .env.*
 !.env.example
-.venv/
-__pycache__/
+*.env
+*.env.*
+
+# Node & Next.js (apps/web)
 node_modules/
+*/node_modules/
 .next/
-.pytest_cache/
-*.pyc
+*/.next/
+dist/
+build/
+.npm/
+
+# IDE, OS & Tooling
+*:Zone.Identifier
+.DS_Store
+Thumbs.db
 .tools/
 .codex/
 /tmp/
