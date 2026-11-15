@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Chart } from "./chart";
-import { ApiClientError, createApiV1Client, type Catalog, type Exploration } from "../lib/api-v1";
+import { ApiClientError, completeMonths, createApiV1Client, type Catalog, type Exploration } from "../lib/api-v1";
 
 const api = createApiV1Client("/api/backend");
 
@@ -34,7 +34,9 @@ export function Explorer() {
       const combination = data.combinations.find((c) => c.region_id === "costa-rica-continental" && c.variable_id === "precipitation" && c.is_ready_for_exploration === true);
       if (!combination) { setCatalogError("La serie inicial no está disponible en el catálogo."); return; }
       const interval = combination.available_interval as { start: string; end: string };
-      const endMonth = interval.end.slice(0, 7);
+      const months = completeMonths(interval);
+      if (!months) { setCatalogError("El servicio no indica meses completos disponibles. Vuelve a intentarlo más tarde."); return; }
+      const endMonth = months.end;
       setStart(endMonth);
       setEnd(endMonth);
       setCatalog(data); setCatalogError("");
@@ -43,7 +45,8 @@ export function Explorer() {
   }, [reload]);
 
   const combination = catalog?.combinations.find((c) => c.region_id === "costa-rica-continental" && c.variable_id === "precipitation");
-  const coverage = combination?.available_interval as { start: string; end: string } | undefined;
+  const interval = combination?.available_interval as { start: string; end: string } | undefined;
+  const coverage = interval ? completeMonths(interval) : null;
 
   async function explore(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,8 +77,8 @@ export function Explorer() {
         <p className="control-note">{coverage ? `Período indicado por el servicio: ${coverage.start.slice(0, 7)} a ${coverage.end.slice(0, 7)}. La disponibilidad efectiva está pendiente de comprobación.` : catalogError || "Consultando disponibilidad del servicio…"}</p>
         {catalogError ? <button type="button" className="button" onClick={() => { setCatalogError(""); setReload((n) => n + 1); }}>Reintentar conexión <span aria-hidden="true">→</span></button> : <button className="button" disabled={!coverage || status === "loading"}>{status === "loading" ? "Consultando…" : "Consultar serie"}<span aria-hidden="true">→</span></button>}
       </form>
-      <div className="results" aria-busy={status === "loading"}><p className="sr-only" role="status">{status === "loading" ? "Consultando serie" : message}</p><div className="result-header"><div><span className="result-kicker">SERIE TEMPORAL</span><h3 ref={resultHeading} tabIndex={-1}>{status === "error" ? "No se pudo obtener la serie" : result ? "Precipitación mensual" : "Aquí comienza la exploración"}</h3></div><span className="status-pill">{status === "error" ? "ERROR" : result ? "SIN VALIDAR" : "A LA ESPERA DE DATOS"}</span></div>
-        {status === "error" ? <div className="empty"><p>{message}</p><p>Revisa la selección y vuelve a consultar.</p></div> : result && metadata ? <><p className="chart-caption">Período solicitado: {start} a {end} · {String(metadata.unit)} · los espacios indican valores ausentes</p><Chart points={result.points}/><details className="data-table"><summary>Ver valores y cobertura en una tabla</summary><table><thead><tr><th scope="col">Mes</th><th scope="col">Valor ({String(metadata.unit)})</th><th scope="col">Cobertura</th><th scope="col">Calidad informada</th></tr></thead><tbody>{result.points.map((point) => <tr key={point.date}><td>{point.date.slice(0, 7)}</td><td>{point.value ?? "Sin dato"}</td><td>{Math.round(point.coverageFraction * 100)} %</td><td>{point.qualityFlag}</td></tr>)}</tbody></table></details><div className="result-note"><strong>Serie pendiente de validación</strong><p>El equipo debe confirmar que la serie corresponde a la región seleccionada, su origen y su procesamiento. No se presentan conclusiones de tendencia mientras se revisan los métodos.</p></div><div className="result-note"><strong>Información reportada por el servicio</strong><p>Producto: {String(metadata.dataset)}. Fuente declarada: {String(metadata.source)}. Resolución: {String(metadata.spatial_resolution)}.</p>{warnings.length > 0 && <ul>{warnings.map((warning, i) => <li key={i}>{warning}</li>)}</ul>}</div></> : <div className="empty"><div className="empty-graphic" aria-hidden="true"><span/><span/><span/><span/><span/></div><h4>Elige un período para comenzar.</h4><p>Consulta la serie disponible y revisa su contexto y sus limitaciones.</p></div>}
+      <div className="results" aria-busy={status === "loading"}><p className="sr-only" role="status">{status === "loading" ? "Consultando serie" : message}</p><div className="result-header"><div><span className="result-kicker">SERIE TEMPORAL</span><h3 ref={resultHeading} tabIndex={-1}>{status === "loading" ? "Consultando la serie" : status === "error" ? "No se pudo obtener la serie" : result ? "Precipitación mensual" : "Aquí comienza la exploración"}</h3></div><span className="status-pill">{status === "loading" ? "EN CURSO" : status === "error" ? "ERROR" : result ? "SIN VALIDAR" : "A LA ESPERA DE DATOS"}</span></div>
+        {status === "loading" ? <div className="empty"><p>Estamos consultando el servicio. Esto puede tardar unos minutos.</p></div> : status === "error" ? <div className="empty"><p>{message}</p><p>Revisa la selección y vuelve a consultar.</p></div> : result && metadata ? <><p className="chart-caption">Período solicitado: {start} a {end} · {String(metadata.unit)} · los espacios indican valores ausentes</p>{result.points.every((point) => point.value === null) ? <div className="empty"><h4>No hay valores para este período.</h4><p>Prueba otro período y consulta la cobertura y calidad en la tabla.</p></div> : <Chart points={result.points}/>}<details className="data-table"><summary>Ver valores y cobertura en una tabla</summary><table><thead><tr><th scope="col">Mes</th><th scope="col">Valor ({String(metadata.unit)})</th><th scope="col">Cobertura</th><th scope="col">Calidad informada</th></tr></thead><tbody>{result.points.map((point) => <tr key={point.date}><td>{point.date.slice(0, 7)}</td><td>{point.value ?? "Sin dato"}</td><td>{Math.round(point.coverageFraction * 100)} %</td><td>{point.qualityFlag}</td></tr>)}</tbody></table></details><div className="result-note"><strong>Serie pendiente de validación</strong><p>El equipo debe confirmar que la serie corresponde a la región seleccionada, su origen y su procesamiento. No se presentan conclusiones de tendencia mientras se revisan los métodos.</p></div><div className="result-note"><strong>Información reportada por el servicio</strong><p>Producto: {String(metadata.dataset)}. Fuente declarada: {String(metadata.source)}. Resolución: {String(metadata.spatial_resolution)}.</p>{warnings.length > 0 && <ul>{warnings.map((warning, i) => <li key={i}>{warning}</li>)}</ul>}</div></> : <div className="empty"><div className="empty-graphic" aria-hidden="true"><span/><span/><span/><span/><span/></div><h4>Elige un período para comenzar.</h4><p>Consulta la serie disponible y revisa su contexto y sus limitaciones.</p></div>}
       </div></div><div className="evidence"><div><h3>La evidencia<br />siempre a la vista.</h3></div><p>Las cifras necesitan contexto. La procedencia y el método de la serie se están revisando con el equipo.</p><div className="evidence-list"><span>Fuente y producto <b>En revisión</b></span><span>Método y cobertura <b>En revisión</b></span><span>Limitaciones <b>En revisión</b></span></div></div>
     </div></section></main><footer id="acerca"><div className="wrap footer-inner"><div><a className="footer-brand" href="#inicio">iyök<span>.</span></a><p>Una forma más clara de explorar<br />el cambio en nuestro planeta.</p></div><div><strong>HECHO PARA EXPLORAR</strong><p>Un proyecto en desarrollo de Bee4TheWorld.<br />Integración y análisis en revisión.</p></div><a href="#inicio">Volver arriba ↑</a></div></footer>
   </>;

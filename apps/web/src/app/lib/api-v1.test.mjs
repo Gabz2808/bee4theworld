@@ -1,10 +1,15 @@
 import { test } from "node:test";
 import { deepStrictEqual, equal, rejects, throws } from "node:assert/strict";
-import { ApiClientError, createApiV1Client, parseCatalog, parseExploration } from "./api-v1.ts";
+import { ApiClientError, completeMonths, createApiV1Client, parseCatalog, parseExploration } from "./api-v1.ts";
 
 // Datos sintéticos: no representan observaciones ni resultados científicos.
 const request = { region_id: "costa-rica-continental", variable_id: "precipitation", start_date: "2023-01-01", end_date: "2023-02-28", temporal_resolution: "monthly" };
 const range = { start: request.start_date, end: request.end_date };
+test("limita la selección a meses completos dentro de la cobertura declarada", () => {
+  deepStrictEqual(completeMonths({ start: "2023-12-02", end: "2024-03-30" }), { start: "2024-01", end: "2024-02" });
+  deepStrictEqual(completeMonths({ start: "2024-02-01", end: "2024-02-29" }), { start: "2024-02", end: "2024-02" });
+  equal(completeMonths({ start: "2024-02-02", end: "2024-02-29" }), null);
+});
 function catalog() {
   return { status: "success", regions: [{ id: request.region_id, name: "Ejemplo", boundary_source: "Ejemplo", boundary_version: "1", geom: { type: "Polygon", coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }],
     variables: [{ id: "precipitation", name: "Ejemplo", source: "Ejemplo", dataset: "Ejemplo", unit: "mm/month", spatial_resolution: "Ejemplo", temporal_resolution: "monthly", available_interval: range, restrictions: [] }],

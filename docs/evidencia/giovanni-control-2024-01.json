@@ -1,0 +1,144 @@
+{
+   "encoding" : "UTF-8",
+   "session" : {
+      "id" : "D42E972E-E0CC-11F1-BC82-638EE8D1C619",
+      "resultset" : [
+         {
+            "id" : "D4923FCC-E0CC-11F1-9588-F68EE8D1C619",
+            "result" : [
+               {
+                  "id" : "D4925052-E0CC-11F1-9588-F68EE8D1C619",
+                  "title" : "Time Series, Area-Averaged",
+                  "description" : "Time series of area-averaged values from 2024-01-01T00:00:00Z to 2024-01-31T23:59:59Z over -85.5,9,-85.3,9.2",
+                  "status" : [
+                     {
+                        "code" : [
+                           {
+                              "value" : "0"
+                           }
+                        ],
+                        "message" : [
+                           {
+                              "value" : "Visualization completed"
+                           }
+                        ],
+                        "percentComplete" : [
+                           {
+                              "value" : "100"
+                           }
+                        ]
+                     }
+                  ],
+                  "criteria" : [
+                     {
+                        "query" : [
+                           {
+                              "value" : "session=D42E972E-E0CC-11F1-BC82-638EE8D1C619&service=ArAvTs&starttime=2024-01-01T00%3A00%3A00Z&endtime=2024-01-31T23%3A59%3A59Z&bbox=-85.5%2C9%2C-85.3%2C9.2&data=GPM_3IMERGM_07_precipitation&portal=GIOVANNI&format=json"
+                           }
+                        ],
+                        "referer" : [
+                           {}
+                        ]
+                     }
+                  ],
+                  "data" : [
+                     {
+                        "fileGroup" : [
+                           {
+                              "dataFile" : [
+                                 {
+                                    "dataUrl" : [
+                                       {
+                                          "value" : "https://giovanni.gsfc.nasa.gov/session/D42E972E-E0CC-11F1-BC82-638EE8D1C619/D4923FCC-E0CC-11F1-9588-F68EE8D1C619/D4925052-E0CC-11F1-9588-F68EE8D1C619/g4.areaAvgTimeSeries.GPM_3IMERGM_07_precipitation.20240101-20240131.85W_9N_85W_9N.nc",
+                                          "label" : "g4.areaAvgTimeSeries.GPM_3IMERGM_07_precipitation.20240101-20240131.85W_9N_85W_9N.nc"
+                                       },
+                                       {
+                                          "value" : "daac-bin/serializer.pl?SESSION=D42E972E-E0CC-11F1-BC82-638EE8D1C619&RESULTSET=D4923FCC-E0CC-11F1-9588-F68EE8D1C619&RESULT=D4925052-E0CC-11F1-9588-F68EE8D1C619&FILE=g4.areaAvgTimeSeries.GPM_3IMERGM_07_precipitation.20240101-20240131.85W_9N_85W_9N.nc",
+                                          "label" : "g4.areaAvgTimeSeries.GPM_3IMERGM_07_precipitation.20240101-20240131.85W_9N_85W_9N.csv"
+                                       }
+                                    ],
+                                    "image" : [
+                                       {
+                                          "type" : "TIME_SERIES_GNU",
+                                          "src" : [
+                                             {
+                                                "value" : "https://giovanni.gsfc.nasa.gov/session/D42E972E-E0CC-11F1-BC82-638EE8D1C619/D4923FCC-E0CC-11F1-9588-F68EE8D1C619/D4925052-E0CC-11F1-9588-F68EE8D1C619//g4.areaAvgTimeSeries.GPM_3IMERGM_07_precipitation.20240101-20240131.85W_9N_85W_9N.nc_1794730586.png"
+                                             }
+                                          ],
+                                          "options" : [
+                                             {
+                                                "defaults" : [
+                                                   {
+                                                      "value" : "{\"Y Axis\":{\"Label\":\"Area-Averaged of Merged satellite-gauge precipitation estimate - Final Run (recommended for general use)\",\"Range\":{\"Max\":\"0.0167499\",\"Min\":\"0.0167499\"}},\"Fit a line\":false}"
+                                                   }
+                                                ],
+                                                "schema" : [
+                                                   {
+                                                      "value" : "{\"definitions\":{\"axis\":{\"properties\":{\"Range\":{\"propertyOrder\":2,\"$ref\":\"#/definitions/range\"},\"Label\":{\"propertyOrder\":1,\"readOnly\":true,\"type\":\"string\"}},\"type\":\"object\"},\"dateRange\":{\"type\":\"object\",\"properties\":{\"To\":{\"propertyOrder\":2,\"format\":\"datetime\",\"type\":\"string\"},\"From\":{\"type\":\"string\",\"propertyOrder\":1,\"format\":\"datetime\"}}},\"lineFit\":{\"format\":\"checkbox\",\"type\":\"boolean\"},\"range\":{\"type\":\"object\",\"properties\":{\"Min\":{\"propertyOrder\":1,\"type\":\"number\"},\"Max\":{\"propertyOrder\":2,\"type\":\"number\"}}},\"scale\":{\"type\":\"string\",\"enum\":[\"Linear\",\"Log\"],\"required\":true}},\"title\":\"Time Series\",\"type\":\"object\",\"properties\":{\"Y Axis\":{\"properties\":{\"Range\":{\"properties\":{\"Max\":{\"propertyOrder\":2,\"type\":\"number\",\"default\":\"0.0167499\"},\"Min\":{\"propertyOrder\":1,\"type\":\"number\",\"default\":\"0.0167499\"}},\"type\":\"object\"},\"Label\":{\"propertyOrder\":1,\"readOnly\":true,\"type\":\"string\",\"default\":\"Area-Averaged of Merged satellite-gauge precipitation estimate - Final Run (recommended for general use)\"}},\"type\":\"object\"},\"Fit a line\":{\"format\":\"checkbox\",\"propertyOrder\":1,\"type\":\"boolean\",\"default\":false}},\"additionalProperties\":false}"
+                                                   }
+                                                ]
+                                             }
+                                          ],
+                                          "title" : [
+                                             {
+                                                "value" : "Time Series, Area-Averaged of Merged satellite-gauge precipitation estimate - Final Run (recommended for general use) monthly 0.1 deg. [GPM GPM_3IMERGM v07] mm/hr over 2024-01-01 00:00:00Z - 2024-02-01 00:00:00Z, Region 85.5W, 9N, 85.3W, 9.2N"
+                                             }
+                                          ],
+                                          "caption" : [
+                                             {
+                                                "value" : "- The user-selected region was defined by 85.5W, 9N, 85.3W, 9.2N. The data grid also limits the analyzable region to the following bounding points: 85.45W, 9.05N, 85.35W, 9.15N. This analyzable region indicates the spatial limits of the subsetted granules that went into making this visualization result.\n- Selected date range was 2024-Jan - 2024-Jan. Title reflects the date range of the granules that went into making this result."
+                                             }
+                                          ],
+                                          "label" : [
+                                             {
+                                                "value" : "- The user-selected region was defined by 85.5W, 9N, 85.3W, 9.2N. The data grid also limits the analyzable region to the following bounding points: 85.45W, 9.05N, 85.35W, 9.15N. This analyzable region indicates the spatial limits of the subsetted granules that went into making this visualization result.\n- Selected date range was 2024-Jan - 2024-Jan. Title reflects the date range of the granules that went into making this result."
+                                             }
+                                          ],
+                                          "id" : [
+                                             {
+                                                "value" : "DA347A08-E0CC-11F1-911D-76FCD9400D93"
+                                             }
+                                          ],
+                                          "status" : [
+                                             {
+                                                "value" : "Succeeded"
+                                             }
+                                          ]
+                                       }
+                                    ],
+                                    "status" : [
+                                       {
+                                          "value" : "Succeeded"
+                                       }
+                                    ]
+                                 }
+                              ],
+                              "percentComplete" : [
+                                 {
+                                    "value" : "100"
+                                 }
+                              ],
+                              "status" : [
+                                 {
+                                    "value" : "Succeeded"
+                                 }
+                              ]
+                           }
+                        ]
+                     }
+                  ],
+                  "lineage" : [
+                     {
+                        "value" : "daac-bin/lineage.pl?session=D42E972E-E0CC-11F1-BC82-638EE8D1C619&resultset=D4923FCC-E0CC-11F1-9588-F68EE8D1C619&result=D4925052-E0CC-11F1-9588-F68EE8D1C619"
+                     }
+                  ],
+                  "imageCollection" : [
+                     {}
+                  ]
+               }
+            ]
+         }
+      ]
+   },
+   "version" : "1.0"
+}

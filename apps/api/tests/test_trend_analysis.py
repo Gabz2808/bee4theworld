@@ -10,9 +10,30 @@ from app.services.trend_analysis import (
     calculate_theil_sen_slope,
     mann_kendall_test,
 )
+from scipy.stats import kendalltau, norm, theilslopes
 
 
 class TrendAnalysisServiceTests(unittest.TestCase):
+    def test_unadjusted_trend_against_scipy_on_known_series(self) -> None:
+        # Datos sintéticos; el contraste no valida la corrección por autocorrelación.
+        cases = (
+            [1, 2, 4, 5, 5, 8, 9, 9, 12, 14, 14, 16],
+            [18, 16, 17, 14, 13, 13, 11, 8, 7, 6, 4, 3],
+            [4, 9, 3, 7, 10, 2, 8, 5, 6, 1, 8, 4],
+        )
+        for values in cases:
+            with self.subTest(values=values):
+                y = np.asarray(values, dtype=float)
+                x = np.arange(len(y), dtype=float)
+                self.assertAlmostEqual(calculate_theil_sen_slope(x, y), theilslopes(y, x).slope)
+                _, variance, p_value, _ = mann_kendall_test(y, apply_autocorrelation_correction=False)
+                # SciPy usa la aproximación asintótica sin corrección de continuidad;
+                # se añade la corrección de una unidad de S para hacerla comparable.
+                scipy_p = kendalltau(x, y, method="asymptotic").pvalue
+                z = norm.isf(scipy_p / 2)
+                expected_p = 2 * norm.sf(max(0.0, z - 1 / np.sqrt(variance)))
+                self.assertAlmostEqual(p_value, expected_p, places=12)
+
     def test_calculate_climatology_and_anomalies(self) -> None:
         # Crear 2 años de datos sintéticos mensuales (2021-2022)
         dates = pd.date_range("2021-01-01", periods=24, freq="MS")

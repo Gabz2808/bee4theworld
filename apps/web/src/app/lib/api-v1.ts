@@ -56,6 +56,15 @@ function interval(value: unknown): { start: string; end: string } {
   if (start > end) return invalid();
   return { start, end };
 }
+/** Meses completos contenidos en el intervalo declarado por el servicio. */
+export function completeMonths(coverage: { start: string; end: string }): { start: string; end: string } | null {
+  const [year, month, day] = coverage.start.split("-").map(Number);
+  const first = day === 1 ? coverage.start.slice(0, 7) : `${month === 12 ? year + 1 : year}-${String(month === 12 ? 1 : month + 1).padStart(2, "0")}`;
+  const [endYear, endMonth, endDay] = coverage.end.split("-").map(Number);
+  const lastDay = new Date(Date.UTC(endYear, endMonth, 0)).getUTCDate();
+  const last = endDay === lastDay ? coverage.end.slice(0, 7) : `${endMonth === 1 ? endYear - 1 : endYear}-${String(endMonth === 1 ? 12 : endMonth - 1).padStart(2, "0")}`;
+  return first <= last ? { start: first, end: last } : null;
+}
 function array(value: unknown): unknown[] { if (!Array.isArray(value)) return invalid(); return value; }
 function strings(value: unknown): void { array(value).forEach(string); }
 function finite(value: unknown): number {

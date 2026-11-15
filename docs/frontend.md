@@ -10,7 +10,13 @@ Para desarrollo, iniciar la API en `127.0.0.1:8000` y el frontend desde `apps/we
 
 Para consultar NASA directamente desde el backend, ver [acceso NASA directo](acceso-nasa-directo.md). Este mecanismo usa CMR y Harmony, no Giovanni, y necesita autenticación Earthdata en el servidor.
 
-Las rutas del frontend únicamente reenvían catálogo y exploración; no comprueban que el backend haya seleccionado la ingesta geográfica correcta. La procedencia que aparece es la declarada por el servicio, no una validación independiente de Giovanni. La respuesta de exploración real y la validación científica siguen pendientes antes de su uso en la demo.
+Las rutas del frontend únicamente reenvían catálogo y exploración; no comprueban que el backend haya seleccionado la ingesta geográfica correcta. La procedencia que aparece es la declarada por el servicio, no una validación independiente de Giovanni. La validación científica sigue pendiente antes de su uso en la demo.
+
+### Comprobación de integración — 15 de noviembre de 2026
+
+Con escritura de caché desactivada, se consultó desde el navegador enero de 2024 para `costa-rica-continental`: el catálogo declaró 2001-01 a 2024-12 y la API devolvió HTTP 200 desde caché. La tabla mostró 66,03 mm/month, cobertura 100 % y calidad `ok`. Una consulta separada a NASA CMR/Harmony, sin caché, devolvió el mismo valor, cobertura y gránulo `G3087531387-GES_DISC` para `GPM_3IMERGM.07`. Se comprobó el estado de carga, la etiqueta de serie sin validar y la ausencia de desbordamiento horizontal en Chrome headless a 390 y 1440 píxeles. Se corrigió la visualización de una serie de un solo punto.
+
+Esta comprobación cubre un mes, no toda la cobertura declarada. Usa la geometría aproximada provisional de la aplicación y el mismo procesamiento de la API en ambas consultas: la coincidencia no valida la geometría, el procesamiento científico ni una extracción de Giovanni. El flujo y la metodología requieren revisión con el compañero antes de presentar la serie como evidencia científica.
 
 ## Integración y datos
 
