@@ -255,10 +255,13 @@ class Issue20HistoricalAndLongJobsTests(unittest.TestCase):
             self.assertEqual(resp2.json()["job_id"], job_id)
 
             # 3. Consultar estado del trabajo (GET /api/v1/jobs/{job_id})
-            time.sleep(0.3)  # Dar tiempo para que el hilo complete
-            status_resp = self.client.get(f"/api/v1/jobs/{job_id}")
-            self.assertEqual(status_resp.status_code, 200)
-            status_data = status_resp.json()
+            for _ in range(20):
+                status_resp = self.client.get(f"/api/v1/jobs/{job_id}")
+                self.assertEqual(status_resp.status_code, 200)
+                status_data = status_resp.json()
+                if status_data["status"] in ("completed", "failed"):
+                    break
+                time.sleep(0.1)
             self.assertEqual(status_data["status"], "completed")
             self.assertIsNotNone(status_data["result"])
             self.assertEqual(status_data["progress"]["percent"], 100.0)
