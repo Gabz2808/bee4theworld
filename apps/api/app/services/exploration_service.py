@@ -29,8 +29,9 @@ from app.models.exploration import (
     ExplorationRequest,
     ExplorationResponse,
     TimeSeriesPoint,
+    TrendAnalysis,
 )
-from app.models.geojson import GeoJSONPolygon, are_geometries_equal
+from app.models.geojson import GeoJSONMultiPolygon, GeoJSONPolygon, are_geometries_equal
 from app.models.regions import Region
 from app.models.variables import AvailableInterval, Variable
 from app.services.gpm_imerg import (
@@ -42,6 +43,7 @@ from app.services.gpm_imerg import (
     GPMIMERGResult,
 )
 from app.services.interpretation_service import generate_interpretation
+from app.services.preprocessed_series import load_preprocessed_series
 from app.services.precipitation_processing import (
     PrecipitationProcessingError,
     aggregate_annual_precipitation,
@@ -236,7 +238,7 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
 def resolve_region(
     request: ExplorationRequest,
     supabase_client: Any | None = None,
-) -> tuple[GeoJSONPolygon, str, str, str, str, str | None]:
+) -> tuple[GeoJSONPolygon | GeoJSONMultiPolygon, str, str, str, str, str | None]:
     """Resuelve la geometría y metadatos de la región a partir de region_id o polígono directo.
 
     Retorna: (geom, public_region_id, region_name, boundary_source, boundary_version, internal_uuid)
@@ -380,7 +382,7 @@ def validate_exploration_request(request: ExplorationRequest) -> None:
 
     # Validar complejidad y extensión del polígono si se proporciona geometría personalizada
     if request.region is not None:
-        validate_polygon_complexity_and_area(request.region.coordinates)
+        validate_polygon_complexity_and_area(request.region.coordinates, multipolygon=request.region.type == "MultiPolygon")
 
     # Incompatibilidad geométrica temprana para regiones de catálogo predeterminado
     if request.region_id and request.region is not None:
@@ -554,10 +556,17 @@ def run_exploration(
     monthly_frame: pd.DataFrame | None = None
     nasa_result: GPMIMERGResult | None = None
     cached = None
+    preprocessed = False
 
     direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "auto").strip().lower() == "nasa"
     cache_status = "disabled" if direct_nasa else "unavailable" if supabase_client is None else "miss"
-    if not direct_nasa and supabase_client is not None and request.region is None:
+    if not direct_nasa and request.region is None:
+        cached = load_preprocessed_series(region_id, geom, start, end)
+        if cached:
+            monthly_frame = cached.frame
+            cache_status = "preprocessed"
+            preprocessed = True
+    if monthly_frame is None and not direct_nasa and supabase_client is not None and request.region is None:
         cached = load_supabase_series(supabase_client, region_id, geom, start, end)
         if cached:
             monthly_frame = cached.frame
@@ -640,6 +649,17 @@ def run_exploration(
             detail=f"Error evaluando tendencias: {e}",
         )
 
+    # La corrección serial actual no controla el error en escenarios simulados.
+    # Conservar la serie, pero no publicar inferencias hasta revisar el método.
+    if trend_analysis.status == "conclusive":
+        trend_analysis = TrendAnalysis(
+            status="inconclusive",
+            method=trend_analysis.method,
+            slope=None, slope_unit=None, p_value=None, is_significant=None, confidence_level=None,
+            summary="La tendencia estadística no puede interpretarse con el método actual.",
+            methodological_note="La corrección por dependencia temporal mostró exceso de falsos positivos en simulaciones; requiere revisión antes de informar significancia.",
+        )
+
     # 6. Serialización a modelos Pydantic
     timeseries = [
         TimeSeriesPoint(
@@ -680,7 +700,7 @@ def run_exploration(
 
     metadata = ExplorationMetadata(
         variable_name="Precipitación mensual estimada",
-        source="NASA GES DISC mediante CMR y Harmony" if nasa_result else "Supabase: serie previamente procesada desde NASA CMR y Harmony",
+        source="NASA GES DISC mediante CMR y Harmony" if nasa_result else "Archivo local preprocesado desde NASA CMR y Harmony" if preprocessed else "Supabase: serie previamente procesada desde NASA CMR y Harmony",
         dataset="GPM_3IMERGM.07",
         unit="mm/month",
         spatial_resolution="0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
@@ -701,6 +721,7 @@ def run_exploration(
         warnings=[
             "IMERG no sustituye mediciones de estaciones en superficie.",
             "Posibles sesgos en zonas de costa y alta montaña deben verificarse según el área elegida.",
+            *(["Serie preprocesada con valores redondeados a dos decimales; geometría y método pendientes de validación."] if preprocessed else []),
             *(["La caché Supabase no está disponible en esta ejecución."] if cache_status == "unavailable" else []),
             *(["La serie no pudo guardarse en la caché Supabase."] if cache_status == "miss" else []),
         ],

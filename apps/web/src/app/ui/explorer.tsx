@@ -26,6 +26,7 @@ export function Explorer() {
   const [result, setResult] = useState<Exploration | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [periodError, setPeriodError] = useState("");
   const resultHeading = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -52,8 +53,11 @@ export function Explorer() {
   async function explore(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!coverage || !start || !end || start > end || start < coverage.start.slice(0, 7) || end > coverage.end.slice(0, 7)) {
-      setResult(null); setStatus("error"); setMessage("Elige meses dentro del período disponible; el inicio debe ser anterior o igual al final."); return;
+      setResult(null); setStatus("idle");
+      setPeriodError(start > end ? "La fecha inicial debe ser anterior o igual a la fecha final. Cambia una de las dos fechas." : "Elige meses dentro del período indicado por el servicio.");
+      return;
     }
+    setPeriodError("");
     setStatus("loading"); setResult(null); setMessage("");
     try {
       const response = await api.explore({ region_id: "costa-rica-continental", variable_id: "precipitation", start_date: `${start}-01`, end_date: monthEnd(end), temporal_resolution: "monthly" });
@@ -73,8 +77,9 @@ export function Explorer() {
       <div className="explorer"><form className="controls" onSubmit={explore}><div className="panel-heading"><h3>Configura tu exploración</h3><p>Consulta la primera serie disponible del servicio.</p></div>
         <label>Territorio<select value="Costa Rica continental" disabled><option>Costa Rica continental</option></select></label>
         <label>Variable<select value="Precipitación mensual" disabled><option>Precipitación mensual</option></select></label>
-        <label htmlFor="period-start">Desde<input id="period-start" type="month" value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} onChange={(e) => { setStart(e.target.value); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
-        <label htmlFor="period-end">Hasta<input id="period-end" type="month" value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} onChange={(e) => { setEnd(e.target.value); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
+        <label htmlFor="period-start">Desde<input id="period-start" type="month" value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setStart(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
+        <label htmlFor="period-end">Hasta<input id="period-end" type="month" value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setEnd(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
+        {periodError && <p id="period-error" className="period-error" role="alert">{periodError}</p>}
         <p className="control-note">{coverage ? `Período indicado por el servicio: ${coverage.start.slice(0, 7)} a ${coverage.end.slice(0, 7)}. La disponibilidad efectiva está pendiente de comprobación.` : catalogError || "Consultando disponibilidad del servicio…"}</p>
         {catalogError ? <button type="button" className="button" onClick={() => { setCatalogError(""); setReload((n) => n + 1); }}>Reintentar conexión <span aria-hidden="true">→</span></button> : <button className="button" disabled={!coverage || status === "loading"}>{status === "loading" ? "Consultando…" : "Consultar serie"}<span aria-hidden="true">→</span></button>}
       </form>

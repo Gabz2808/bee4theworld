@@ -4,7 +4,7 @@ from typing import Literal
 from pydantic import Field, model_validator
 
 from app.models.base import APIModel
-from app.models.geojson import GeoJSONPolygon
+from app.models.geojson import GeoJSONMultiPolygon, GeoJSONPolygon
 
 
 class DateRange(APIModel):
@@ -29,7 +29,7 @@ class EffectiveSelection(APIModel):
 
 class ExplorationRequest(APIModel):
     region_id: str | None = None
-    region: GeoJSONPolygon | None = None
+    region: GeoJSONPolygon | GeoJSONMultiPolygon | None = None
     variable_id: Literal["precipitation"] = "precipitation"
     start_date: date | None = None
     end_date: date | None = None
@@ -69,7 +69,7 @@ class ExplorationMetadata(APIModel):
     weighting_method: str | None = None
     source_granule_ids: list[str] | None = None
     data_accessed_at: datetime | None = None
-    cache_status: Literal["hit", "stored", "miss", "unavailable", "disabled"] = "disabled"
+    cache_status: Literal["hit", "stored", "miss", "unavailable", "disabled", "preprocessed"] = "disabled"
 
 
 class TrendAnalysis(APIModel):

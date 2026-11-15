@@ -1,0 +1,16 @@
+{
+  "source": "NASA GES DISC CMR/Harmony",
+  "dataset": "GPM_3IMERGM.07",
+  "accessed_at_utc": "2026-11-15T15:53:33.727303+00:00",
+  "geometry_sha256": "ea5ab8413ca2b1af4fc6602cffd08ae4e2c956a6d901a45e2ece4dbd25c6cfcb",
+  "source_units": "mm/hr",
+  "unit": "mm/month",
+  "weighting_method": "Intersección parcial de celdas y área en proyección equivalente en EPSG:6933",
+  "granule_ids": [
+    "G3087531387-GES_DISC"
+  ],
+  "date": "2024-01-01",
+  "value": 70.37736922226695,
+  "coverage_fraction": 0.9999979012975974,
+  "quality_flag": "partial_coverage"
+}

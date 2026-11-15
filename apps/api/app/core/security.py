@@ -67,7 +67,7 @@ def is_write_authorized(headers: dict[str, str] | None = None) -> bool:
     return client_key == required_key
 
 
-def validate_polygon_complexity_and_area(coordinates: list[list[list[float]]]) -> None:
+def validate_polygon_complexity_and_area(coordinates: list, *, multipolygon: bool = False) -> None:
     """Valida que el polígono no supere los límites de vértices ni la extensión máxima de área.
 
     Previene ataques de agotamiento computacional o solicitudes planetarias desmedidas.
@@ -76,8 +76,9 @@ def validate_polygon_complexity_and_area(coordinates: list[list[list[float]]]) -
         return
 
     # Codex (Manuel): contar también los anillos interiores para limitar el trabajo total.
-    ring = coordinates[0]
-    num_vertices = sum(len(part) for part in coordinates)
+    polygons = coordinates if multipolygon else [coordinates]
+    rings = [ring for polygon in polygons for ring in polygon]
+    num_vertices = sum(len(ring) for ring in rings)
 
     if num_vertices > MAX_POLYGON_VERTICES:
         raise HTTPException(
@@ -88,8 +89,8 @@ def validate_polygon_complexity_and_area(coordinates: list[list[list[float]]]) -
             ),
         )
 
-    lons = [p[0] for p in ring]
-    lats = [p[1] for p in ring]
+    lons = [p[0] for ring in rings for p in ring]
+    lats = [p[1] for ring in rings for p in ring]
 
     delta_lon = max(lons) - min(lons)
     delta_lat = max(lats) - min(lats)

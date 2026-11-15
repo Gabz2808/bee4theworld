@@ -1,0 +1,31 @@
+{
+  "title": "División Territorial Administrativa de Costa Rica, límite provincial 1:5.000",
+  "publisher": "Instituto Geográfico Nacional - Registro Nacional de Costa Rica / SNIT",
+  "metadata_url": "https://meta2.snitcr.go.cr/geonetwork/srv/api/records/CR_IGN_LTA_DTA_5K_VE",
+  "source_url": "https://geos.snitcr.go.cr/be/IGN_5_CO/wfs",
+  "request_parameters": {
+    "service": "WFS",
+    "version": "2.0.0",
+    "request": "GetFeature",
+    "typeNames": "IGN_5_CO:limiteprovincial_5k",
+    "outputFormat": "application/json",
+    "srsName": "EPSG:4326"
+  },
+  "accessed_at_utc": "2026-11-15T15:41:18.272271+00:00",
+  "declared_usage": "Uso libre y gratuito, con mención del origen y propiedad de los datos.",
+  "sha256_geojson": "c948df270d724e1d0c602c0a38942a0fce2ea5076b8631cb05480138ef19cf59",
+  "sha256_gzip": "0cea1c2db42a42965e4464121516582e819551f5f0aea206d50d10144eb4f98b",
+  "bytes_geojson": 19797596,
+  "feature_count": 7,
+  "provinces": [
+    "Alajuela",
+    "Cartago",
+    "Guanacaste",
+    "Heredia",
+    "Limón",
+    "Puntarenas",
+    "San José"
+  ],
+  "crs": "EPSG:4326",
+  "status": "fuente candidata; ámbito y geometría de análisis sin acordar"
+}

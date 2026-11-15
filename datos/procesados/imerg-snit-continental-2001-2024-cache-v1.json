@@ -1,0 +1,2040 @@
+{
+  "status": "serie exploratoria; interpretación estadística y revisión territorial pendientes",
+  "source": "NASA GES DISC CMR/Harmony, recortes locales verificados",
+  "dataset": "GPM_3IMERGM.07",
+  "version": "07",
+  "collection_concept_id": "C2723754851-GES_DISC",
+  "doi": "10.5067/GPM/IMERG/3B-MONTH/07",
+  "processed_at_utc": "2026-11-15T16:18:55.876701+00:00",
+  "harmony_job_id": "054695e5-f58a-47f6-a365-bf600d9d0b6d",
+  "geometry": {
+    "geometry_sha256": "ea5ab8413ca2b1af4fc6602cffd08ae4e2c956a6d901a45e2ece4dbd25c6cfcb",
+    "file": "datos/fuentes/snit-provincial-2026-11-15/continental-principal.geojson.gz",
+    "selection": "componente principal de la unión provincial IGN/SNIT; componentes separados excluidos"
+  },
+  "source_units": "mm/hr",
+  "unit": "mm/month",
+  "unit_conversion": "tasa mm/hr multiplicada por las horas del mes",
+  "weighting_method": "intersección parcial de celdas en EPSG:6933",
+  "granule_ids": [
+    "G2819417581-GES_DISC",
+    "G2819454271-GES_DISC",
+    "G2819245406-GES_DISC",
+    "G2819245482-GES_DISC",
+    "G2819250962-GES_DISC",
+    "G2819355639-GES_DISC",
+    "G2819262612-GES_DISC",
+    "G2819259869-GES_DISC",
+    "G2819245130-GES_DISC",
+    "G2819259382-GES_DISC",
+    "G2819258336-GES_DISC",
+    "G2819263780-GES_DISC",
+    "G2819246555-GES_DISC",
+    "G2819677943-GES_DISC",
+    "G2819675489-GES_DISC",
+    "G2819677945-GES_DISC",
+    "G2819697649-GES_DISC",
+    "G2819724810-GES_DISC",
+    "G2819746170-GES_DISC",
+    "G2819760521-GES_DISC",
+    "G2819757964-GES_DISC",
+    "G2819773052-GES_DISC",
+    "G2819774467-GES_DISC",
+    "G2819800105-GES_DISC",
+    "G2820281342-GES_DISC",
+    "G2820232668-GES_DISC",
+    "G2820275773-GES_DISC",
+    "G2820266935-GES_DISC",
+    "G2820926906-GES_DISC",
+    "G2820954800-GES_DISC",
+    "G2821041874-GES_DISC",
+    "G2821255468-GES_DISC",
+    "G2821432335-GES_DISC",
+    "G2821631656-GES_DISC",
+    "G2821633476-GES_DISC",
+    "G2822122063-GES_DISC",
+    "G2823384574-GES_DISC",
+    "G2822503590-GES_DISC",
+    "G2823932461-GES_DISC",
+    "G2822862653-GES_DISC",
+    "G2822533008-GES_DISC",
+    "G2822981560-GES_DISC",
+    "G2823775178-GES_DISC",
+    "G2823724488-GES_DISC",
+    "G2823450787-GES_DISC",
+    "G2823347598-GES_DISC",
+    "G2823660275-GES_DISC",
+    "G2824039692-GES_DISC",
+    "G2823464479-GES_DISC",
+    "G2823496864-GES_DISC",
+    "G2823458559-GES_DISC",
+    "G2824062942-GES_DISC",
+    "G2823642773-GES_DISC",
+    "G2823796393-GES_DISC",
+    "G2823905637-GES_DISC",
+    "G2824099076-GES_DISC",
+    "G2823998313-GES_DISC",
+    "G2824029918-GES_DISC",
+    "G2824129615-GES_DISC",
+    "G2824166458-GES_DISC",
+    "G2824249523-GES_DISC",
+    "G2824247285-GES_DISC",
+    "G2824603568-GES_DISC",
+    "G2824681774-GES_DISC",
+    "G2824714954-GES_DISC",
+    "G2824762726-GES_DISC",
+    "G2824848045-GES_DISC",
+    "G2824891281-GES_DISC",
+    "G2827524637-GES_DISC",
+    "G2825111421-GES_DISC",
+    "G2827950319-GES_DISC",
+    "G2827526153-GES_DISC",
+    "G2827706495-GES_DISC",
+    "G2827546676-GES_DISC",
+    "G2827548459-GES_DISC",
+    "G2828108875-GES_DISC",
+    "G2828227490-GES_DISC",
+    "G2827565333-GES_DISC",
+    "G2828175352-GES_DISC",
+    "G2827685244-GES_DISC",
+    "G2828192163-GES_DISC",
+    "G2827574907-GES_DISC",
+    "G2827696326-GES_DISC",
+    "G2827698623-GES_DISC",
+    "G2828169072-GES_DISC",
+    "G2827696338-GES_DISC",
+    "G2827602379-GES_DISC",
+    "G2827953757-GES_DISC",
+    "G2828235998-GES_DISC",
+    "G2828246084-GES_DISC",
+    "G2827617737-GES_DISC",
+    "G2828196187-GES_DISC",
+    "G2827862805-GES_DISC",
+    "G2827869143-GES_DISC",
+    "G2827878849-GES_DISC",
+    "G2828146717-GES_DISC",
+    "G2828046319-GES_DISC",
+    "G2827964762-GES_DISC",
+    "G2827988423-GES_DISC",
+    "G2827910534-GES_DISC",
+    "G2828386903-GES_DISC",
+    "G2828649829-GES_DISC",
+    "G2829893223-GES_DISC",
+    "G2829068977-GES_DISC",
+    "G2829068975-GES_DISC",
+    "G2829127047-GES_DISC",
+    "G2829125668-GES_DISC",
+    "G2829126316-GES_DISC",
+    "G2829186145-GES_DISC",
+    "G2829915010-GES_DISC",
+    "G2829916319-GES_DISC",
+    "G2830344537-GES_DISC",
+    "G2830362153-GES_DISC",
+    "G2830364905-GES_DISC",
+    "G2830356582-GES_DISC",
+    "G2830377715-GES_DISC",
+    "G2830403896-GES_DISC",
+    "G2830541069-GES_DISC",
+    "G2830544996-GES_DISC",
+    "G2830506010-GES_DISC",
+    "G2830602137-GES_DISC",
+    "G2830537570-GES_DISC",
+    "G2830585683-GES_DISC",
+    "G2830712816-GES_DISC",
+    "G2830865328-GES_DISC",
+    "G2830899369-GES_DISC",
+    "G2831011583-GES_DISC",
+    "G2831097197-GES_DISC",
+    "G2831224382-GES_DISC",
+    "G2831314937-GES_DISC",
+    "G2831420461-GES_DISC",
+    "G2831530403-GES_DISC",
+    "G2831680649-GES_DISC",
+    "G2831680852-GES_DISC",
+    "G2831863782-GES_DISC",
+    "G2831952071-GES_DISC",
+    "G2832077556-GES_DISC",
+    "G2832238997-GES_DISC",
+    "G2832237022-GES_DISC",
+    "G2832936649-GES_DISC",
+    "G2832960050-GES_DISC",
+    "G2832974318-GES_DISC",
+    "G2832968549-GES_DISC",
+    "G2832976016-GES_DISC",
+    "G2833261128-GES_DISC",
+    "G2833378809-GES_DISC",
+    "G2833423585-GES_DISC",
+    "G2833394428-GES_DISC",
+    "G2833486490-GES_DISC",
+    "G2833413544-GES_DISC",
+    "G2833566580-GES_DISC",
+    "G2833593732-GES_DISC",
+    "G2833686023-GES_DISC",
+    "G2833920077-GES_DISC",
+    "G2833997542-GES_DISC",
+    "G2834121257-GES_DISC",
+    "G2834668272-GES_DISC",
+    "G2834668100-GES_DISC",
+    "G2834669026-GES_DISC",
+    "G2834668665-GES_DISC",
+    "G2834668209-GES_DISC",
+    "G2817505604-GES_DISC",
+    "G2817505605-GES_DISC",
+    "G2819253841-GES_DISC",
+    "G2819264822-GES_DISC",
+    "G2819474845-GES_DISC",
+    "G2819389065-GES_DISC",
+    "G2819412389-GES_DISC",
+    "G2819257469-GES_DISC",
+    "G2819260311-GES_DISC",
+    "G2819277871-GES_DISC",
+    "G2819253386-GES_DISC",
+    "G2819268801-GES_DISC",
+    "G2819311874-GES_DISC",
+    "G2819352059-GES_DISC",
+    "G2819675462-GES_DISC",
+    "G2819715901-GES_DISC",
+    "G2819699145-GES_DISC",
+    "G2819760467-GES_DISC",
+    "G2819757905-GES_DISC",
+    "G2819773910-GES_DISC",
+    "G2819874784-GES_DISC",
+    "G2819918562-GES_DISC",
+    "G2820311515-GES_DISC",
+    "G2820607988-GES_DISC",
+    "G2821013052-GES_DISC",
+    "G2820928632-GES_DISC",
+    "G2821071569-GES_DISC",
+    "G2821215521-GES_DISC",
+    "G2821365948-GES_DISC",
+    "G2823555960-GES_DISC",
+    "G2822185306-GES_DISC",
+    "G2823562659-GES_DISC",
+    "G2823008659-GES_DISC",
+    "G2823476404-GES_DISC",
+    "G2823725355-GES_DISC",
+    "G2823914750-GES_DISC",
+    "G2823468652-GES_DISC",
+    "G2823913025-GES_DISC",
+    "G2823650167-GES_DISC",
+    "G2823547309-GES_DISC",
+    "G2823941993-GES_DISC",
+    "G2823916100-GES_DISC",
+    "G2824012384-GES_DISC",
+    "G2824288989-GES_DISC",
+    "G2824482454-GES_DISC",
+    "G2824521072-GES_DISC",
+    "G2824603398-GES_DISC",
+    "G2824714995-GES_DISC",
+    "G2824856632-GES_DISC",
+    "G2827533091-GES_DISC",
+    "G2828104216-GES_DISC",
+    "G2827620549-GES_DISC",
+    "G2827970481-GES_DISC",
+    "G2827554505-GES_DISC",
+    "G2827924680-GES_DISC",
+    "G2827928521-GES_DISC",
+    "G2828213932-GES_DISC",
+    "G2827577788-GES_DISC",
+    "G2827588448-GES_DISC",
+    "G2828043463-GES_DISC",
+    "G2827721053-GES_DISC",
+    "G2827716169-GES_DISC",
+    "G2828040655-GES_DISC",
+    "G2828253184-GES_DISC",
+    "G2827648937-GES_DISC",
+    "G2828247468-GES_DISC",
+    "G2827990267-GES_DISC",
+    "G2828015621-GES_DISC",
+    "G2828055552-GES_DISC",
+    "G2827973176-GES_DISC",
+    "G2828052933-GES_DISC",
+    "G2828104151-GES_DISC",
+    "G2828196139-GES_DISC",
+    "G2828375584-GES_DISC",
+    "G2828649702-GES_DISC",
+    "G2828678389-GES_DISC",
+    "G2828695766-GES_DISC",
+    "G2828730347-GES_DISC",
+    "G2829072635-GES_DISC",
+    "G2829125431-GES_DISC",
+    "G2829126269-GES_DISC",
+    "G2830345607-GES_DISC",
+    "G2830353760-GES_DISC",
+    "G2830461859-GES_DISC",
+    "G2830491870-GES_DISC",
+    "G2830546878-GES_DISC",
+    "G2830521151-GES_DISC",
+    "G2830593682-GES_DISC",
+    "G2830729137-GES_DISC",
+    "G2830856272-GES_DISC",
+    "G2831043898-GES_DISC",
+    "G2831223745-GES_DISC",
+    "G2831284857-GES_DISC",
+    "G2831421796-GES_DISC",
+    "G2831525832-GES_DISC",
+    "G2831774481-GES_DISC",
+    "G2831921939-GES_DISC",
+    "G2832051662-GES_DISC",
+    "G2832157502-GES_DISC",
+    "G2832964145-GES_DISC",
+    "G2833004806-GES_DISC",
+    "G2832967613-GES_DISC",
+    "G2833536571-GES_DISC",
+    "G2833518859-GES_DISC",
+    "G2833356571-GES_DISC",
+    "G2833395021-GES_DISC",
+    "G2833349532-GES_DISC",
+    "G2833559784-GES_DISC",
+    "G2833551697-GES_DISC",
+    "G2833739714-GES_DISC",
+    "G2837511896-GES_DISC",
+    "G2921452469-GES_DISC",
+    "G2921835338-GES_DISC",
+    "G2921989334-GES_DISC",
+    "G2984603690-GES_DISC",
+    "G3087531387-GES_DISC",
+    "G3144085255-GES_DISC",
+    "G3181376270-GES_DISC",
+    "G3228670382-GES_DISC",
+    "G3268863526-GES_DISC",
+    "G3290997722-GES_DISC",
+    "G3365978518-GES_DISC",
+    "G3385101388-GES_DISC",
+    "G3385088375-GES_DISC",
+    "G3432241522-GES_DISC",
+    "G3474816818-GES_DISC",
+    "G3522220647-GES_DISC"
+  ],
+  "granule_ids_provenance": "consulta CMR comprobada frente a extracción previa; nombres mensuales de Harmony verificados",
+  "timeseries": [
+    {
+      "date": "2001-01-01",
+      "value": 154.31428779902262,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-02-01",
+      "value": 88.81781584090038,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-03-01",
+      "value": 68.79374009088619,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-04-01",
+      "value": 163.7270287214365,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-05-01",
+      "value": 273.145046626047,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-06-01",
+      "value": 337.73752380286135,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-07-01",
+      "value": 314.0230292775384,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-08-01",
+      "value": 353.03045900888526,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-09-01",
+      "value": 338.90577811780383,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-10-01",
+      "value": 419.24470589781686,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-11-01",
+      "value": 338.8787185277493,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2001-12-01",
+      "value": 220.73299213547446,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-01-01",
+      "value": 155.04400566659555,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-02-01",
+      "value": 76.96985583798028,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-03-01",
+      "value": 79.82655249520792,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-04-01",
+      "value": 95.64343155780294,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-05-01",
+      "value": 416.6131091352212,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-06-01",
+      "value": 322.1254457674589,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-07-01",
+      "value": 413.3747757308998,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-08-01",
+      "value": 419.34682825528273,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-09-01",
+      "value": 399.7562905236208,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-10-01",
+      "value": 376.6236966655873,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-11-01",
+      "value": 392.5647730176862,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2002-12-01",
+      "value": 101.34942553608887,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-01-01",
+      "value": 116.733819569164,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-02-01",
+      "value": 56.23564729376231,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-03-01",
+      "value": 92.3276075375511,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-04-01",
+      "value": 152.2587570281889,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-05-01",
+      "value": 407.17891021112524,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-06-01",
+      "value": 464.3382874638168,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-07-01",
+      "value": 321.0180765163469,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-08-01",
+      "value": 332.31105257722214,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-09-01",
+      "value": 402.5492690276593,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-10-01",
+      "value": 451.9731769308551,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-11-01",
+      "value": 320.5110841784697,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2003-12-01",
+      "value": 291.36891423996633,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-01-01",
+      "value": 104.502699704544,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-02-01",
+      "value": 88.58364243981819,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-03-01",
+      "value": 129.31986969473527,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-04-01",
+      "value": 139.74664259817916,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-05-01",
+      "value": 516.5396985644524,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-06-01",
+      "value": 296.9648844455153,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-07-01",
+      "value": 338.17898912518507,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-08-01",
+      "value": 353.914365540634,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-09-01",
+      "value": 420.09112670640246,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-10-01",
+      "value": 348.81619852265607,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-11-01",
+      "value": 343.34010772693716,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2004-12-01",
+      "value": 218.3856839243235,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-01-01",
+      "value": 292.57776493548175,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-02-01",
+      "value": 98.78303100174412,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-03-01",
+      "value": 98.80885507888948,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-04-01",
+      "value": 149.63216461841685,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-05-01",
+      "value": 302.56212420591964,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-06-01",
+      "value": 424.50702220129136,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-07-01",
+      "value": 299.6053462064713,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-08-01",
+      "value": 328.90226085870665,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-09-01",
+      "value": 400.5744452034658,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-10-01",
+      "value": 479.05432895444903,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-11-01",
+      "value": 343.9262585290291,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2005-12-01",
+      "value": 123.34141566040682,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-01-01",
+      "value": 245.37732718630437,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-02-01",
+      "value": 98.90862228826515,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-03-01",
+      "value": 133.22996010082647,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-04-01",
+      "value": 113.55078452725967,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-05-01",
+      "value": 263.34896672868445,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-06-01",
+      "value": 385.1548253672525,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-07-01",
+      "value": 407.033384316433,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-08-01",
+      "value": 270.25414941269617,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-09-01",
+      "value": 285.878790778606,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-10-01",
+      "value": 322.21108437844583,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-11-01",
+      "value": 268.2923085969664,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2006-12-01",
+      "value": 193.0115275647644,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-01-01",
+      "value": 101.70964138647552,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-02-01",
+      "value": 62.44781285341044,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-03-01",
+      "value": 80.93910527747717,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-04-01",
+      "value": 173.33260123053452,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-05-01",
+      "value": 435.5876593887559,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-06-01",
+      "value": 283.3485817553581,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-07-01",
+      "value": 347.65039152863665,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-08-01",
+      "value": 492.14635999542224,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-09-01",
+      "value": 419.3915952424412,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-10-01",
+      "value": 518.7413190013192,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-11-01",
+      "value": 333.6010095950675,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2007-12-01",
+      "value": 255.3634691658031,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-01-01",
+      "value": 123.80159087854682,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-02-01",
+      "value": 72.8888934590682,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-03-01",
+      "value": 70.99916065259242,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-04-01",
+      "value": 153.5164107807165,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-05-01",
+      "value": 423.5392232310295,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-06-01",
+      "value": 375.7962470015672,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-07-01",
+      "value": 433.77992314271256,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-08-01",
+      "value": 472.75598322070397,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-09-01",
+      "value": 402.12307027792997,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-10-01",
+      "value": 548.4719263632155,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-11-01",
+      "value": 405.08586701797003,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2008-12-01",
+      "value": 214.32384525555693,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-01-01",
+      "value": 145.77285627710327,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-02-01",
+      "value": 171.05345688642387,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-03-01",
+      "value": 118.47159019620237,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-04-01",
+      "value": 87.48227625636397,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-05-01",
+      "value": 307.5838468301731,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-06-01",
+      "value": 354.78011777428316,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-07-01",
+      "value": 292.63129337799336,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-08-01",
+      "value": 341.03735274005817,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-09-01",
+      "value": 249.62942260431507,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-10-01",
+      "value": 399.5358174511139,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-11-01",
+      "value": 331.6906367127133,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2009-12-01",
+      "value": 147.51098723202358,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-01-01",
+      "value": 140.01468283920693,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-02-01",
+      "value": 142.90096643539204,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-03-01",
+      "value": 161.22966631172415,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-04-01",
+      "value": 209.53017733574774,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-05-01",
+      "value": 239.13851301878128,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-06-01",
+      "value": 349.5747736978144,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-07-01",
+      "value": 416.3040675798083,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-08-01",
+      "value": 420.8225325986945,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-09-01",
+      "value": 444.54424272149356,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-10-01",
+      "value": 352.15093684315997,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-11-01",
+      "value": 376.4676397863433,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2010-12-01",
+      "value": 239.56852256892319,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-01-01",
+      "value": 143.18351737347956,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-02-01",
+      "value": 102.02124434960812,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-03-01",
+      "value": 66.58688586401611,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-04-01",
+      "value": 119.99777246358073,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-05-01",
+      "value": 335.08031121473914,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-06-01",
+      "value": 346.07376577917836,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-07-01",
+      "value": 359.5331907924153,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-08-01",
+      "value": 337.22422913231907,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-09-01",
+      "value": 293.2599281316564,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-10-01",
+      "value": 475.8253191423307,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-11-01",
+      "value": 283.0153168852251,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2011-12-01",
+      "value": 184.43858478603792,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-01-01",
+      "value": 104.11852764902886,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-02-01",
+      "value": 68.86649113064765,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-03-01",
+      "value": 78.80231214074291,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-04-01",
+      "value": 143.76923608743476,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-05-01",
+      "value": 278.65091928213127,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-06-01",
+      "value": 286.1537763116873,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-07-01",
+      "value": 325.3895666589137,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-08-01",
+      "value": 345.4828806073362,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-09-01",
+      "value": 288.31450086157326,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-10-01",
+      "value": 324.1030279939168,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-11-01",
+      "value": 252.3728312886714,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2012-12-01",
+      "value": 132.43547121801674,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-01-01",
+      "value": 89.7385540003524,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-02-01",
+      "value": 59.269335326232856,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-03-01",
+      "value": 114.45454025253316,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-04-01",
+      "value": 133.4100459775146,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-05-01",
+      "value": 267.95955312195787,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-06-01",
+      "value": 285.3376848825966,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-07-01",
+      "value": 317.10278654493084,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-08-01",
+      "value": 300.6897393204174,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-09-01",
+      "value": 347.3353313971734,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-10-01",
+      "value": 354.9553473501074,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-11-01",
+      "value": 246.63779437242295,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2013-12-01",
+      "value": 109.49613299147994,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-01-01",
+      "value": 95.65898871323598,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-02-01",
+      "value": 51.79590881759935,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-03-01",
+      "value": 54.18237109024493,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-04-01",
+      "value": 158.33532447879716,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-05-01",
+      "value": 265.0641586647333,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-06-01",
+      "value": 355.2683922728477,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-07-01",
+      "value": 380.09748099493015,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-08-01",
+      "value": 355.46050153917366,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-09-01",
+      "value": 462.4794707295246,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-10-01",
+      "value": 396.2877609643923,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-11-01",
+      "value": 281.60458631091683,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2014-12-01",
+      "value": 224.4584286286726,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-01-01",
+      "value": 116.16031222624937,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-02-01",
+      "value": 98.93533703456812,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-03-01",
+      "value": 84.49190319656707,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-04-01",
+      "value": 121.49004745699989,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-05-01",
+      "value": 208.34023401161147,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-06-01",
+      "value": 355.04020613990025,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-07-01",
+      "value": 255.28594957135573,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-08-01",
+      "value": 261.00302964373907,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-09-01",
+      "value": 289.3162150051346,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-10-01",
+      "value": 343.02705513420017,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-11-01",
+      "value": 325.3017434313442,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2015-12-01",
+      "value": 190.6791031947257,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-01-01",
+      "value": 84.06496106955773,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-02-01",
+      "value": 60.43135999490802,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-03-01",
+      "value": 51.640585163006776,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-04-01",
+      "value": 127.41541372860618,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-05-01",
+      "value": 262.6288118039624,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-06-01",
+      "value": 361.1073127329204,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-07-01",
+      "value": 258.47414486652224,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-08-01",
+      "value": 334.49732080579184,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-09-01",
+      "value": 293.19517017961016,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-10-01",
+      "value": 386.5999559841077,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-11-01",
+      "value": 366.7986302623743,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2016-12-01",
+      "value": 155.92301391744635,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-01-01",
+      "value": 107.05638800496946,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-02-01",
+      "value": 45.8883836559582,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-03-01",
+      "value": 74.7786528468038,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-04-01",
+      "value": 123.71312854944703,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-05-01",
+      "value": 437.3348329099022,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-06-01",
+      "value": 314.61477525291866,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-07-01",
+      "value": 331.07263366741535,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-08-01",
+      "value": 318.47441167941804,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-09-01",
+      "value": 299.37980340934445,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-10-01",
+      "value": 414.72150268099693,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-11-01",
+      "value": 246.3198689574723,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2017-12-01",
+      "value": 171.83516564647766,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-01-01",
+      "value": 243.69168957050803,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-02-01",
+      "value": 54.398977543276445,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-03-01",
+      "value": 75.49150985190384,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-04-01",
+      "value": 134.81482527955984,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-05-01",
+      "value": 320.01867629802837,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-06-01",
+      "value": 316.94159119192636,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-07-01",
+      "value": 447.3370276123171,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-08-01",
+      "value": 252.72103085690568,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-09-01",
+      "value": 298.7799120386528,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-10-01",
+      "value": 474.7304564125424,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-11-01",
+      "value": 225.87868462143197,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2018-12-01",
+      "value": 100.78043474359494,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-01-01",
+      "value": 68.91363683255906,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-02-01",
+      "value": 47.10864519727612,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-03-01",
+      "value": 85.18537915109944,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-04-01",
+      "value": 85.95789812741621,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-05-01",
+      "value": 351.59277263196566,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-06-01",
+      "value": 291.77815580522366,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-07-01",
+      "value": 314.09519298790093,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-08-01",
+      "value": 306.9945716600925,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-09-01",
+      "value": 295.75569513858426,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-10-01",
+      "value": 414.9718236275597,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-11-01",
+      "value": 273.47183843509345,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2019-12-01",
+      "value": 166.65972610534558,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-01-01",
+      "value": 127.03755388275624,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-02-01",
+      "value": 60.527935043357296,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-03-01",
+      "value": 38.39600937438457,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-04-01",
+      "value": 138.90695871456492,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-05-01",
+      "value": 261.9453263843172,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-06-01",
+      "value": 346.01287815890163,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-07-01",
+      "value": 291.22349604535157,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-08-01",
+      "value": 398.5567536483299,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-09-01",
+      "value": 378.17534168717145,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-10-01",
+      "value": 510.8149485326168,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-11-01",
+      "value": 363.8902799361009,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2020-12-01",
+      "value": 230.77684691486235,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-01-01",
+      "value": 106.07279491105506,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-02-01",
+      "value": 73.75090596171599,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-03-01",
+      "value": 113.0620388976351,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-04-01",
+      "value": 336.90849093230366,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-05-01",
+      "value": 311.3417016588014,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-06-01",
+      "value": 253.53906402324418,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-07-01",
+      "value": 388.57326767126057,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-08-01",
+      "value": 402.49701337978695,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-09-01",
+      "value": 335.5475733340749,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-10-01",
+      "value": 333.23641920898336,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-11-01",
+      "value": 212.61601353623317,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2021-12-01",
+      "value": 144.20464349765865,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-01-01",
+      "value": 74.12479228999882,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-02-01",
+      "value": 50.62286047011332,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-03-01",
+      "value": 96.98521078653728,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-04-01",
+      "value": 218.13182823314196,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-05-01",
+      "value": 340.96206519988027,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-06-01",
+      "value": 455.2892989617754,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-07-01",
+      "value": 305.98157401483445,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-08-01",
+      "value": 362.19360548541135,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-09-01",
+      "value": 400.57418704141236,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-10-01",
+      "value": 299.2745285359698,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-11-01",
+      "value": 294.11937342868833,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2022-12-01",
+      "value": 123.02280428476023,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-01-01",
+      "value": 100.66655201185851,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-02-01",
+      "value": 60.06645009960273,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-03-01",
+      "value": 124.95520623045898,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-04-01",
+      "value": 105.46586923001699,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-05-01",
+      "value": 205.5462110600755,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-06-01",
+      "value": 303.81021204593185,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-07-01",
+      "value": 313.4138476358126,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-08-01",
+      "value": 290.6464528327676,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-09-01",
+      "value": 269.53325392525403,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-10-01",
+      "value": 426.5887803333796,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-11-01",
+      "value": 293.2291561983024,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2023-12-01",
+      "value": 155.05721910521044,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-01-01",
+      "value": 70.37736922226695,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-02-01",
+      "value": 77.04412920719183,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-03-01",
+      "value": 57.94388714726408,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-04-01",
+      "value": 180.06871872346514,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-05-01",
+      "value": 301.97169267107995,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-06-01",
+      "value": 430.917847924987,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-07-01",
+      "value": 394.9739731199779,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-08-01",
+      "value": 277.465704263224,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-09-01",
+      "value": 371.29670582881005,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-10-01",
+      "value": 330.46628041618334,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-11-01",
+      "value": 556.3634324191617,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    },
+    {
+      "date": "2024-12-01",
+      "value": 207.29566919261268,
+      "coverage_fraction": 0.9999979012975974,
+      "quality_flag": "partial_coverage"
+    }
+  ]
+}

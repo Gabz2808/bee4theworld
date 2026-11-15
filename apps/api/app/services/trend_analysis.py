@@ -167,8 +167,8 @@ def mann_kendall_test(
 ) -> tuple[int, float, float, bool]:
     """Aplica la prueba no paramétrica de Mann-Kendall con corrección de empates
 
-    y ajuste de varianza por dependencia serial (Modified Mann-Kendall según
-    Hamed & Rao 1998 / Yue & Wang 2002 / USGS).
+    y un ajuste heurístico de varianza por dependencia serial lag-1.
+    Este ajuste concreto aún no ha sido validado como implementación de un método publicado.
 
     Retorna:
     - s: estadístico de Mann-Kendall
@@ -207,7 +207,7 @@ def mann_kendall_test(
         # Límites críticos de Anderson (1941) al 95% de confianza bilateral
         r_crit_upper = (-1.0 + 1.96 * math.sqrt(n - 2)) / (n - 1)
         if r1 > r_crit_upper and 0.0 < r1 < 1.0:
-            # Factor de inflación de varianza de Hamed & Rao / Yue & Wang para AR(1)
+            # Factor heurístico de inflación de varianza para AR(1), limitado a 10.
             eta = 1.0 + (2.0 * r1 / (n * ((1.0 - r1) ** 2))) * (
                 n * (1.0 - r1) - (1.0 - (r1 ** n))
             )
@@ -297,11 +297,10 @@ def analyze_annual_trend(
             p_value=None,
             is_significant=None,
             confidence_level=None,
-            summary=f"Serie temporal insuficiente ({len(values)} años) para evaluar tendencias climáticas anuales con representatividad estadística.",
+            summary=f"Serie temporal insuficiente ({len(values)} años) según el mínimo configurado para este análisis.",
             methodological_note=(
-                f"Se requieren al menos {min_years} años calendario completos para evaluar "
-                f"tendencias con representatividad estadística y distinguir tendencias de oscilaciones "
-                f"multianuales o decil (como El Niño-Oscilación del Sur). La serie contiene {len(values)} año(s)."
+                f"Se requieren al menos {min_years} años calendario completos según la regla actual. "
+                f"Ese mínimo no garantiza representatividad climática ni separa oscilaciones multianuales. La serie contiene {len(values)} año(s)."
             ),
         )
 
@@ -338,10 +337,8 @@ def analyze_annual_trend(
                 "que invalida el supuesto de observaciones independientes del análisis de tendencias."
             ),
             methodological_note=(
-                f"Autocorrelación serial residual severa detectada (r₁ = {r1:.2f} >= 0.60). "
-                "Según pautas de USGS (SIR 2004-5080), una persistencia temporal residual elevada infla "
-                "la varianza y produce tasas inaceptables de falsos positivos en Mann-Kendall. "
-                "Se requiere una serie temporal más extensa o modelos autorregresivos avanzados."
+                f"Autocorrelación serial residual elevada detectada (r₁ = {r1:.2f} >= 0.60). "
+                "El umbral es una decisión provisional del código y requiere revisión metodológica."
             ),
         )
 
@@ -378,7 +375,7 @@ def analyze_annual_trend(
         if r1 > r_crit_upper:
             methodological_note = (
                 f"Autocorrelación serial residual lag-1 detectada (r₁ = {r1:.3f}); se aplicó la corrección de varianza "
-                f"de Hamed-Rao / Yue-Wang para controlar el riesgo de falsos positivos según pautas de USGS."
+                f"heurística; su comportamiento y sus supuestos requieren revisión independiente."
             )
 
     return TrendAnalysis(

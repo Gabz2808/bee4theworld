@@ -9,15 +9,19 @@ import httpx
 import numpy as np
 import pandas as pd
 import xarray as xr
-from app.models.geojson import GeoJSONPolygon
+from app.models.geojson import GeoJSONMultiPolygon, GeoJSONPolygon
 from app.services.gpm_imerg import (
     DataUnavailableError,
     GPMIMERGConnector,
     _aggregate_dataset,
     _area_weights,
+    _polygon_from_geojson,
 )
 from pydantic import ValidationError
-from shapely.geometry import Polygon
+from fastapi import HTTPException
+from app.models.exploration import ExplorationRequest
+from app.services.exploration_service import validate_exploration_request
+from shapely.geometry import Polygon, MultiPolygon
 
 
 def _region(coordinates: list[list[list[float]]]) -> GeoJSONPolygon:
@@ -115,6 +119,30 @@ class FakeHarmonyClient:
 
 
 class GPMIMERGTests(unittest.TestCase):
+    def test_multipolygon_user_geometry_limits_cover_all_components(self) -> None:
+        ring = [[-85, 10], [-84.9, 10], [-84.9, 10.1], [-85, 10]]
+        too_many = GeoJSONMultiPolygon(type="MultiPolygon", coordinates=[[ring] for _ in range(126)])
+        request = ExplorationRequest(region=too_many, start_date="2024-01-01", end_date="2024-01-31")
+        with self.assertRaises(HTTPException):
+            validate_exploration_request(request)
+        far = [[-60, 10], [-59.9, 10], [-59.9, 10.1], [-60, 10]]
+        request = ExplorationRequest(region=GeoJSONMultiPolygon(type="MultiPolygon", coordinates=[[ring], [far]]), start_date="2024-01-01", end_date="2024-01-31")
+        with self.assertRaises(HTTPException):
+            validate_exploration_request(request)
+
+    def test_multipolygon_weights_include_separate_parts_and_exclude_holes(self) -> None:
+        outer = [(-85.05, 9.95), (-84.95, 9.95), (-84.95, 10.05), (-85.05, 10.05), (-85.05, 9.95)]
+        hole = [(-85.02, 9.98), (-84.98, 9.98), (-84.98, 10.02), (-85.02, 10.02), (-85.02, 9.98)]
+        other = [(-84.85, 9.95), (-84.75, 9.95), (-84.75, 10.05), (-84.85, 10.05), (-84.85, 9.95)]
+        region = GeoJSONMultiPolygon(type="MultiPolygon", coordinates=[[outer, hole], [other]])
+        geom = _polygon_from_geojson(region)
+        self.assertIsInstance(geom, MultiPolygon)
+        weights, total = _area_weights(geom, np.array([10.0]), np.array([-85.0, -84.9, -84.8]))
+        self.assertGreater(weights[0, 0], 0)
+        self.assertEqual(weights[0, 1], 0)
+        self.assertGreater(weights[0, 2], weights[0, 0])
+        self.assertAlmostEqual(float(weights.sum()) / total, 1.0, places=5)
+
     def test_area_weights_include_partial_boundary_cells(self) -> None:
         region = _region(
             [[

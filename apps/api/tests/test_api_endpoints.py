@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 from app.api.routes import get_connector, get_optional_supabase
 from app.main import app
-from app.models.geojson import GeoJSONPolygon
+from app.models.geojson import GeoJSONMultiPolygon, GeoJSONPolygon
 from app.services.gpm_imerg import GPMIMERGResult, MonthlyPrecipitation
 from fastapi.testclient import TestClient
 
@@ -21,6 +21,25 @@ class APIEndpointsTests(unittest.TestCase):
         response = self.client.get("/ping")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"status": "ok"})
+
+    def test_custom_multipolygon_flows_through_endpoint(self) -> None:
+        geometry = {"type": "MultiPolygon", "coordinates": [
+            [[[-85, 10], [-84.9, 10], [-84.9, 10.1], [-85, 10]]],
+            [[[-84.8, 10], [-84.7, 10], [-84.7, 10.1], [-84.8, 10]]],
+        ]}
+        region = GeoJSONMultiPolygon.model_validate(geometry)
+        connector = MagicMock()
+        connector.fetch_monthly_precipitation.return_value = GPMIMERGResult(
+            dataset="GPM_3IMERGM.07", version="07", region=region, source_units="mm/hr", output_units="mm/month",
+            unit_conversion="duración del mes", spatial_resolution_degrees=0.1, granule_ids=("G1",),
+            weighting_method="área", monthly_values=(MonthlyPrecipitation(date(2024, 1, 1), 1.0, 1.0),),
+        )
+        app.dependency_overrides[get_connector] = lambda: connector
+        with patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa"}):
+            response = self.client.post("/api/v1/explorations", json={"region": geometry, "variable_id": "precipitation", "start_date": "2024-01-01", "end_date": "2024-01-31"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["timeseries"][0]["value"], 744.0)
+        self.assertEqual(connector.fetch_monthly_precipitation.call_args.args[0].type, "MultiPolygon")
 
     def test_nasa_without_credentials_returns_clear_error(self) -> None:
         with patch("app.services.exploration_service.load_supabase_series") as cache, patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa", "EARTHDATA_TOKEN": ""}):
@@ -194,7 +213,8 @@ class APIEndpointsTests(unittest.TestCase):
                 "end_date": "2024-12-31",
                 "temporal_resolution": "monthly",
             }
-            response = self.client.post("/api/v1/explorations", json=payload)
+            with patch.dict("os.environ", {"IYOK_DATA_SOURCE": "nasa"}):
+                response = self.client.post("/api/v1/explorations", json=payload)
             self.assertEqual(response.status_code, 200)
             data = response.json()
             self.assertEqual(data["status"], "success")

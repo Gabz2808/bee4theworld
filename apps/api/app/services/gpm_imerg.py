@@ -17,10 +17,14 @@ import xarray as xr
 from harmony import BBox, Client, Collection, Request
 from pyproj import Transformer
 from shapely import transform as transform_geometry
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPolygon, shape
+from shapely.prepared import prep
 from shapely.validation import explain_validity
 
-from app.models.geojson import GeoJSONPolygon
+from app.models.geojson import GeoJSONMultiPolygon, GeoJSONPolygon
+
+AnalysisRegion = GeoJSONPolygon | GeoJSONMultiPolygon
+AnalysisGeometry = Polygon | MultiPolygon
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +70,7 @@ class MonthlyPrecipitation:
 class GPMIMERGResult:
     dataset: str
     version: str
-    region: GeoJSONPolygon
+    region: AnalysisRegion
     source_units: str
     output_units: str
     unit_conversion: str
@@ -88,7 +92,7 @@ class GPMIMERGConnector:
 
     def fetch_monthly_precipitation(
         self,
-        region: GeoJSONPolygon,
+        region: AnalysisRegion,
         start: date,
         end: date,
     ) -> GPMIMERGResult:
@@ -116,6 +120,7 @@ class GPMIMERGConnector:
 
         client = self._get_harmony_client()
         job_id = client.submit(request)
+        logger.info("Trabajo Harmony iniciado: %s", job_id)
         with tempfile.TemporaryDirectory(prefix="iyok-imerg-") as temp_dir:
             futures = client.download_all(
                 job_id,
@@ -187,8 +192,8 @@ class GPMIMERGConnector:
     @staticmethod
     def _read_result(
         paths: list[Path],
-        region: GeoJSONPolygon,
-        geometry: Polygon,
+        region: AnalysisRegion,
+        geometry: AnalysisGeometry,
         expected_months: tuple[date, ...],
         granules: list[CMRGranule],
     ) -> GPMIMERGResult:
@@ -255,8 +260,8 @@ def _requested_months(start: date, end: date) -> tuple[date, ...]:
     return tuple(months)
 
 
-def _polygon_from_geojson(region: GeoJSONPolygon) -> Polygon:
-    geometry = Polygon(region.coordinates[0], region.coordinates[1:])
+def _polygon_from_geojson(region: AnalysisRegion) -> AnalysisGeometry:
+    geometry = shape(region.model_dump(mode="json"))
     if geometry.is_empty or not geometry.is_valid:
         raise ValueError(f"Polígono inválido: {explain_validity(geometry)}")
     if geometry.bounds[2] - geometry.bounds[0] > 180:
@@ -266,7 +271,7 @@ def _polygon_from_geojson(region: GeoJSONPolygon) -> Polygon:
     return geometry
 
 
-def _bounding_box(geometry: Polygon) -> BBox:
+def _bounding_box(geometry: AnalysisGeometry) -> BBox:
     west, south, east, north = geometry.bounds
     padding = GRID_RESOLUTION_DEGREES
     return BBox(
@@ -290,7 +295,7 @@ def _parse_time_coordinate(time_values: np.ndarray | list[object]) -> list[date]
 
 def _aggregate_dataset(
     dataset: xr.Dataset,
-    geometry: Polygon,
+    geometry: AnalysisGeometry,
     expected_months: tuple[date, ...],
 ) -> tuple[str, tuple[MonthlyPrecipitation, ...]]:
     var_name = None
@@ -408,7 +413,7 @@ def _validate_grid_axis(coordinates: np.ndarray, name: str) -> None:
 
 
 def _area_weights(
-    geometry: Polygon,
+    geometry: AnalysisGeometry,
     latitudes: np.ndarray,
     longitudes: np.ndarray,
 ) -> tuple[np.ndarray, float]:
@@ -423,6 +428,7 @@ def _area_weights(
         raise ValueError("El polígono debe cubrir un área mayor que cero")
 
     weights = np.zeros((len(latitudes), len(longitudes)), dtype=float)
+    prepared = prep(projected_region)
     west, south, east, north = geometry.bounds
     half_cell = GRID_RESOLUTION_DEGREES / 2
     for row, latitude in enumerate(latitudes):
@@ -446,7 +452,10 @@ def _area_weights(
                 transformer.transform,
                 interleaved=False,
             )
-            weights[row, column] = projected_region.intersection(projected_cell).area
+            if prepared.covers(projected_cell):
+                weights[row, column] = projected_cell.area
+            elif prepared.intersects(projected_cell):
+                weights[row, column] = projected_region.intersection(projected_cell).area
 
     covered_area = float(weights.sum())
     if covered_area == 0:

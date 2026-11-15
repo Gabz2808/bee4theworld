@@ -1,6 +1,7 @@
 from typing import Annotated, Any, Literal
 
 from pydantic import Field, model_validator
+from shapely.geometry import shape
 
 from app.models.base import APIModel
 
@@ -22,9 +23,22 @@ class GeoJSONPolygon(APIModel):
         return self
 
 
+class GeoJSONMultiPolygon(APIModel):
+    type: Literal["MultiPolygon"]
+    coordinates: Annotated[list[Annotated[list[LinearRing], Field(min_length=1)]], Field(min_length=1)]
+
+    @model_validator(mode="after")
+    def rings_must_be_closed(self) -> "GeoJSONMultiPolygon":
+        for polygon in self.coordinates:
+            for ring in polygon:
+                if ring[0] != ring[-1]:
+                    raise ValueError("Cada anillo del multipolígono debe estar cerrado")
+        return self
+
+
 def are_geometries_equal(
-    geom1: GeoJSONPolygon | dict[str, Any] | None,
-    geom2: GeoJSONPolygon | dict[str, Any] | None,
+    geom1: GeoJSONPolygon | GeoJSONMultiPolygon | dict[str, Any] | None,
+    geom2: GeoJSONPolygon | GeoJSONMultiPolygon | dict[str, Any] | None,
     tolerance: float = 1e-5,
 ) -> bool:
     """Compara si dos geometrías poligonales GeoJSON son espacialmente equivalentes
@@ -33,25 +47,12 @@ def are_geometries_equal(
     """
     if geom1 is None or geom2 is None:
         return False
-    coords1 = (
-        geom1.coordinates
-        if isinstance(geom1, GeoJSONPolygon)
-        else (geom1.get("coordinates") if isinstance(geom1, dict) else None)
-    )
-    coords2 = (
-        geom2.coordinates
-        if isinstance(geom2, GeoJSONPolygon)
-        else (geom2.get("coordinates") if isinstance(geom2, dict) else None)
-    )
-    if coords1 is None or coords2 is None:
+    obj1 = geom1.model_dump(mode="json") if isinstance(geom1, (GeoJSONPolygon, GeoJSONMultiPolygon)) else geom1
+    obj2 = geom2.model_dump(mode="json") if isinstance(geom2, (GeoJSONPolygon, GeoJSONMultiPolygon)) else geom2
+    if obj1.get("type") != obj2.get("type"):
         return False
-    if len(coords1) != len(coords2):
+    try:
+        return shape(obj1).equals_exact(shape(obj2), tolerance)
+    except (TypeError, ValueError, KeyError):
         return False
-    for ring1, ring2 in zip(coords1, coords2):
-        if len(ring1) != len(ring2):
-            return False
-        for pt1, pt2 in zip(ring1, ring2):
-            if abs(pt1[0] - pt2[0]) > tolerance or abs(pt1[1] - pt2[1]) > tolerance:
-                return False
-    return True
 

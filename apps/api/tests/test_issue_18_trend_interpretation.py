@@ -115,7 +115,7 @@ class Issue18TrendInterpretationTests(unittest.TestCase):
         # Debe marcarse como inconcluso debido a la fuerte dependencia temporal residual que invalida el supuesto de independencia
         self.assertEqual(result.status, "inconclusive")
         self.assertIn("dependencia temporal serial", result.summary)
-        self.assertIn("USGS", result.methodological_note)
+        self.assertIn("provisional", result.methodological_note)
 
     def test_modified_mann_kendall_adjusts_variance_for_positive_autocorrelation(self) -> None:
         """Cuando se detecta autocorrelación positiva estadísticamente significativa, la varianza de Mann-Kendall es ajustada hacia arriba."""

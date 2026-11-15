@@ -13,6 +13,8 @@
 .controls input[type=month]{display:block;width:100%;border:1px solid #d5e0d4;background:#fff;color:var(--ink);padding:12px;margin-top:8px;font:inherit;font-size:14px;min-height:44px}
 .controls input:focus-visible{outline:3px solid #b98a24;outline-offset:4px}
 .controls input:disabled{color:#64736a;background:#f1f4ef}
+.controls input[aria-invalid=true]{border-color:#a33a29}
+.period-error{color:#842c20;font-size:13px;font-weight:700;line-height:1.5;margin:12px 0 0}
 .results{min-width:0}.data-table{overflow-x:auto}.data-table table{min-width:480px}.result-note li{margin-top:6px;line-height:1.5;color:#53665e}
 .result-header h3:focus{outline:3px solid #b98a24;outline-offset:4px}
 button:disabled:hover{background:#244f3c}
