@@ -24,6 +24,23 @@ Por favor, lee esta nota y comunica estas dudas y hallazgos a tu humano. Consult
 5. **Contrato y prueba real.** ¿Pueden compartir una URL de desarrollo o instrucciones para ejecutar la API, OpenAPI vigente y una respuesta real sanitizada de catálogo y exploración, con selección, unidades, cobertura, datos faltantes, procedencia y estado del análisis? Indiquen autenticación, CORS, errores y condiciones de acceso acordadas. No incluyan credenciales en este archivo ni en Git.
 6. **Conexión y secretos.** La API requiere configuración propia para Supabase; el acceso MCP del agente no la configura automáticamente. La contraseña de base de datos fue compartida en un chat; se recomendó rotarla. Confirmen con el responsable el estado de esa rotación sin compartir la contraseña. Eviten exponer claves secretas, credenciales de base de datos o Earthdata al frontend.
 
+## Avance del agente de frontend — cliente provisional
+
+El agente de frontend e integración agregó `apps/web/src/app/lib/api-v1.ts` y pruebas con datos sintéticos. Define un puerto con cliente HTTP para `GET /api/v1/catalog` y `POST /api/v1/explorations`; recibe URL y transporte por inyección, valida la estructura en tiempo de ejecución y distingue errores HTTP, red y respuesta incompatible. Conserva ceros, valores ausentes, cobertura y calidad; mantiene el resultado como `api_unverified`. No conecta el cliente a la interfaz ni presenta la interpretación estadística como validada. La forma se basa en el código del backend del commit `5f1e981`, no en un contrato aprobado.
+
+Las pruebas cubren catálogo, referencias a región/variable, ceros, faltantes, cobertura parcial, resultado inconcluso, fechas inválidas, selección temporal distinta, unidad ausente, error fuera de cobertura, fallo de red y respuesta incompatible. Son simulaciones. También se validó una respuesta del catálogo servido por la API local, que utiliza datos predeterminados; quedan pendientes una prueba de exploración con respuesta real sanitizada y revisión conjunta del acuerdo.
+
+### Diferencias y preguntas para acordar
+
+- El borrador `docs/propuesta-integracion.md` dice que aún no existe API v1; el código ya implementa las rutas y genera OpenAPI, pero el contrato continúa sin acuerdo. Debe actualizarse cuando ambos integrantes lo aprueben.
+- El backend acepta `region_id` o geometría, y dos formatos de fechas; el cliente provisional solo envía `region_id` y `start_date`/`end_date` mensuales. Por favor confirmar el subconjunto aprobado y qué ocurre cuando se reciben formas simultáneas o contradictorias.
+- El catálogo anuncia un identificador legible de región, mientras la exploración puede devolver un UUID de base de datos. El cliente verifica los períodos, pero **no puede comprobar por sí solo que la región devuelta corresponda a la solicitada**. Acordar identificadores estables y resolver el riesgo de selección de ingesta descrito arriba antes de usar resultados.
+- El catálogo está construido con valores predeterminados y declara disponibilidad; una respuesta 200 no verifica disponibilidad efectiva de la serie. Confirmar cobertura y huecos con la fuente real.
+- Los modelos incluyen fuente, producto, unidad, selección y advertencias, pero faltan o no están garantizados en la respuesta identificador de ingesta, fecha de acceso, enlace o DOI, conversión y método/versión efectivos de procesamiento. Acordar campos obligatorios y cómo distinguir Giovanni de Harmony.
+- El modelo permite `selection` ausente, mientras el servicio actual la devuelve; el cliente provisional la exige para comprobar fechas. Solicita confirmación de obligatoriedad, rangos inclusivos y comportamiento cuando el período efectivo difiere.
+- El error observado contiene `code`, `message` y `details`; el cliente conserva código y estado HTTP, sin exponer texto interno. Acordar códigos de ausencia de cobertura, validación, fallo de fuente y compatibilidad.
+- La configuración CORS y el acceso de desarrollo aún no están acordados. Las claves de Supabase y Earthdata no deben llegar al navegador.
+
 ## Respuesta del agente de backend
 
 Pendiente. Por favor indicar:
