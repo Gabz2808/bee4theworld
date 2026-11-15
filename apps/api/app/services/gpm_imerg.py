@@ -8,7 +8,7 @@ from contextlib import ExitStack
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time
 from pathlib import Path
-from typing import TypedDict
+from typing import Callable, TypedDict
 
 import httpx
 import numpy as np
@@ -80,6 +80,9 @@ class GPMIMERGResult:
     monthly_values: tuple[MonthlyPrecipitation, ...]
 
 
+CHUNK_MAX_MONTHS = 12
+
+
 class GPMIMERGConnector:
     def __init__(
         self,
@@ -95,11 +98,115 @@ class GPMIMERGConnector:
         region: AnalysisRegion,
         start: date,
         end: date,
+        progress_callback: Callable[[int, int, str], None] | None = None,
+        cancel_check: Callable[[], bool] | None = None,
     ) -> GPMIMERGResult:
         months = _requested_months(start, end)
         geometry = _polygon_from_geojson(region)
         if self._harmony_client is None and not os.environ.get("EARTHDATA_TOKEN", "").strip():
             raise EarthdataAuthenticationRequired("Configure EARTHDATA_TOKEN en el entorno de la API.")
+
+        # Si el rango es <= 12 meses, extraer en un único bloque directamente
+        if len(months) <= CHUNK_MAX_MONTHS:
+            if progress_callback:
+                progress_callback(0, len(months), "Descargando gránulos desde NASA Harmony...")
+            res = self._fetch_chunk(region, geometry, months, start, end)
+            if progress_callback:
+                progress_callback(len(months), len(months), "Descarga completada")
+            return res
+
+        # Si es multianual (> 12 meses), dividir en bloques de como máximo 12 meses
+        chunks: list[tuple[date, date, tuple[date, ...]]] = []
+        current_chunk: list[date] = []
+        current_year = months[0].year
+
+        for m in months:
+            if m.year != current_year and len(current_chunk) >= CHUNK_MAX_MONTHS:
+                c_start = current_chunk[0]
+                last_m = current_chunk[-1]
+                c_end = date(last_m.year, last_m.month, calendar.monthrange(last_m.year, last_m.month)[1])
+                chunks.append((c_start, c_end, tuple(current_chunk)))
+                current_chunk = [m]
+                current_year = m.year
+            else:
+                current_chunk.append(m)
+
+        if current_chunk:
+            c_start = current_chunk[0]
+            last_m = current_chunk[-1]
+            c_end = date(last_m.year, last_m.month, calendar.monthrange(last_m.year, last_m.month)[1])
+            chunks.append((c_start, c_end, tuple(current_chunk)))
+
+        all_monthly_values: list[MonthlyPrecipitation] = []
+        all_granule_ids: list[str] = []
+        first_result: GPMIMERGResult | None = None
+
+        total_chunks = len(chunks)
+        completed_months = 0
+        total_months = len(months)
+
+        for i, (c_start, c_end, c_months) in enumerate(chunks):
+            if cancel_check and cancel_check():
+                raise GPMIMERGError("Operación de extracción satelital cancelada por el usuario")
+
+            if progress_callback:
+                progress_callback(
+                    completed_months,
+                    total_months,
+                    f"Descargando bloque {i + 1}/{total_chunks} ({c_start.year})",
+                )
+
+            chunk_result = None
+            last_error: Exception | None = None
+            for attempt in range(2):
+                if cancel_check and cancel_check():
+                    raise GPMIMERGError("Operación de extracción satelital cancelada por el usuario")
+                try:
+                    chunk_result = self._fetch_chunk(region, geometry, c_months, c_start, c_end)
+                    break
+                except Exception as e:
+                    last_error = e
+                    logger.warning("Fallo transitorio en bloque %s (intento %d/2): %s", c_start.year, attempt + 1, e)
+
+            if chunk_result is None:
+                raise DataUnavailableError(f"Error procesando bloque {c_start.year}: {last_error}")
+
+            if first_result is None:
+                first_result = chunk_result
+
+            all_monthly_values.extend(chunk_result.monthly_values)
+            all_granule_ids.extend(chunk_result.granule_ids)
+            completed_months += len(c_months)
+
+            if progress_callback:
+                progress_callback(
+                    completed_months,
+                    total_months,
+                    f"Bloque {i + 1}/{total_chunks} ({c_start.year}) completado",
+                )
+
+        assert first_result is not None
+        return GPMIMERGResult(
+            dataset=first_result.dataset,
+            version=first_result.version,
+            region=region,
+            source_units=first_result.source_units,
+            output_units=first_result.output_units,
+            spatial_resolution_degrees=first_result.spatial_resolution_degrees,
+            granule_ids=tuple(all_granule_ids),
+            weighting_method=first_result.weighting_method,
+            unit_conversion=first_result.unit_conversion,
+            monthly_values=tuple(all_monthly_values),
+        )
+
+    def _fetch_chunk(
+        self,
+        region: AnalysisRegion,
+        geometry: AnalysisGeometry,
+        months: tuple[date, ...],
+        start: date,
+        end: date,
+    ) -> GPMIMERGResult:
         granules = self._search_granules(start, end, months)
         collection_ids = {granule["collection_concept_id"] for granule in granules}
         if len(collection_ids) != 1:
@@ -120,7 +227,7 @@ class GPMIMERGConnector:
 
         client = self._get_harmony_client()
         job_id = client.submit(request)
-        logger.info("Trabajo Harmony iniciado: %s", job_id)
+        logger.info("Trabajo Harmony iniciado: %s (período %s a %s)", job_id, start, end)
         with tempfile.TemporaryDirectory(prefix="iyok-imerg-") as temp_dir:
             futures = client.download_all(
                 job_id,

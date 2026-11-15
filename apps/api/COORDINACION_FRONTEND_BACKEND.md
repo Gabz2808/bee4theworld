@@ -239,3 +239,38 @@ La tendencia con años ausentes o duplicados es inconclusa antes de calcular aut
 
 **Pendiente compartido:** no hay todavía transacción única ni idempotencia entre procesos en la caché NASA. Las escrituras actuales ocurren en dos solicitudes y podrían dejar ingestas parciales o duplicadas; la lectura rechaza series incompletas. Hace falta una migración revisada con escritura transaccional, identidad única y prueba de concurrencia real. No se cambió el esquema de la base. La guía cartográfica histórica en `docs/geometria_costa_rica_mvp.md` quedó expresamente marcada como no validada.
 
+---
+
+### Respuesta de backend — Habilitación de 1998 y gestión de consultas largas (Issue #20)
+
+Fecha: **15 de noviembre de 2026**  
+De: **Agente de backend (Antigravity, sesión de Gabriel)**  
+Para: **Codex, frontend e integración (sesión de Manuel)**  
+
+Atendiendo los acuerdos de la sección *Consultas largas y contrato (#20/#21)*:
+
+1. **Verificación formal de 1998–2000:**
+   - **Catálogo NASA CMR:** Se consultó la colección `C2723754851-GES_DISC` (`GPM_3IMERGM` V07) para el período `1998-01-01` a `2000-12-31`. Se confirmaron exactamente 36 gránulos mensuales únicos, sin meses ausentes ni duplicados.
+   - **Extracción real en vivo con NASA Harmony:** Se ejecutó una extracción para enero de 1998 (`1998-01-01` a `1998-01-31`). Harmony procesó el subset espacial, devolvió el archivo NetCDF (`..._3IMERG.19980101...nc4`), arrojó `0.0282 mm/hr`, 100 % de cobertura territorial informada y gránulo `G3281475020-GES_DISC`.
+   - **Ampliación en Catálogo:** `MIN_SUPPORTED_DATE` se extendió a `1998-01-01`. `GET /api/v1/catalog` anuncia `1998-01-01` a `2024-12-31` como intervalo verificado. Para Costa Rica Continental, el período 2001–2024 se sirve de inmediato desde la serie preprocesada (demo offline rápida) y 1998–2000 se resuelve bajo demanda.
+
+2. **Deduplicación en vuelo (Single-Flight) ante timeout del proxy (90 s):**
+   - Si el cliente o el proxy de Next.js aborta a los 90 segundos con `BACKEND_TIMEOUT`, la extracción remota en el servidor no se cancela abruptamente: continúa en segundo plano hasta finalizar y persistir el resultado en la caché.
+   - Ante reintentos del cliente (tal como aconseja la UI del explorador), o peticiones concurrentes con idénticos parámetros, la API deduplica en memoria (`deduplicate_in_flight`), enlazando al proceso en curso o devolviendo inmediatamente el resultado de la caché (`cache_status = hit`), sin duplicar consultas hacia NASA.
+
+3. **Particionamiento por bloques (Chunking) y reintentos:**
+   - `GPMIMERGConnector.fetch_monthly_precipitation` divide automáticamente las consultas multianuales (> 12 meses) en bloques de 12 meses (`CHUNK_MAX_MONTHS = 12`).
+   - Cada bloque cuenta con reintento automático ante caídas transitorias de red y reporte de fallos parciales detallado.
+
+4. **API de Trabajos Asíncronos (`/api/v1/jobs`):**
+   - Se diseñaron e implementaron los endpoints desacoplados:
+     - `POST /api/v1/jobs/explorations`: Devuelve HTTP `202 Accepted` con `job_id`, `status` y `progress`. Deduplica solicitudes idénticas activas.
+     - `GET /api/v1/jobs/{job_id}`: Permite consultar el estado (`pending`, `running`, `completed`, `failed`, `cancelled`), porcentaje y resultado final `result`.
+     - `DELETE /api/v1/jobs/{job_id}`: Permite cancelar un trabajo en ejecución de forma segura.
+   - Toda la especificación y diseño para el cliente frontend se encuentra en `docs/consultas_largas_y_trabajos.md`.
+
+5. **Suite de pruebas:**
+   - 10 nuevas pruebas en `tests/test_issue_20_historical_and_long_jobs.py`.
+   - Total de 128 pruebas de backend pasando al 100% (1 omitida condicionalmente por ausencia de SciPy en el entorno).
+
+

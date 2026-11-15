@@ -7,7 +7,7 @@ import logging
 import math
 import os
 from datetime import UTC, date, datetime, timezone
-from typing import Any
+from typing import Any, Callable
 
 import pandas as pd
 from fastapi import HTTPException
@@ -59,7 +59,7 @@ from app.services.trend_analysis import (
 
 logger = logging.getLogger(__name__)
 
-MIN_SUPPORTED_DATE = date(2001, 1, 1)
+MIN_SUPPORTED_DATE = date(1998, 1, 1)
 MAX_SUPPORTED_DATE = date(2024, 12, 31)
 
 DEFAULT_COSTA_RICA_GEOM = GeoJSONPolygon(
@@ -212,7 +212,7 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
         )
     ]
 
-    # Costa Rica cuenta con serie verificada completa de 288 meses
+    # Costa Rica cuenta con cobertura verificada en CMR/Harmony desde 1998 (324 meses) y archivo preprocesado 2001-2024
     cr_combination = CatalogCombination(
         region_id="costa-rica-continental",
         variable_id="precipitation",
@@ -232,7 +232,7 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
         source_status="verified",
         temporal_resolution="monthly",
         is_ready_for_exploration=True,
-        notes="Serie continua de 288 meses calendario verificados en archivo/catálogo oficial.",
+        notes="Serie continua histórica 1998-2024 verificada en catálogo NASA (324 meses); período 2001-2024 disponible de inmediato en archivo preprocesado y 1998-2000 bajo demanda.",
     )
 
     panama_status = "on_demand" if has_earthdata_token else "source_unavailable"
@@ -663,6 +663,8 @@ def run_exploration(
     connector: GPMIMERGConnector | None = None,
     supabase_client: Any | None = None,
     request_headers: dict[str, str] | None = None,
+    progress_callback: Callable[[int, int, str], None] | None = None,
+    cancel_check: Callable[[], bool] | None = None,
 ) -> ExplorationResponse:
     validate_exploration_request(request)
 
@@ -785,6 +787,8 @@ def run_exploration(
                 geom,
                 start,
                 end,
+                progress_callback=progress_callback,
+                cancel_check=cancel_check,
             )
             monthly_frame = prepare_monthly_precipitation(nasa_result, start, end)
             provenance_info = {

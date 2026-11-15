@@ -138,8 +138,8 @@ class APIEndpointsTests(unittest.TestCase):
         payload = {
             "region_id": "costa-rica-continental",
             "variable_id": "precipitation",
-            "start_date": "1999-01-01",  # Precede a 2001
-            "end_date": "1999-12-31",
+            "start_date": "1997-01-01",  # Precede a 1998
+            "end_date": "1997-12-31",
             "temporal_resolution": "monthly",
         }
         response = self.client.post("/api/v1/explorations", json=payload)
