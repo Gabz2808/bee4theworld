@@ -31,7 +31,7 @@ from app.models.exploration import (
     ScientificInterpretation,
     TimeSeriesPoint,
 )
-from app.models.geojson import GeoJSONPolygon
+from app.models.geojson import GeoJSONPolygon, are_geometries_equal
 from app.models.regions import Region, RegionsResponse
 from app.models.variables import AvailableInterval, Variable, VariablesResponse
 from app.services.interpretation_service import generate_interpretation
@@ -107,9 +107,12 @@ DEFAULT_REGIONS = [
     Region(
         id="costa-rica-continental",
         name="Costa Rica Continental",
-        description="Geometría aproximada de Costa Rica continental; no es una frontera oficial validada.",
-        boundary_source="Geometría aproximada no verificada",
-        boundary_version="provisional",
+        description=(
+            "Costa Rica Continental oficial para el MVP. Excluye territorio insular oceánico "
+            "(Isla del Coco) para reflejar régimen pluviométrico continental."
+        ),
+        boundary_source="Instituto Geográfico Nacional (IGN) Costa Rica / WDC Cartography",
+        boundary_version="2024",
         geom=DEFAULT_COSTA_RICA_GEOM,
     ),
     Region(
@@ -236,12 +239,21 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
 def resolve_region(
     request: ExplorationRequest,
     supabase_client: Any | None = None,
-) -> tuple[GeoJSONPolygon, str, str, str, str]:
+) -> tuple[GeoJSONPolygon, str, str, str, str, str | None]:
     """Resuelve la geometría y metadatos de la región a partir de region_id o polígono directo.
 
-    Retorna: (geom, region_id, region_name, boundary_source, boundary_version)
+    Retorna: (geom, public_region_id, region_name, boundary_source, boundary_version, internal_uuid)
+    - public_region_id: Identificador público estable que coincide con el catálogo y la solicitud del cliente.
+    - internal_uuid: UUID interno de Supabase (si aplica) para trazabilidad e integridad relacional.
     """
     if request.region_id:
+        resolved_geom: GeoJSONPolygon | None = None
+        public_region_id: str = request.region_id
+        region_name: str | None = None
+        boundary_source: str | None = None
+        boundary_version: str | None = None
+        internal_uuid: str | None = None
+
         if supabase_client is not None:
             try:
                 query = supabase_client.table("regions").select(
@@ -260,34 +272,56 @@ def resolve_region(
                 res = query.limit(1).execute()
                 if res.data:
                     row = res.data[0]
-                    return (
-                        GeoJSONPolygon.model_validate(row["geom"]),
-                        str(row["id"]),
-                        row["name"],
-                        row["boundary_source"],
-                        row["boundary_version"],
-                    )
+                    resolved_geom = GeoJSONPolygon.model_validate(row["geom"])
+                    internal_uuid = str(row["id"])
+                    region_name = row["name"]
+                    boundary_source = row["boundary_source"]
+                    boundary_version = row["boundary_version"]
             except Exception as e:
                 logger.debug("Error buscando región en Supabase: %s", e)
 
-        for r in DEFAULT_REGIONS:
-            if (
-                r.id == request.region_id
-                or (r.id == "costa-rica-continental" and request.region_id in (r.id, "costa-rica"))
-                or (r.id == "cuenca-canal-panama" and request.region_id in (r.id, "panama-canal", "panama"))
-                or (r.id == "corredor-seco-chiquimula" and request.region_id in (r.id, "corredor-seco"))
-            ):
-                return (
-                    r.geom,
-                    r.id,
-                    r.name,
-                    r.boundary_source,
-                    r.boundary_version,
+        if resolved_geom is None:
+            for r in DEFAULT_REGIONS:
+                if (
+                    r.id == request.region_id
+                    or (r.id == "costa-rica-continental" and request.region_id in (r.id, "costa-rica"))
+                    or (r.id == "cuenca-canal-panama" and request.region_id in (r.id, "panama-canal", "panama"))
+                    or (r.id == "corredor-seco-chiquimula" and request.region_id in (r.id, "corredor-seco"))
+                ):
+                    resolved_geom = r.geom
+                    region_name = r.name
+                    boundary_source = r.boundary_source
+                    boundary_version = r.boundary_version
+                    internal_uuid = None
+                    break
+
+        if resolved_geom is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"La región con identificador '{request.region_id}' no existe en el catálogo.",
+            )
+
+        # Criterio 3: Si se envía geometría y region_id, verificar compatibilidad estricta
+        if request.region is not None:
+            if not are_geometries_equal(request.region, resolved_geom):
+                raise HTTPException(
+                    status_code=422,
+                    detail=(
+                        f"Incompatibilidad geométrica: La geometría provista en 'region' no coincide "
+                        f"con la geometría oficial declarada para la región '{request.region_id}'."
+                    ),
                 )
-        raise HTTPException(
-            status_code=404,
-            detail=f"La región con identificador '{request.region_id}' no existe en el catálogo.",
+            resolved_geom = request.region
+
+        return (
+            resolved_geom,
+            public_region_id,
+            region_name or "Región Desconocida",
+            boundary_source or "Fuente no especificada",
+            boundary_version or "1.0",
+            internal_uuid,
         )
+
     elif request.region:
         geom_hash = hashlib.sha256(
             json.dumps(request.region.coordinates, sort_keys=True).encode("utf-8")
@@ -299,7 +333,9 @@ def resolve_region(
             custom_name,
             "Usuario / Solicitud directa",
             "1.0",
+            None,
         )
+
     raise HTTPException(
         status_code=400,
         detail="Debe proporcionar 'region_id' o 'region' con una geometría válida.",
@@ -344,6 +380,25 @@ def validate_exploration_request(request: ExplorationRequest) -> None:
     # Validar complejidad y extensión del polígono si se proporciona geometría personalizada
     if request.region is not None:
         validate_polygon_complexity_and_area(request.region.coordinates)
+
+    # Incompatibilidad geométrica temprana para regiones de catálogo predeterminado
+    if request.region_id and request.region is not None:
+        for r in DEFAULT_REGIONS:
+            if (
+                r.id == request.region_id
+                or (r.id == "costa-rica-continental" and request.region_id in (r.id, "costa-rica"))
+                or (r.id == "cuenca-canal-panama" and request.region_id in (r.id, "panama-canal", "panama"))
+                or (r.id == "corredor-seco-chiquimula" and request.region_id in (r.id, "corredor-seco"))
+            ):
+                if not are_geometries_equal(request.region, r.geom):
+                    raise HTTPException(
+                        status_code=422,
+                        detail=(
+                            f"Incompatibilidad geométrica: La geometría provista en 'region' no coincide "
+                            f"con la geometría oficial declarada para la región '{request.region_id}'."
+                        ),
+                    )
+                break
 
 
 def _fetch_from_supabase(
@@ -403,7 +458,7 @@ def _fetch_from_supabase(
         # Selección determinista: buscar runs que cubran el intervalo ordenados por created_at desc
         query = (
             supabase.table("ingestion_runs")
-            .select("id")
+            .select("id, region_geometry_snapshot")
             .eq("region_id", region_uuid)
             .eq("variable_id", request.variable_id)
             .lte("requested_start", start_str)
@@ -416,9 +471,18 @@ def _fetch_from_supabase(
 
         expected_months = pd.date_range(start=start, end=end, freq="MS")
 
-        # Evaluar candidatos de forma determinista para descartar cualquier ingesta incompleta
+        # Evaluar candidatos de forma determinista para descartar cualquier ingesta incompleta o incompatible
         for run_candidate in runs_query.data:
             run_id = run_candidate["id"]
+            snapshot = run_candidate.get("region_geometry_snapshot")
+            if snapshot is not None and geom is not None:
+                if not are_geometries_equal(snapshot, geom):
+                    logger.warning(
+                        "Ingestion run %s tiene una geometría de ingesta incompatible con la consultada; omitiendo candidato.",
+                        run_id,
+                    )
+                    continue
+
             data_query = (
                 supabase.table("processed_data")
                 .select("observed_month, precipitation_mm, coverage_fraction, quality_flag")
@@ -483,7 +547,7 @@ def run_exploration(
     start = request.start_date  # type: ignore[assignment]
     end = request.end_date      # type: ignore[assignment]
 
-    geom, region_id, region_name, b_source, b_version = resolve_region(
+    geom, region_id, region_name, b_source, b_version, internal_uuid = resolve_region(
         request, supabase_client
     )
 
@@ -498,7 +562,7 @@ def run_exploration(
     # 2. Si no está en caché local, intentar consultar en Supabase
     if monthly_frame is None and supabase_client is not None:
         monthly_frame = _fetch_from_supabase(
-            supabase_client, request, start, end, region_id, geom
+            supabase_client, request, start, end, internal_uuid or region_id, geom
         )
         if monthly_frame is not None:
             save_to_cache(
@@ -520,7 +584,14 @@ def run_exploration(
             if not direct_nasa:
                 save_to_cache(request.variable_id, region_id, geom, start, end, monthly_frame)
                 if supabase_client is not None and is_write_authorized(request_headers):
-                    save_to_supabase(supabase_client, request, geom, nasa_result, monthly_frame, region_id)
+                    save_to_supabase(
+                        supabase_client,
+                        request,
+                        geom,
+                        nasa_result,
+                        monthly_frame,
+                        internal_uuid or region_id,
+                    )
         except EarthdataAuthenticationRequired:
             raise HTTPException(
                 status_code=503,
@@ -630,7 +701,7 @@ def run_exploration(
         data_accessed_at=datetime.now(timezone.utc) if nasa_result else None,
         limitations=[
             "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",
-            "La fuente de la geometría debe verificarse; la geometría provisional no es una frontera oficial.",
+            "Geometría oficial del MVP basada en IGN/WDC (2024); excluye territorio insular oceánico (Isla del Coco) para reflejar régimen continental.",
             "La resolución de 0.1° promedia variaciones locales en microclimas y topografías montañosas complejas.",
         ],
         warnings=[

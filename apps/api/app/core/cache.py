@@ -9,7 +9,7 @@ from typing import Any
 
 import pandas as pd
 from app.models.exploration import ExplorationRequest
-from app.models.geojson import GeoJSONPolygon
+from app.models.geojson import GeoJSONPolygon, are_geometries_equal
 from app.services.gpm_imerg import GPMIMERGResult
 from app.core.security import is_write_authorized
 
@@ -125,6 +125,7 @@ def save_to_supabase(
 
     try:
         region_uuid: str | None = None
+        registered_geom: dict | None = None
         if len(region_identifier) == 36 and "-" in region_identifier:
             res = (
                 supabase.table("regions")
@@ -135,6 +136,7 @@ def save_to_supabase(
             )
             if res.data:
                 region_uuid = str(res.data[0]["id"])
+                registered_geom = res.data[0].get("geom")
         else:
             name_candidates = []
             if region_identifier in ("costa-rica-continental", "costa-rica"):
@@ -154,11 +156,19 @@ def save_to_supabase(
                 )
                 if res.data:
                     region_uuid = str(res.data[0]["id"])
+                    registered_geom = res.data[0].get("geom")
                     break
 
         if not region_uuid:
             logger.debug(
                 "Región '%s' no encontrada con identidad verificada en Supabase; se mantiene en caché local.",
+                region_identifier,
+            )
+            return
+
+        if registered_geom and not are_geometries_equal(registered_geom, geom):
+            logger.warning(
+                "Incompatibilidad geométrica: La geometría para '%s' difiere de la registrada en Supabase. Omitiendo persistencia.",
                 region_identifier,
             )
             return
