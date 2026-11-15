@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
+import uuid
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -18,6 +20,9 @@ logger = logging.getLogger(__name__)
 
 CACHE_DIR_DEFAULT = Path(__file__).resolve().parents[2] / "data" / "cache"
 
+DEFAULT_PRODUCT_VERSION = "v07"
+DEFAULT_PROCESSING_VERSION = "p1"
+
 
 def get_cache_dir() -> Path:
     cache_dir = CACHE_DIR_DEFAULT
@@ -31,7 +36,29 @@ def make_cache_key(
     geom: GeoJSONPolygon,
     start: date,
     end: date,
+    product_version: str = DEFAULT_PRODUCT_VERSION,
+    processing_version: str = DEFAULT_PROCESSING_VERSION,
 ) -> str:
+    """Genera una clave determinista que versiona producto, procesamiento, datos y geometría."""
+    geom_str = json.dumps(geom.coordinates, sort_keys=True)
+    geom_hash = hashlib.sha256(geom_str.encode("utf-8")).hexdigest()[:16]
+    sanitized_region = "".join(
+        c if c.isalnum() or c in "-_" else "_" for c in region_id
+    )[:30]
+    return (
+        f"{variable_id}_{product_version}_{processing_version}_{sanitized_region}_"
+        f"{geom_hash}_{start.isoformat()}_{end.isoformat()}.json"
+    )
+
+
+def make_legacy_cache_key(
+    variable_id: str,
+    region_id: str,
+    geom: GeoJSONPolygon,
+    start: date,
+    end: date,
+) -> str:
+    """Clave compatible anterior sin versionamiento de producto/procesamiento."""
     geom_str = json.dumps(geom.coordinates, sort_keys=True)
     geom_hash = hashlib.sha256(geom_str.encode("utf-8")).hexdigest()[:16]
     sanitized_region = "".join(
@@ -46,25 +73,106 @@ def load_from_cache(
     geom: GeoJSONPolygon,
     start: date,
     end: date,
-) -> pd.DataFrame | None:
-    cache_key = make_cache_key(variable_id, region_id, geom, start, end)
-    cache_file = get_cache_dir() / cache_key
+    product_version: str = DEFAULT_PRODUCT_VERSION,
+    processing_version: str = DEFAULT_PROCESSING_VERSION,
+    with_provenance: bool = False,
+) -> pd.DataFrame | tuple[pd.DataFrame, dict[str, Any]] | None:
+    """Carga datos y procedencia desde la caché local.
+
+    Aplica recuperación automática ante caché incompleta o corrupta (eliminando el archivo)
+    y admite retrocompatibilidad con formato legacy.
+    """
+    cache_key = make_cache_key(
+        variable_id, region_id, geom, start, end, product_version, processing_version
+    )
+    cache_dir = get_cache_dir()
+    cache_file = cache_dir / cache_key
+
+    # Si no existe clave versionada, verificar clave legacy
+    is_legacy = False
     if not cache_file.exists():
-        return None
+        legacy_key = make_legacy_cache_key(variable_id, region_id, geom, start, end)
+        legacy_file = cache_dir / legacy_key
+        if legacy_file.exists():
+            cache_file = legacy_file
+            is_legacy = True
+        else:
+            return None
+
+    expected_months = pd.date_range(start=start, end=end, freq="MS")
 
     try:
+        with open(cache_file, "r", encoding="utf-8") as f:
+            raw_content = json.load(f)
+
+        # Formato schema 2.0 con preservación explícita de procedencia
+        if isinstance(raw_content, dict) and "records" in raw_content:
+            records = raw_content.get("records", [])
+            # Recuperación ante caché incompleta: si no contiene todos los meses requeridos
+            if len(records) != len(expected_months):
+                logger.warning(
+                    "Caché incompleta para %s: se esperaban %d meses pero contiene %d. Descartando y purgando.",
+                    cache_key,
+                    len(expected_months),
+                    len(records),
+                )
+                cache_file.unlink(missing_ok=True)
+                return None
+
+            provenance = raw_content.get("provenance", {})
+            parsed_rows = {}
+            for r in records:
+                m = pd.Timestamp(r["month"])
+                val = (
+                    float(r["precipitation_mm"])
+                    if r.get("precipitation_mm") is not None
+                    else float("nan")
+                )
+                cov = float(r.get("coverage_fraction", 1.0))
+                flag = str(r.get("quality_flag", "ok"))
+                parsed_rows[m] = (val, cov, flag)
+
+            df = pd.DataFrame.from_dict(
+                parsed_rows,
+                orient="index",
+                columns=("precipitation_mm", "coverage_fraction", "quality_flag"),
+            ).reindex(expected_months)
+            df.index.name = "month"
+
+            # Adjuntar procedencia a los atributos del DataFrame
+            df.attrs["provenance"] = provenance
+            logger.info("Cache hit v2 para clave %s con procedencia explícita", cache_key)
+            if with_provenance:
+                return df, provenance
+            return df
+
+        # Soporte para caché legacy orient="table"
         df = pd.read_json(cache_file, orient="table")
-        expected_months = pd.date_range(start=start, end=end, freq="MS")
         if (
             len(df) == len(expected_months)
             and df.index.min() == expected_months.min()
             and df.index.max() == expected_months.max()
         ):
-            logger.info("Cache hit para clave %s", cache_key)
+            logger.info("Cache hit legacy para clave %s", cache_key)
+            df.attrs["provenance"] = {}
+            if with_provenance:
+                return df, {}
             return df
+
+        # Incompleta en legacy: descartar y purgar
+        logger.warning("Caché legacy incompleta para %s. Purgando.", cache_key)
+        cache_file.unlink(missing_ok=True)
         return None
     except Exception as e:  # noqa: BLE001 - boundary fallback
-        logger.warning("Error leyendo archivo de caché %s: %s", cache_file, e)
+        logger.warning(
+            "Error leyendo o parseando archivo de caché %s: %s. Eliminando archivo corrupto.",
+            cache_file,
+            e,
+        )
+        try:
+            cache_file.unlink(missing_ok=True)
+        except Exception:
+            pass
         return None
 
 
@@ -75,20 +183,92 @@ def save_to_cache(
     start: date,
     end: date,
     df: pd.DataFrame,
+    provenance: dict[str, Any] | None = None,
+    product_version: str = DEFAULT_PRODUCT_VERSION,
+    processing_version: str = DEFAULT_PROCESSING_VERSION,
 ) -> None:
-    cache_key = make_cache_key(variable_id, region_id, geom, start, end)
+    """Guarda serie y procedencia completa usando escritura atómica protegida contra concurrencia."""
+    cache_key = make_cache_key(
+        variable_id, region_id, geom, start, end, product_version, processing_version
+    )
     cache_dir = get_cache_dir()
     cache_file = cache_dir / cache_key
-    temp_file = cache_dir / f".tmp_{cache_key}"
+    unique_suffix = f"{os.getpid()}_{uuid.uuid4().hex[:8]}"
+    temp_file = cache_dir / f".tmp_{unique_suffix}_{cache_key}"
 
     try:
-        df.to_json(temp_file, orient="table", date_format="iso", indent=2)
+        records = []
+        for month_ts, row in df.iterrows():
+            val = (
+                None
+                if pd.isna(row["precipitation_mm"])
+                else float(row["precipitation_mm"])
+            )
+            records.append(
+                {
+                    "month": month_ts.strftime("%Y-%m-%d"),
+                    "precipitation_mm": val,
+                    "coverage_fraction": float(row["coverage_fraction"]),
+                    "quality_flag": str(row["quality_flag"]),
+                }
+            )
+
+        payload = {
+            "format": "iyok_cache_v2",
+            "schema_version": "2.0",
+            "product_version": product_version,
+            "processing_version": processing_version,
+            "variable_id": variable_id,
+            "region_id": region_id,
+            "start_date": start.isoformat(),
+            "end_date": end.isoformat(),
+            "geom_coordinates": geom.coordinates,
+            "provenance": provenance or {},
+            "records": records,
+        }
+
+        with open(temp_file, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+
+        # Reemplazo atómico en POSIX: evita colisiones de concurrencia y lecturas parciales
         temp_file.replace(cache_file)
-        logger.info("Datos guardados en caché local %s", cache_file)
+        logger.info("Datos y procedencia guardados en caché local %s", cache_file)
     except Exception as e:  # noqa: BLE001 - boundary fallback
         logger.warning("Error guardando en caché %s: %s", cache_file, e)
         if temp_file.exists():
             temp_file.unlink(missing_ok=True)
+
+
+def invalidate_cache(
+    variable_id: str,
+    region_id: str,
+    geom: GeoJSONPolygon,
+    start: date,
+    end: date,
+    product_version: str = DEFAULT_PRODUCT_VERSION,
+    processing_version: str = DEFAULT_PROCESSING_VERSION,
+) -> bool:
+    """Invalida y purga explícitamente un archivo de caché."""
+    cache_key = make_cache_key(
+        variable_id, region_id, geom, start, end, product_version, processing_version
+    )
+    cache_dir = get_cache_dir()
+    cache_file = cache_dir / cache_key
+    deleted = False
+    if cache_file.exists():
+        cache_file.unlink(missing_ok=True)
+        deleted = True
+        logger.info("Caché invalidada y eliminada para %s", cache_key)
+
+    legacy_key = make_legacy_cache_key(variable_id, region_id, geom, start, end)
+    legacy_file = cache_dir / legacy_key
+    if legacy_file.exists():
+        legacy_file.unlink(missing_ok=True)
+        deleted = True
+
+    return deleted
 
 
 def save_to_supabase(
@@ -219,7 +399,7 @@ def save_to_supabase(
             "weighting_method": result.weighting_method,
             "source_granule_ids": list(result.granule_ids),
             "region_geometry_snapshot": geom_payload,
-            "region_source_snapshot": "Iyök System Snapshot",
+            "region_source_snapshot": getattr(result, "effective_origin", "NASA Harmony"),
             "region_version_snapshot": "1.0",
         }
 

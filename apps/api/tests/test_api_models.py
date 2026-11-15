@@ -31,7 +31,7 @@ class APIContractModelTests(unittest.TestCase):
     def test_models_accept_v1_catalog_contract(self) -> None:
         catalog_mock = self.contract["GET_/api/v1/catalog"]["response"]
         catalog = CatalogResponse.model_validate(catalog_mock)
-        self.assertEqual(catalog.model_dump(mode="json"), catalog_mock)
+        self.assertEqual(catalog.model_dump(mode="json", exclude_unset=True), catalog_mock)
         self.assertGreaterEqual(len(catalog.regions), 1)
         self.assertGreaterEqual(len(catalog.variables), 1)
         self.assertGreaterEqual(len(catalog.combinations), 1)

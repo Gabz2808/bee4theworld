@@ -62,6 +62,12 @@ class ExplorationMetadata(APIModel):
     spatial_resolution: str
     temporal_resolution: str = "monthly"
     selection: EffectiveSelection | None = None
+    effective_origin: str | None = None
+    product_version: str | None = "07"
+    processing_version: str | None = "1.0"
+    doi_or_link: str | None = "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07"
+    quality_method: str | None = None
+    geometry_snapshot: dict | None = None
     limitations: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     source_units: str | None = None

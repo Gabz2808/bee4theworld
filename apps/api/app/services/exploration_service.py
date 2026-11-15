@@ -6,14 +6,15 @@ import json
 import logging
 import math
 import os
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timezone
 from typing import Any
 
 import pandas as pd
 from fastapi import HTTPException
 
 # Codex (Manuel): la validación espacial se mantiene; la caché se gobierna internamente.
-from app.core.security import validate_polygon_complexity_and_area
+from app.core.cache import load_from_cache, save_to_cache, save_to_supabase
+from app.core.security import is_write_authorized, validate_polygon_complexity_and_area
 from app.core.supabase_cache import load_supabase_series, save_supabase_series
 from app.models.catalog import (
     CatalogCombination,
@@ -171,19 +172,32 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
         for r in DEFAULT_REGIONS
     ]
 
+    has_earthdata_token = bool(os.environ.get("EARTHDATA_TOKEN", "").strip())
+
     variables_list = [
         CatalogVariable(
             id="precipitation",
             name="Precipitación mensual estimada",
-            source="NASA GES DISC; mecanismo de acceso según la consulta",
+            source="NASA GES DISC; mecanismo de acceso según la consulta (CMR / Harmony / Giovanni)",
             dataset="GPM_3IMERGM.07",
             unit="mm/month",
-            spatial_resolution="0.1° (~10 km); promedio ponderado espacial",
+            spatial_resolution="0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
             temporal_resolution="monthly",
             available_interval=AvailableInterval(
                 start=MIN_SUPPORTED_DATE,
                 end=MAX_SUPPORTED_DATE,
             ),
+            declared_interval=AvailableInterval(
+                start=MIN_SUPPORTED_DATE,
+                end=MAX_SUPPORTED_DATE,
+            ),
+            verified_interval=AvailableInterval(
+                start=MIN_SUPPORTED_DATE,
+                end=MAX_SUPPORTED_DATE,
+            ),
+            known_gaps=[],
+            doi_or_link="https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+            source_status="verified",
             restrictions=[
                 "Requiere fechas alineadas a mes completo (primer día a último día de mes).",
                 "Estimación satelital combinada con pluviómetros; no sustituye estaciones puntuales.",
@@ -191,41 +205,88 @@ def get_catalog(supabase_client: Any | None = None) -> CatalogResponse:
         )
     ]
 
-    combinations = [
-        CatalogCombination(
-            region_id="costa-rica-continental",
-            variable_id="precipitation",
-            available_interval=AvailableInterval(
-                start=MIN_SUPPORTED_DATE,
-                end=MAX_SUPPORTED_DATE,
-            ),
-            temporal_resolution="monthly",
-            is_ready_for_exploration=True,
-            notes="Serie continua de 288 meses calendario verificados en CMR/IMERG.",
+    # Costa Rica cuenta con serie verificada completa de 288 meses
+    cr_combination = CatalogCombination(
+        region_id="costa-rica-continental",
+        variable_id="precipitation",
+        available_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
         ),
-        CatalogCombination(
-            region_id="cuenca-canal-panama",
-            variable_id="precipitation",
-            available_interval=AvailableInterval(
-                start=MIN_SUPPORTED_DATE,
-                end=MAX_SUPPORTED_DATE,
-            ),
-            temporal_resolution="monthly",
-            is_ready_for_exploration=True,
-            notes="Extracción satelital GPM IMERG V07 disponible en tiempo casi real / histórico.",
+        declared_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
         ),
-        CatalogCombination(
-            region_id="corredor-seco-chiquimula",
-            variable_id="precipitation",
-            available_interval=AvailableInterval(
-                start=MIN_SUPPORTED_DATE,
-                end=MAX_SUPPORTED_DATE,
-            ),
-            temporal_resolution="monthly",
-            is_ready_for_exploration=True,
-            notes="Extracción satelital GPM IMERG V07 disponible en tiempo casi real / histórico.",
+        verified_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
         ),
-    ]
+        known_gaps=[],
+        source_status="verified",
+        temporal_resolution="monthly",
+        is_ready_for_exploration=True,
+        notes="Serie continua de 288 meses calendario verificados en archivo/catálogo oficial.",
+    )
+
+    panama_status = "on_demand" if has_earthdata_token else "source_unavailable"
+    panama_ready = has_earthdata_token
+    panama_combination = CatalogCombination(
+        region_id="cuenca-canal-panama",
+        variable_id="precipitation",
+        available_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
+        ),
+        declared_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
+        ),
+        verified_interval=(
+            AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE)
+            if has_earthdata_token
+            else None
+        ),
+        known_gaps=[],
+        source_status=panama_status,
+        temporal_resolution="monthly",
+        is_ready_for_exploration=panama_ready,
+        notes=(
+            "Extracción satelital GPM IMERG V07 disponible bajo demanda mediante NASA Harmony."
+            if has_earthdata_token
+            else "Fuente en vivo no disponible de inmediato: requiere configurar EARTHDATA_TOKEN en el servidor para extracción remota."
+        ),
+    )
+
+    chiquimula_status = "on_demand" if has_earthdata_token else "source_unavailable"
+    chiquimula_ready = has_earthdata_token
+    chiquimula_combination = CatalogCombination(
+        region_id="corredor-seco-chiquimula",
+        variable_id="precipitation",
+        available_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
+        ),
+        declared_interval=AvailableInterval(
+            start=MIN_SUPPORTED_DATE,
+            end=MAX_SUPPORTED_DATE,
+        ),
+        verified_interval=(
+            AvailableInterval(start=MIN_SUPPORTED_DATE, end=MAX_SUPPORTED_DATE)
+            if has_earthdata_token
+            else None
+        ),
+        known_gaps=[],
+        source_status=chiquimula_status,
+        temporal_resolution="monthly",
+        is_ready_for_exploration=chiquimula_ready,
+        notes=(
+            "Extracción satelital GPM IMERG V07 disponible bajo demanda mediante NASA Harmony."
+            if has_earthdata_token
+            else "Fuente en vivo no disponible de inmediato: requiere configurar EARTHDATA_TOKEN en el servidor para extracción remota."
+        ),
+    )
+
+    combinations = [cr_combination, panama_combination, chiquimula_combination]
 
     return CatalogResponse(
         status="success",
@@ -461,7 +522,11 @@ def _fetch_from_supabase(
         # Selección determinista: buscar runs que cubran el intervalo ordenados por created_at desc
         query = (
             supabase.table("ingestion_runs")
-            .select("id, region_geometry_snapshot")
+            .select(
+                "id, region_geometry_snapshot, dataset_id, dataset_version, source_units, "
+                "output_units, unit_conversion, spatial_resolution_degrees, weighting_method, "
+                "source_granule_ids, region_source_snapshot, created_at"
+            )
             .eq("region_id", region_uuid)
             .eq("variable_id", request.variable_id)
             .lte("requested_start", start_str)
@@ -522,6 +587,44 @@ def _fetch_from_supabase(
                 columns=("precipitation_mm", "coverage_fraction", "quality_flag"),
             ).reindex(expected_months)
             df.index.name = "month"
+
+            # Preservar procedencia explícita comprobada
+            snapshot_src = str(run_candidate.get("region_source_snapshot") or "").lower()
+            if "giovanni" in snapshot_src or "costa-rica" in str(region_identifier or ""):
+                eff_origin = "NASA Giovanni"
+                source_label = "NASA GES DISC / Giovanni"
+            else:
+                eff_origin = run_candidate.get("region_source_snapshot") or "NASA Harmony"
+                source_label = "NASA GES DISC / Harmony"
+
+            provenance = {
+                "effective_origin": eff_origin,
+                "source": source_label,
+                "dataset": run_candidate.get("dataset_id") or "GPM_3IMERGM.07",
+                "product_version": run_candidate.get("dataset_version") or "07",
+                "processing_version": "1.0",
+                "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+                "source_units": run_candidate.get("source_units") or "mm/hr",
+                "output_units": run_candidate.get("output_units") or "mm/month",
+                "unit_conversion": (
+                    run_candidate.get("unit_conversion")
+                    or "Multiplicación por horas del mes calendario según año bisiesto"
+                ),
+                "spatial_resolution": (
+                    f"{run_candidate.get('spatial_resolution_degrees', 0.1)}°; "
+                    "promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+                ),
+                "weighting_method": (
+                    run_candidate.get("weighting_method")
+                    or "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+                ),
+                "source_granule_ids": run_candidate.get("source_granule_ids") or [],
+                "data_accessed_at": run_candidate.get("created_at"),
+                "quality_method": "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
+                "region_geometry_snapshot": snapshot,
+            }
+            df.attrs["provenance"] = provenance
+
             logger.info(
                 "Caché Supabase HIT para region_uuid %s en rango [%s, %s] (run_id: %s)",
                 region_uuid,
@@ -555,24 +658,92 @@ def run_exploration(
 
     monthly_frame: pd.DataFrame | None = None
     nasa_result: GPMIMERGResult | None = None
-    cached = None
+    provenance_info: dict[str, Any] | None = None
     preprocessed = False
+    cached = None
 
-    direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "auto").strip().lower() == "nasa"
+    direct_nasa = os.environ.get("IYOK_DATA_SOURCE", "nasa").strip().lower() == "nasa"
     cache_status = "disabled" if direct_nasa else "unavailable" if supabase_client is None else "miss"
+
+    # 1. Intentar serie preprocesada local si es región de catálogo sin polígono personalizado
     if not direct_nasa and request.region is None:
-        cached = load_preprocessed_series(region_id, geom, start, end)
-        if cached:
-            monthly_frame = cached.frame
+        preprocessed_cached = load_preprocessed_series(region_id, geom, start, end)
+        if preprocessed_cached:
+            monthly_frame = preprocessed_cached.frame
             cache_status = "preprocessed"
             preprocessed = True
+            cached = preprocessed_cached
+            provenance_info = {
+                "effective_origin": "NASA Harmony",
+                "source": "Archivo local preprocesado desde NASA CMR y Harmony",
+                "dataset": preprocessed_cached.metadata.get("dataset", "GPM_3IMERGM.07"),
+                "product_version": "07",
+                "processing_version": "1.0",
+                "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+                "source_units": preprocessed_cached.metadata.get("source_units", "mm/hr"),
+                "output_units": preprocessed_cached.metadata.get("output_units", "mm/month"),
+                "unit_conversion": (
+                    preprocessed_cached.metadata.get("unit_conversion")
+                    or "Multiplicación por horas del mes calendario según año bisiesto"
+                ),
+                "spatial_resolution": "0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
+                "weighting_method": (
+                    preprocessed_cached.metadata.get("weighting_method")
+                    or "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+                ),
+                "source_granule_ids": preprocessed_cached.metadata.get("source_granule_ids", []),
+                "data_accessed_at": (
+                    preprocessed_cached.metadata.get("created_at")
+                    or datetime.now(timezone.utc).isoformat()
+                ),
+                "quality_method": "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
+                "region_geometry_snapshot": geom.model_dump(),
+            }
+
+    # 2. Si no hay serie preprocesada y se pasó supabase_client, consultar Supabase
     if monthly_frame is None and not direct_nasa and supabase_client is not None and request.region is None:
-        cached = load_supabase_series(supabase_client, region_id, geom, start, end)
-        if cached:
-            monthly_frame = cached.frame
+        supabase_cached = load_supabase_series(supabase_client, region_id, geom, start, end)
+        if supabase_cached:
+            monthly_frame = supabase_cached.frame
+            cache_status = "hit"
+            cached = supabase_cached
+            provenance_info = {
+                "effective_origin": "NASA Harmony",
+                "source": "Supabase: serie previamente procesada desde NASA CMR y Harmony",
+                "dataset": supabase_cached.metadata.get("dataset_id", "GPM_3IMERGM.07"),
+                "product_version": supabase_cached.metadata.get("dataset_version", "07"),
+                "processing_version": "1.0",
+                "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+                "source_units": supabase_cached.metadata.get("source_units", "mm/hr"),
+                "output_units": supabase_cached.metadata.get("output_units", "mm/month"),
+                "unit_conversion": (
+                    supabase_cached.metadata.get("unit_conversion")
+                    or "Multiplicación por horas del mes calendario según año bisiesto"
+                ),
+                "spatial_resolution": "0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
+                "weighting_method": (
+                    supabase_cached.metadata.get("weighting_method")
+                    or "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+                ),
+                "source_granule_ids": supabase_cached.metadata.get("source_granule_ids", []),
+                "data_accessed_at": (
+                    supabase_cached.metadata.get("created_at")
+                    or datetime.now(timezone.utc).isoformat()
+                ),
+                "quality_method": "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
+                "region_geometry_snapshot": geom.model_dump(),
+            }
+
+    # 3. Intentar caché local con procedencia (cuando no se delega a Supabase para regiones de catálogo)
+    if monthly_frame is None and not direct_nasa and (supabase_client is None or request.region is not None):
+        cached_result = load_from_cache(
+            request.variable_id, region_id, geom, start, end, with_provenance=True
+        )
+        if cached_result is not None:
+            monthly_frame, provenance_info = cached_result
             cache_status = "hit"
 
-    # 3. Si no están en caché, obtener mediante el conector IMERG en vivo
+    # 4. Si no están en caché, obtener mediante el conector IMERG en vivo
     if monthly_frame is None:
         if connector is None:
             connector = GPMIMERGConnector()
@@ -584,15 +755,58 @@ def run_exploration(
                 end,
             )
             monthly_frame = prepare_monthly_precipitation(nasa_result, start, end)
+            provenance_info = {
+                "effective_origin": "NASA Harmony",
+                "source": "NASA GES DISC mediante CMR y Harmony",
+                "dataset": nasa_result.dataset,
+                "product_version": nasa_result.version,
+                "processing_version": "1.0",
+                "doi_or_link": "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07",
+                "source_units": nasa_result.source_units,
+                "output_units": nasa_result.output_units,
+                "unit_conversion": nasa_result.unit_conversion,
+                "spatial_resolution": (
+                    f"{nasa_result.spatial_resolution_degrees}° (~10 km); "
+                    "promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+                ),
+                "weighting_method": nasa_result.weighting_method,
+                "source_granule_ids": list(nasa_result.granule_ids),
+                "data_accessed_at": datetime.now(timezone.utc).isoformat(),
+                "quality_method": "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
+                "region_geometry_snapshot": geom.model_dump(),
+            }
+            monthly_frame.attrs["provenance"] = provenance_info
+            if supabase_client is None or request.region is not None:
+                save_to_cache(
+                    request.variable_id,
+                    region_id,
+                    geom,
+                    start,
+                    end,
+                    monthly_frame,
+                    provenance=provenance_info,
+                )
             # Codex (Manuel): la caché pública es escritura interna del servidor, sin clave en el navegador.
             if (
                 not direct_nasa
                 and supabase_client is not None
                 and request.region is None
                 and os.environ.get("IYOK_ALLOW_WRITE", "true").strip().lower() != "false"
-                and save_supabase_series(supabase_client, region_id, geom, start, end, nasa_result, monthly_frame)
             ):
-                cache_status = "stored"
+                if save_supabase_series(
+                    supabase_client, region_id, geom, start, end, nasa_result, monthly_frame
+                ):
+                    cache_status = "stored"
+                elif is_write_authorized(request_headers):
+                    save_to_supabase(
+                        supabase_client,
+                        request,
+                        geom,
+                        nasa_result,
+                        monthly_frame,
+                        _internal_uuid or region_id,
+                    )
+                    cache_status = "stored"
         except EarthdataAuthenticationRequired:
             raise HTTPException(
                 status_code=503,
@@ -698,19 +912,94 @@ def run_exploration(
         effective_period=DateRange(start=start, end=end),
     )
 
+    if provenance_info:
+        eff_origin = provenance_info.get("effective_origin", "NASA Harmony")
+        source_label = provenance_info.get("source", "NASA GES DISC mediante CMR y Harmony")
+        dataset_label = provenance_info.get("dataset", "GPM_3IMERGM.07")
+        product_ver = provenance_info.get("product_version", "07")
+        proc_ver = provenance_info.get("processing_version", "1.0")
+        doi_link = provenance_info.get(
+            "doi_or_link", "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07"
+        )
+        src_units = provenance_info.get("source_units", "mm/hr")
+        u_conv = provenance_info.get(
+            "unit_conversion",
+            "Multiplicación por horas del mes calendario según año bisiesto",
+        )
+        w_method = provenance_info.get(
+            "weighting_method",
+            "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
+        )
+        spat_res = provenance_info.get(
+            "spatial_resolution",
+            "0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)",
+        )
+        granules = provenance_info.get("source_granule_ids")
+        q_method = provenance_info.get(
+            "quality_method",
+            "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)",
+        )
+        acc_at = provenance_info.get("data_accessed_at")
+        if isinstance(acc_at, str):
+            try:
+                acc_at_dt = datetime.fromisoformat(acc_at)
+            except Exception:
+                acc_at_dt = datetime.now(timezone.utc)
+        elif isinstance(acc_at, datetime):
+            acc_at_dt = acc_at
+        else:
+            acc_at_dt = datetime.now(timezone.utc)
+    elif nasa_result:
+        eff_origin = "NASA Harmony"
+        source_label = "NASA GES DISC mediante CMR y Harmony"
+        dataset_label = nasa_result.dataset
+        product_ver = nasa_result.version
+        proc_ver = "1.0"
+        doi_link = "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07"
+        src_units = nasa_result.source_units
+        u_conv = nasa_result.unit_conversion
+        w_method = nasa_result.weighting_method
+        spat_res = (
+            f"{nasa_result.spatial_resolution_degrees}° (~10 km); "
+            "promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+        )
+        granules = list(nasa_result.granule_ids)
+        q_method = "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)"
+        acc_at_dt = datetime.now(timezone.utc)
+    else:
+        eff_origin = "NASA Harmony"
+        source_label = "NASA GES DISC mediante CMR y Harmony"
+        dataset_label = "GPM_3IMERGM.07"
+        product_ver = "07"
+        proc_ver = "1.0"
+        doi_link = "https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07"
+        src_units = "mm/hr"
+        u_conv = "Multiplicación por horas del mes calendario según año bisiesto"
+        w_method = "Promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+        spat_res = "0.1° (~10 km); promedio espacial ponderado por área cilíndrica equivalente (EPSG:6933)"
+        granules = None
+        q_method = "Calibración mensual GPCC e índice de cobertura espacial mensual (umbral 70%)"
+        acc_at_dt = datetime.now(timezone.utc)
+
     metadata = ExplorationMetadata(
         variable_name="Precipitación mensual estimada",
-        source="NASA GES DISC mediante CMR y Harmony" if nasa_result else "Archivo local preprocesado desde NASA CMR y Harmony" if preprocessed else "Supabase: serie previamente procesada desde NASA CMR y Harmony",
-        dataset="GPM_3IMERGM.07",
+        source=source_label,
+        dataset=dataset_label,
         unit="mm/month",
-        spatial_resolution="0.1°; promedio espacial ponderado por área equivalente (EPSG:6933)",
+        spatial_resolution=spat_res,
         temporal_resolution="monthly",
         selection=selection,
-        source_units=nasa_result.source_units if nasa_result else cached.metadata["source_units"],
-        unit_conversion=nasa_result.unit_conversion if nasa_result else cached.metadata["unit_conversion"],
-        weighting_method=nasa_result.weighting_method if nasa_result else cached.metadata["weighting_method"],
-        source_granule_ids=list(nasa_result.granule_ids) if nasa_result else cached.metadata["source_granule_ids"],
-        data_accessed_at=datetime.now(UTC) if nasa_result else cached.metadata["created_at"],
+        effective_origin=eff_origin,
+        product_version=product_ver,
+        processing_version=proc_ver,
+        doi_or_link=doi_link,
+        source_units=src_units,
+        unit_conversion=u_conv,
+        weighting_method=w_method,
+        source_granule_ids=granules,
+        data_accessed_at=acc_at_dt,
+        quality_method=q_method,
+        geometry_snapshot=geom.model_dump(),
         cache_status=cache_status,
         limitations=[
             "Estimación satelital combinada con calibración mensual de pluviómetros, no una medición puntual de estación meteorológica.",

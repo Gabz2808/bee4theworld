@@ -6,6 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 from app.core.cache import (
+    DEFAULT_PROCESSING_VERSION,
+    DEFAULT_PRODUCT_VERSION,
     load_from_cache,
     make_cache_key,
     save_to_cache,
@@ -46,7 +48,8 @@ class CacheTests(unittest.TestCase):
         key1 = make_cache_key("precipitation", "costa-rica", self.geom, self.start, self.end)
         key2 = make_cache_key("precipitation", "costa-rica", self.geom, self.start, self.end)
         self.assertEqual(key1, key2)
-        self.assertTrue(key1.startswith("precipitation_costa-rica_"))
+        expected_prefix = f"precipitation_{DEFAULT_PRODUCT_VERSION}_{DEFAULT_PROCESSING_VERSION}_costa-rica_"
+        self.assertTrue(key1.startswith(expected_prefix))
         self.assertTrue(key1.endswith(".json"))
 
     def test_save_and_load_cache(self) -> None:

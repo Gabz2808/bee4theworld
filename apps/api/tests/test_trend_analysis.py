@@ -10,10 +10,15 @@ from app.services.trend_analysis import (
     calculate_theil_sen_slope,
     mann_kendall_test,
 )
-from scipy.stats import kendalltau, norm, theilslopes
+try:
+    from scipy.stats import kendalltau, norm, theilslopes
+    HAS_SCIPY = True
+except ImportError:
+    HAS_SCIPY = False
 
 
 class TrendAnalysisServiceTests(unittest.TestCase):
+    @unittest.skipUnless(HAS_SCIPY, "scipy no está disponible en este entorno")
     def test_unadjusted_trend_against_scipy_on_known_series(self) -> None:
         # Datos sintéticos; el contraste no valida la corrección por autocorrelación.
         cases = (
