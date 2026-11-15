@@ -101,7 +101,7 @@ class GPMIMERGConnector:
             variables=[PRECIPITATION_VARIABLE],
             granule_id=[granule["id"] for granule in granules],
             format="application/x-netcdf4",
-            concatenate=True,
+            concatenate=False,
             ignore_errors=False,
             skip_preview=True,
         )

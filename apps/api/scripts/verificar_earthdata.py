@@ -62,8 +62,8 @@ def verificar_cmr() -> None:
             resp = client.get(cmr_url, params=params)
             resp.raise_for_status()
             feed = resp.json().get("feed", {})
-            total_hits = feed.get("hits", 0)
-            print(f"✅ Conexión exitosa a NASA CMR. Granules totales disponibles: {total_hits}")
+            total_hits = resp.headers.get("CMR-Hits", len(feed.get("entry", [])))
+            print(f"✅ Conexión exitosa a NASA CMR. Granules totales encontrados en CMR: {total_hits}")
     except Exception as e:
         print(f"❌ Error al consultar NASA CMR: {e}")
         sys.exit(1)
