@@ -2,6 +2,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 # Cargar automáticamente variables de entorno desde apps/api/.env o .env raíz
@@ -17,6 +18,14 @@ app = FastAPI(
     title="Iyök API",
     description="API de inteligencia y detección de tendencias del sistema terrestre para Iyök (NASA Space Apps Challenge).",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
