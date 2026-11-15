@@ -189,7 +189,7 @@ class GPMIMERGTests(unittest.TestCase):
         self.assertEqual(result.granule_ids, ("G123-GES_DISC",))
         self.assertEqual(result.monthly_values[0].value, 1)
         self.assertEqual(result.region, _sample_region())
-        self.assertEqual(harmony.request.variables, ["precipitation"])
+        self.assertEqual(harmony.request.variables, ["Grid/precipitation"])
 
     def test_connector_fails_when_cmr_has_no_monthly_granule(self) -> None:
         cmr_client = httpx.Client(

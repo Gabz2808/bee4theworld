@@ -24,6 +24,7 @@ from app.models.geojson import GeoJSONPolygon
 CMR_GRANULES_URL = "https://cmr.earthdata.nasa.gov/search/granules.json"
 CMR_SHORT_NAME = "GPM_3IMERGM"
 CMR_VERSION = "07"
+HARMONY_VARIABLE = "Grid/precipitation"
 PRECIPITATION_VARIABLE = "precipitation"
 GRID_RESOLUTION_DEGREES = 0.1
 EQUAL_AREA_CRS = "EPSG:6933"
@@ -98,7 +99,7 @@ class GPMIMERGConnector:
                 "start": datetime.combine(start, time.min, tzinfo=timezone.utc),
                 "stop": datetime.combine(end, time.max, tzinfo=timezone.utc),
             },
-            variables=[PRECIPITATION_VARIABLE],
+            variables=[HARMONY_VARIABLE],
             granule_id=[granule["id"] for granule in granules],
             format="application/x-netcdf4",
             concatenate=False,
@@ -262,15 +263,21 @@ def _aggregate_dataset(
     geometry: Polygon,
     expected_months: tuple[date, ...],
 ) -> tuple[str, tuple[MonthlyPrecipitation, ...]]:
-    if PRECIPITATION_VARIABLE not in dataset:
+    var_name = None
+    for candidate in (PRECIPITATION_VARIABLE, HARMONY_VARIABLE, "precipitationCal"):
+        if candidate in dataset:
+            var_name = candidate
+            break
+    if not var_name:
         raise DataIntegrityError(
-            f"El NetCDF no contiene la variable {PRECIPITATION_VARIABLE!r}"
+            f"El NetCDF no contiene la variable esperada ({PRECIPITATION_VARIABLE!r} o {HARMONY_VARIABLE!r}). "
+            f"Variables presentes: {list(dataset.data_vars)}"
         )
 
     lat_name = _find_coordinate(dataset, ("lat", "latitude"))
     lon_name = _find_coordinate(dataset, ("lon", "longitude"))
     time_name = _find_coordinate(dataset, ("time",))
-    precipitation = dataset[PRECIPITATION_VARIABLE]
+    precipitation = dataset[var_name]
     lat_dimension = dataset[lat_name].dims
     lon_dimension = dataset[lon_name].dims
     time_dimension = dataset[time_name].dims
