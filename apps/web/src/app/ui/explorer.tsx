@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Chart } from "./chart";
-import { Research } from "./research";
 import { WorldMap } from "./world-map";
-import { LanguageToggle } from "../i18n/language-toggle";
 import { useI18n } from "../i18n/provider";
+import { MonthField } from "./month-field";
+import { Completeness } from "./completeness";
 import type { Dictionary } from "../i18n/dictionaries";
 import { ApiClientError, completeMonths, createApiV1Client, type Catalog, type Exploration } from "../lib/api-v1";
 
@@ -127,10 +126,7 @@ export function Explorer() {
   const metadata = result?.metadata;
   const unitLabel = metadata?.unit === "mm/month" ? t.map.unit : String(metadata?.unit ?? "");
   const warnings = metadata ? [...metadata.limitations as string[], ...metadata.warnings as string[]] : [];
-  return <>
-    <a className="skip-link" href="#explorar">{t.header.skip}</a>
-    <header className="topbar"><a className="brand" href="#inicio" aria-label={t.header.home}><span className="brand-symbol iyok-symbol" aria-hidden="true"><Image src="/iyok-logo.jpg" alt="" width={160} height={100} priority /></span><span>Iyök</span></a><nav aria-label={t.header.nav}><a href="#explorar">{t.header.explore}</a><a href="#investigacion">{t.header.research}</a><a href="#acerca">{t.header.about}</a></nav><LanguageToggle /><a className="header-team" href="https://github.com/Gabz2808/bee4theworld" target="_blank" rel="noopener noreferrer" aria-label={t.header.teamLabel}><span className="brand-symbol team-symbol" aria-hidden="true"><Image src="/bee4theworld-logo.jpg" alt="" width={100} height={75} priority /></span><span><small>{t.header.teamBy}</small><strong>Bee4TheWorld</strong></span></a></header>
-    <main id="inicio"><section className="intro wrap"><div className="intro-copy"><div className="location"><span className="location-dot" /> {t.intro.location}</div><h1>{t.intro.title1}<br /><em>{t.intro.title2}</em></h1><p>{t.intro.body}</p><a className="primary-link" href="#explorar">{t.intro.cta} <span aria-hidden="true">↗</span></a></div><div className="intro-side"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="earth"><span>CR</span></div><div className="intro-caption"><span>{t.intro.captionKicker}</span><strong>{t.intro.caption1}<br />{t.intro.caption2}</strong></div></div></section>
+  return <main id="graficos">
     <section id="explorar" className="workspace"><div className="wrap"><div className="section-heading"><div><p className="section-label">{t.explorer.label}</p><h2>{t.explorer.title1}<br /><em>{t.explorer.title2}</em></h2></div><p>{t.explorer.body}</p></div>
       <div className="demo-notice"><strong>{t.explorer.noticeTitle}</strong><span>{t.explorer.notice}</span></div>
       <div className="explorer">
@@ -155,9 +151,6 @@ export function Explorer() {
             <div className="indicator-header">
               <span className="territory-icon">📍</span>
               <span className="indicator-tag">{t.explorer.territoryTag}</span>
-              <span className={`territory-status-tag ${selectedRegion.id === defaultRegionId ? "status-ready" : "status-ondemand"}`}>
-                {selectedRegion.id === defaultRegionId ? t.explorer.seriesReady : t.explorer.onDemand}
-              </span>
             </div>
             <strong className="indicator-title">{regionName}</strong>
             <p className="indicator-meta">
@@ -165,13 +158,10 @@ export function Explorer() {
                 ? t.explorer.defaultMeta
                 : t.explorer.otherMeta}
             </p>
-            <div className="territory-action-hint">
-              <span><span aria-hidden="true">🌍 </span>{t.explorer.mapHint}</span>
-            </div>
           </div>
 
-          <label htmlFor="period-start">{t.explorer.from}<input id="period-start" type="month" value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setStart(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
-          <label htmlFor="period-end">{t.explorer.to}<input id="period-end" type="month" value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setEnd(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
+          <MonthField id="period-start" legend={t.explorer.from} value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} invalid={!!periodError} disabled={!coverage || status === "loading"} onChange={(value) => { setStart(value); setPeriodError(""); setResult(null); setStatus("idle"); }} />
+          <MonthField id="period-end" legend={t.explorer.to} value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} invalid={!!periodError} disabled={!coverage || status === "loading"} onChange={(value) => { setEnd(value); setPeriodError(""); setResult(null); setStatus("idle"); }} />
           {periodError && <p id="period-error" className="period-error" role="alert">{t.explorer[periodError]}</p>}
           <p className="control-note">{coverage ? t.explorer.available(coverage.start.slice(0, 7), coverage.end.slice(0, 7)) : catalogError ? t.errors[catalogError] : (selectedRegion.id !== defaultRegionId ? t.explorer.needsToken : t.explorer.checking)}</p>
           {catalogError ? <button type="button" className="button" onClick={() => { setCatalogError(""); setReload((n) => n + 1); }}>{t.explorer.retry} <span aria-hidden="true">→</span></button> : <button className="button" disabled={!coverage || status === "loading"}>{status === "loading" ? t.explorer.querying : t.explorer.query}<span aria-hidden="true">→</span></button>}
@@ -184,7 +174,7 @@ export function Explorer() {
               <span className="result-kicker">{t.results.kicker}</span>
               <h3 ref={resultHeading} tabIndex={-1}>{status === "loading" ? t.results.loadingTitle : status === "error" ? t.results.errorTitle : result ? t.results.resultTitle : t.results.idleTitle}</h3>
             </div>
-            <span className="status-pill">{status === "loading" ? t.results.pillLoading : status === "error" ? t.results.pillError : result ? t.results.pillResult : t.results.pillIdle}</span>
+            {(status !== "idle" || result) && <span className="status-pill">{status === "loading" ? t.results.pillLoading : status === "error" ? t.results.pillError : t.results.pillResult}</span>}
           </div>
 
           {status === "loading" ? (
@@ -315,10 +305,11 @@ export function Explorer() {
       </div>
 
       <div className="evidence">
-        <div>
+        <div className="evidence-intro">
           <h3>{t.evidence.title1}<br />{t.evidence.title2}</h3>
+          <p>{t.evidence.body}</p>
         </div>
-        <p>{t.evidence.body}</p>
+        <Completeness result={result} />
         <div className="evidence-list">
           {result && metadata ? (
             <>
@@ -345,20 +336,5 @@ export function Explorer() {
       </div>
     </div>
   </section>
-  <Research />
-  </main>
-  <footer id="acerca">
-    <div className="wrap footer-inner">
-      <div>
-        <a className="footer-brand" href="#inicio">iyök<span>.</span></a>
-        <p>{t.footer.tagline1}<br />{t.footer.tagline2}</p>
-      </div>
-      <div>
-        <strong>{t.footer.madeFor}</strong>
-        <p>{t.footer.project1}<br />{t.footer.project2}</p>
-      </div>
-      <a href="#inicio">{t.footer.top} ↑</a>
-    </div>
-  </footer>
-</>;
+  </main>;
 }

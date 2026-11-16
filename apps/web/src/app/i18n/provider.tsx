@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from "react";
 import { dictionaries, type Dictionary, type Locale } from "./dictionaries";
 
@@ -33,10 +34,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     try { window.localStorage.setItem(storageKey, next); memoryLocale = null; } catch { memoryLocale = next; }
     window.dispatchEvent(new Event(changeEvent));
   }, []);
+  const pathname = usePathname();
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = dictionaries[locale].meta.title;
-  }, [locale]);
+    const meta = dictionaries[locale].meta;
+    document.title = pathname?.startsWith("/explorar") ? meta.chartsTitle : pathname?.startsWith("/investigacion") ? meta.researchTitle : meta.title;
+  }, [locale, pathname]);
   return <I18nContext.Provider value={{ locale, t: dictionaries[locale], setLocale }}>{children}</I18nContext.Provider>;
 }
 

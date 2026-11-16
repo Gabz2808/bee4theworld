@@ -7,23 +7,30 @@ const launched = await chromium.launch({ headless: true, executablePath: process
 const context = await launched.newContext();
 await context.addInitScript(() => { try { localStorage.setItem("iyok-locale", "es"); } catch {} });
 const browser = { newPage: (options) => options ? launched.newContext(options).then(async (c) => { await c.addInitScript(() => { try { localStorage.setItem("iyok-locale", "es"); } catch {} }); return c.newPage(); }) : context.newPage(), close: () => launched.close() };
-const base = process.env.IYOK_TEST_URL || "http://localhost:3001";
+const base = (process.env.IYOK_TEST_URL || "http://localhost:3001") + "/explorar";
 const button = (page) => page.getByRole("button", { name: "Consultar serie" });
+// Los campos de mes son dos selects (mes y año) en el idioma del sitio; el valor enviado sigue siendo YYYY-MM.
+async function setMonth(page, id, value) {
+  const [year, month] = value.split("-");
+  await page.locator(`#${id}-year`).selectOption(String(Number(year)));
+  await page.locator(`#${id}-month`).selectOption(String(Number(month)));
+}
 async function ready(page) {
   await page.goto(base);
-  await page.locator("#period-start:enabled").waitFor({ timeout: 30000 });
+  await page.locator("#period-start-month:enabled").waitFor({ timeout: 30000 });
 }
 async function period(page, start = "2024-01", end = "2024-12") {
-  await page.locator("#period-start").fill(start);
-  await page.locator("#period-end").fill(end);
+  await setMonth(page, "period-start", start);
+  await setMonth(page, "period-end", end);
 }
 
 try {
   for (const width of [1280, 390]) {
     const page = await browser.newPage({ viewport: { width, height: 800 } });
     await ready(page);
-    assert.equal(await page.getByRole("link", { name: "Investigación", exact: true }).getAttribute("href"), "#investigacion");
-    assert.equal(await page.getByRole("heading", { name: "Pruebas y alcance técnico" }).count(), 1);
+    assert.equal(await page.getByRole("link", { name: "Investigación", exact: true }).getAttribute("href"), "/investigacion");
+    // La investigación abierta tiene su propia página; esta solo muestra datos y gráficos.
+    assert.equal(await page.getByRole("heading", { name: "Pruebas y alcance técnico" }).count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await period(page);
     await button(page).click();
@@ -42,8 +49,8 @@ try {
     assert.match(await page.locator("tbody tr").first().innerText(), /Parcial/);
     assert.match(await page.locator("tbody tr").first().innerText(), /70[.,]38/);
     assert.match(await page.locator("tbody tr").first().innerText(), />99 %/);
-    assert.equal(await page.locator("#period-start").getAttribute("min"), "2001-01");
-    assert.equal(await page.locator("#period-end").getAttribute("max"), "2024-12");
+    assert.equal(await page.locator("#period-start").getAttribute("data-min"), "2001-01");
+    assert.equal(await page.locator("#period-end").getAttribute("data-max"), "2024-12");
     await period(page, "2023-01", "2023-12");
     await page.getByRole("heading", { name: "Aquí comienza la exploración" }).waitFor();
     assert.equal(await page.locator("tbody tr").count(), 0);
@@ -81,7 +88,7 @@ try {
   });
   await unavailable.goto(base);
   await unavailable.getByRole("button", { name: /Reintentar conexión/ }).waitFor();
-  assert.equal(await unavailable.locator("#period-start").isDisabled(), true);
+  assert.equal(await unavailable.locator("#period-start-month").isDisabled(), true);
   await unavailable.close();
 
   const missing = await browser.newPage();
@@ -102,7 +109,8 @@ try {
   assert.match(await missing.locator("tbody tr").nth(0).innerText(), /Completa/);
   assert.match(await missing.locator("tbody tr").nth(1).innerText(), /2024-02\s+Sin dato/);
   assert.match(await missing.locator("tbody tr").nth(1).innerText(), /Sin valor/);
-  assert.match(await missing.locator("thead").innerText(), /Valor \(.+\)/);
+  // textContent: el CSS muestra los encabezados en mayúsculas.
+  assert.match(await missing.locator("thead").textContent(), /Valor \(.+\)/);
   await missing.close();
 
   const empty = await browser.newPage();
@@ -150,14 +158,16 @@ try {
     await route.fulfill({ response, json: data });
   });
   await ready(wide);
-  assert.equal(await wide.locator("#period-start").getAttribute("min"), "2001-01");
-  assert.equal(await wide.locator("#period-end").getAttribute("max"), "2024-12");
+  assert.equal(await wide.locator("#period-start").getAttribute("data-min"), "2001-01");
+  assert.equal(await wide.locator("#period-end").getAttribute("data-max"), "2024-12");
   assert.match(await wide.locator(".control-note").innerText(), /Período disponible: 2001-01 a 2024-12/);
   let wideRequests = 0;
   wide.on("request", (request) => { if (request.url().includes("/api/backend/explorations")) wideRequests += 1; });
-  await period(wide, "1998-01", "1998-12");
-  await button(wide).click();
-  assert.equal(await wide.locator("#period-start").evaluate((input) => input.validity.rangeUnderflow), true);
+  // Los años fuera de la serie SNIT ni siquiera se ofrecen.
+  const years = await wide.locator("#period-start-year option").allTextContents();
+  assert.equal(years[0], "2001");
+  assert.equal(years.at(-1), "2024");
+  assert.equal(years.includes("1998"), false);
   await wide.waitForTimeout(1000);
   assert.equal(wideRequests, 0);
   await wide.close();
@@ -167,8 +177,8 @@ try {
   await ready(loading); await period(loading); await button(loading).click();
   await loading.getByRole("heading", { name: "Consultando la serie" }).waitFor();
   assert.equal(await loading.getByRole("button", { name: /Consultando/ }).isDisabled(), true);
-  assert.equal(await loading.locator("#period-start").isDisabled(), true);
-  assert.equal(await loading.locator("#period-end").isDisabled(), true);
+  assert.equal(await loading.locator("#period-start-month").isDisabled(), true);
+  assert.equal(await loading.locator("#period-end-year").isDisabled(), true);
   await loading.getByRole("heading", { name: "Precipitación mensual" }).waitFor({ timeout: 30000 });
   assert.match(await loading.locator(".chart-caption").first().innerText(), /2024-01 a 2024-12/);
   await loading.close();

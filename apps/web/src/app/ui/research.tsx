@@ -1,3 +1,5 @@
+"use client";
+import Link from "next/link";
 import { useI18n } from "../i18n/provider";
 const stepIcons = ["origin", "area", "calculation", "review"];
 
@@ -33,7 +35,7 @@ export function Research() {
         <p><strong>{r.trendLead}</strong> {r.trend1}</p>
         <p>{r.trend2}</p>
         <p>{r.trend3}</p>
-        <a href="#explorar">{r.trendLink}</a>
+        <Link href="/explorar">{r.trendLink}</Link>
       </section>
 
       <div className="research-grid">

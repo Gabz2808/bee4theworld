@@ -20,7 +20,6 @@ export function WorldMap({
   const { t } = useI18n();
   const siteText = (site: GlobalSite) => t.sites[site.id] ?? site;
   const [viewMode, setViewMode] = useState<"globe" | "flat">("globe");
-  const [hoveredSite, setHoveredSite] = useState<GlobalSite | null>(null);
   const [activeSite, setActiveSite] = useState<GlobalSite | null>(() => {
     return GLOBAL_OBSERVATION_SITES.find((s) => s.regionId === selectedRegionId) || GLOBAL_OBSERVATION_SITES[0];
   });
@@ -32,8 +31,6 @@ export function WorldMap({
       onSelectRegion(site.regionId, siteText(site).name);
     }
   };
-
-  const currentDisplaySite = hoveredSite || activeSite || GLOBAL_OBSERVATION_SITES[0];
 
   return (
     <div className="world-map-wrapper" role="region" aria-label={t.world.aria}>
@@ -69,45 +66,6 @@ export function WorldMap({
           >
             <span aria-hidden="true">🗺️ </span>{t.world.flat}
           </button>
-        </div>
-      </div>
-
-      {/* Tarjeta flotante de telemetría y sitio activo (inspirada en AirIndx) */}
-      <div className="telemetry-overlay">
-        <div className="telemetry-card">
-          <div className="telemetry-header">
-            <span className="telemetry-badge">
-              {currentDisplaySite.status === "verified"
-                ? t.world.verified
-                : currentDisplaySite.status === "on_demand"
-                ? t.world.onDemand
-                : t.world.research}
-            </span>
-            <span className="telemetry-coords">
-              {currentDisplaySite.lat >= 0 ? `${currentDisplaySite.lat}°N` : `${Math.abs(currentDisplaySite.lat)}°S`} ·{" "}
-              {currentDisplaySite.lon >= 0 ? `${currentDisplaySite.lon}°E` : `${Math.abs(currentDisplaySite.lon)}°W`}
-            </span>
-          </div>
-          <strong className="telemetry-site-name">{siteText(currentDisplaySite).name}</strong>
-          <span className="telemetry-country">{siteText(currentDisplaySite).country}</span>
-          <p className="telemetry-desc">{siteText(currentDisplaySite).description}</p>
-          {currentDisplaySite.regionId ? (
-            <div className="telemetry-action">
-              {activeSite?.id === currentDisplaySite.id ? (
-                <span className="telemetry-selected-tag">✓ {t.world.active}</span>
-              ) : (
-                <button
-                  type="button"
-                  className="telemetry-select-btn"
-                  onClick={() => handleSelectSite(currentDisplaySite)}
-                >
-                  {t.world.select} →
-                </button>
-              )}
-            </div>
-          ) : (
-            <span className="telemetry-note">{t.world.calibration}</span>
-          )}
         </div>
       </div>
 
@@ -208,8 +166,6 @@ export function WorldMap({
               className="globe-marker primary-marker"
               transform="translate(198, 222)"
               onClick={() => handleSelectSite(GLOBAL_OBSERVATION_SITES[0])}
-              onMouseEnter={() => setHoveredSite(GLOBAL_OBSERVATION_SITES[0])}
-              onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
               aria-label={siteText(GLOBAL_OBSERVATION_SITES[0]).name}
@@ -232,8 +188,6 @@ export function WorldMap({
               className="globe-marker"
               transform="translate(225, 234)"
               onClick={() => handleSelectSite(GLOBAL_OBSERVATION_SITES[1])}
-              onMouseEnter={() => setHoveredSite(GLOBAL_OBSERVATION_SITES[1])}
-              onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
               aria-label={t.globeLabels.panamaAria}
@@ -249,8 +203,6 @@ export function WorldMap({
               className="globe-marker"
               transform="translate(265, 280)"
               onClick={() => handleSelectSite(GLOBAL_OBSERVATION_SITES[3])}
-              onMouseEnter={() => setHoveredSite(GLOBAL_OBSERVATION_SITES[3])}
-              onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
               aria-label={t.globeLabels.amazonAria}
@@ -266,8 +218,6 @@ export function WorldMap({
               className="globe-marker"
               transform="translate(178, 204)"
               onClick={() => handleSelectSite(GLOBAL_OBSERVATION_SITES[2])}
-              onMouseEnter={() => setHoveredSite(GLOBAL_OBSERVATION_SITES[2])}
-              onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
               aria-label={t.globeLabels.chiquimulaAria}
@@ -347,8 +297,6 @@ export function WorldMap({
                   key={site.id}
                   className={`site-pin ${isSelected ? "selected" : ""}`}
                   onClick={() => handleSelectSite(site)}
-                  onMouseEnter={() => setHoveredSite(site)}
-                  onMouseLeave={() => setHoveredSite(null)}
                   tabIndex={0}
                   role="button"
                   aria-label={`${siteText(site).name} (${siteText(site).country})`}
