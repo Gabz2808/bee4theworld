@@ -1609,6 +1609,37 @@ button:focus-visible, a:focus-visible, summary:focus-visible, select:focus-visib
   color: var(--cloud);
 }
 
+/* Panel de tendencia: el icono SVG del título necesita tamaño explícito o crece al ancho del panel. */
+.trend-research {
+  margin-top: 18px;
+}
+
+.trend-research h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trend-research h3 svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  color: var(--amber);
+}
+
+.research-panel.trend-research p {
+  margin-top: 14px;
+}
+
+.trend-research a {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--amber);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .research-metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1891,4 +1922,33 @@ footer {
     flex-direction: column;
     gap: 24px;
   }
+}
+
+/* Interruptor de idioma */
+.language-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(82, 106, 134, 0.35);
+  background: transparent;
+  color: var(--cloud);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.language-toggle svg { flex: none; }
+.language-toggle:hover { border-color: var(--amber); color: var(--amber); }
+.language-toggle:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.topbar .language-toggle { margin-left: auto; }
+.topbar .language-toggle + .header-team { margin-left: 0; }
+@media (max-width: 900px) {
+  .topbar { grid-template-columns: 1fr auto auto; }
+  .topbar .language-toggle { margin-left: 0; }
 }

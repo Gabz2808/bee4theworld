@@ -1,9 +1,5 @@
-const steps = [
-  { label: "Origen", title: "IMERG Final mensual V07", detail: "Serie temporal 2001–2024 (NASA).", icon: "origin" },
-  { label: "Recorte espacial", title: "Componente terrestre IGN/SNIT", detail: "Solo territorio continental principal (componentes separados excluidos).", icon: "area" },
-  { label: "Cálculo", title: "Acumulado ponderado", detail: "Conversión de tasa media mensual a acumulado + promedio ponderado por área de celda.", icon: "calculation" },
-  { label: "Estado", title: "Revisión científica", detail: "Geometría y procesamiento bajo validación antes de liberar derivados.", icon: "review" },
-];
+import { useI18n } from "../i18n/provider";
+const stepIcons = ["origin", "area", "calculation", "review"];
 
 function StepIcon({ type }: { type: string }) {
   return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -15,58 +11,60 @@ function StepIcon({ type }: { type: string }) {
 }
 
 export function Research() {
+  const { t } = useI18n();
+  const r = t.research;
   return <section id="investigacion" className="research" aria-labelledby="research-heading">
     <div className="wrap">
       <header className="research-intro">
-        <span className="research-badge"><span aria-hidden="true" />MVP • Abierto a revisión científica</span>
-        <h2 id="research-heading">La investigación, abierta a revisión.</h2>
-        <p>Este MVP comparte lo que sabemos, cómo lo calculamos y lo que aún no podemos concluir. Los resultados se actualizan cuando hay evidencia nueva.</p>
+        <span className="research-badge"><span aria-hidden="true" />{r.badge}</span>
+        <h2 id="research-heading">{r.heading}</h2>
+        <p>{r.intro}</p>
       </header>
 
-      <div className="method-flow" aria-label="Flujo metodológico">
-        <ol>{steps.map((step, index) => <li key={step.label}>
-          <div className="method-step-top"><span className="method-icon"><StepIcon type={step.icon} /></span><span className="method-number">0{index + 1}</span></div>
+      <div className="method-flow" aria-label={r.flow}>
+        <ol>{r.steps.map((step, index) => <li key={stepIcons[index]}>
+          <div className="method-step-top"><span className="method-icon"><StepIcon type={stepIcons[index]} /></span><span className="method-number">0{index + 1}</span></div>
           <span className="method-label">{step.label}</span><h3>{step.title}</h3><p>{step.detail}</p>
         </li>)}</ol>
       </div>
 
       <section className="research-panel trend-research" aria-labelledby="research-trend-heading">
-        <h3 id="research-trend-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v4.5M12 17h.01"/></svg>Tendencia e incertidumbre</h3>
-        <p><strong>Resultado inconcluso.</strong> La revisión del método y sus supuestos está pendiente. La serie mensual muestra estimaciones de precipitación; el análisis de tendencia es un cálculo separado.</p>
-        <p>El servicio informa el método y el estado para el período consultado en el explorador. No se dispone de un intervalo de confianza revisado para la pendiente y la cobertura espacial no mide la precisión de la estimación.</p>
-        <p>La procedencia, la calidad y el procesamiento siguen en revisión científica. Los cambios observados no demuestran por sí solos su causa.</p>
-        <a href="#explorar">Consultar la serie y su evidencia</a>
+        <h3 id="research-trend-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v4.5M12 17h.01"/></svg>{r.trendHeading}</h3>
+        <p><strong>{r.trendLead}</strong> {r.trend1}</p>
+        <p>{r.trend2}</p>
+        <p>{r.trend3}</p>
+        <a href="#explorar">{r.trendLink}</a>
       </section>
 
       <div className="research-grid">
         <section className="research-panel technical-panel" aria-labelledby="technical-heading">
-          <h3 id="technical-heading">Pruebas y alcance técnico</h3>
+          <h3 id="technical-heading">{r.technicalHeading}</h3>
           <div className="research-metrics">
-            <div><strong>288 <small>meses</small></strong><p>Cálculo contrastado e integridad geométrica verificada.</p></div>
-            <div><strong>≈ 99,9998 <small>%</small></strong><p>Cobertura conjunta calculada mediante pesos por área, en un ensayo separado del índice mensual por celda.</p></div>
+            <div><strong>288 <small>{r.months}</small></strong><p>{r.monthsDetail}</p></div>
+            <div><strong>{r.coverageValue} <small>%</small></strong><p>{r.coverageDetail}</p></div>
           </div>
-          <p className="research-warning"><strong>Alcance limitado:</strong> Estas son comprobaciones técnicas; no validan las observaciones ni la significancia de una tendencia.</p>
+          <p className="research-warning"><strong>{r.scopeLead}</strong> {r.scope}</p>
         </section>
         <section className="research-panel publication-panel" aria-labelledby="publication-heading">
-          <h3 id="publication-heading">Estado de publicación de datos</h3>
+          <h3 id="publication-heading">{r.publicationHeading}</h3>
           <ul className="publication-list">
-            <li><span className="publication-status available">Disponible</span><p>Producto original NASA IMERG Final V07 (2001–2024).</p></li>
-            <li><span className="publication-status review">En revisión</span><p>Condiciones de uso y licenciamiento de fuentes.</p></li>
-            <li><span className="publication-status pending">Pendiente</span><p>Serie procesada, geometría de Iyök y código fuente.</p></li>
+            <li><span className="publication-status available">{r.available}</span><p>{r.pubAvailable}</p></li>
+            <li><span className="publication-status review">{r.review}</span><p>{r.pubReview}</p></li>
+            <li><span className="publication-status pending">{r.pending}</span><p>{r.pubPending}</p></li>
           </ul>
         </section>
       </div>
 
       <section className="interval-panel" aria-labelledby="interval-heading">
-        <div><h3 id="interval-heading">Intervalos de evaluación por celda</h3><p>Intervalos provisionales ATBD de NASA (por celda)</p></div>
-        <div className="interval-content"><div className="interval-bar" aria-label="Intervalos: menor que 3; de 3 a menos de 10; 10 o más"><span>&lt; 3</span><span>3 a &lt; 10</span><span>≥ 10</span></div>
-          <p><strong>Nota metodológica:</strong> Otra guía de NASA propone límites distintos. La relación entre el índice y el error local sigue sin validar, por lo que <strong>NO filtramos la precipitación</strong> con estos intervalos.</p></div>
+        <div><h3 id="interval-heading">{r.intervalHeading}</h3><p>{r.intervalSub}</p></div>
+        <div className="interval-content"><div className="interval-bar" aria-label={r.intervalAria}><span>&lt; 3</span><span>{r.intervalMid}</span><span>≥ 10</span></div>
+          <p><strong>{r.noteLead}</strong> {r.note1} <strong>{r.noteStrong}</strong> {r.note2}</p></div>
       </section>
 
-      <nav className="research-links" aria-label="Referencias oficiales de NASA">
-        <a href="https://gpm.nasa.gov/resources/documents/imerg-v07-technical-documentation">Consultar documentación IMERG de NASA <span aria-hidden="true">↗</span></a>
-        <a href="https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07">Consultar el producto original de NASA <span aria-hidden="true">↗</span></a>
-        <a href="https://gpm.nasa.gov/sites/default/files/2023-07/IMERG_V07_ATBD_final_230712.pdf">Consultar el método de NASA <span aria-hidden="true">↗</span></a>
+      <nav className="research-links" aria-label={r.links}>
+        <a href="https://gpm.nasa.gov/resources/documents/imerg-v07-technical-documentation">{r.linkDocs} <span aria-hidden="true">↗</span></a>
+        <a href="https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07">{r.linkProduct} <span aria-hidden="true">↗</span></a>
+        <a href="https://gpm.nasa.gov/sites/default/files/2023-07/IMERG_V07_ATBD_final_230712.pdf">{r.linkMethod} <span aria-hidden="true">↗</span></a>
       </nav>
     </div>
   </section>;

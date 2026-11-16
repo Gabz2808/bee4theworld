@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import type { Exploration } from "../lib/api-v1";
+import { useI18n } from "../i18n/provider";
 
 type Cell = [number, number, number, number, number | null];
 type Manifest = { dataset: string; geometry_sha256: string; months: { month: string; file: string }[] };
@@ -15,17 +16,6 @@ const empty = { type: "FeatureCollection" as const, features: [] };
 // Cortes de color en mm/mes; la leyenda usa las mismas posiciones relativas.
 const stops: [number, string][] = [[0, "#e8eac2"], [100, "#a8d8ad"], [300, "#45a4a2"], [600, "#246995"], [1000, "#273878"]];
 const legendGradient = `linear-gradient(90deg, ${stops.map(([v, c]) => `${c} ${v / 10}%`).join(", ")})`;
-const locale = {
-  "Map.Title": "Mapa",
-  "NavigationControl.ZoomIn": "Acercar",
-  "NavigationControl.ZoomOut": "Alejar",
-  "AttributionControl.ToggleAttribution": "Mostrar u ocultar atribución",
-  "Popup.Close": "Cerrar",
-  "CooperativeGesturesHandler.WindowsHelpText": "Usa Ctrl + rueda para acercar o alejar el mapa",
-  "CooperativeGesturesHandler.MacHelpText": "Usa ⌘ + rueda para acercar o alejar el mapa",
-  "CooperativeGesturesHandler.MobileHelpText": "Usa dos dedos para mover el mapa",
-};
-const number = new Intl.NumberFormat("es-CR", { maximumFractionDigits: 1 });
 
 async function loadManifest(signal: AbortSignal): Promise<Manifest> {
   const response = await fetch("/map-data/manifest.json", { signal });
@@ -36,6 +26,9 @@ async function loadManifest(signal: AbortSignal): Promise<Manifest> {
 }
 
 export default function PrecipitationMap({ result, index, setIndex }: { result: Exploration; index: number; setIndex: (index: number) => void }) {
+  // El componente se vuelve a montar al cambiar de idioma (key en el explorador), así que t es estable aquí.
+  const { t } = useI18n();
+  const number = new Intl.NumberFormat(t.numberLocale, { maximumFractionDigits: 1 });
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MapLibreMap | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -71,7 +64,7 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
         maxZoom: 11,
         attributionControl: false,
         cooperativeGestures: true,
-        locale,
+        locale: t.map.controls,
         style: {
           version: 8,
           sources: {
@@ -80,7 +73,7 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
               tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
               tileSize: 256,
               maxzoom: 19,
-              attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">colaboradores de OpenStreetMap</a>',
+              attribution: `© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">${t.map.osm}</a>`,
             },
           },
           layers: [
@@ -89,7 +82,7 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
           ],
         },
       });
-    } catch { queueMicrotask(() => setMapProblem("No se pudo iniciar el mapa en este navegador; puede requerir WebGL. La serie y la tabla siguen disponibles.")); return; }
+    } catch { queueMicrotask(() => setMapProblem(t.map.webgl)); return; }
     map.current = instance;
     instance.on("error", (event) => { if ("sourceId" in event && event.sourceId === "basemap") setBasemapProblem(true); });
     instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
@@ -97,7 +90,7 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
     instance.on("load", () => {
       instance.addSource("cells", { type: "geojson", data: empty, attribution: "IMERG: NASA GES DISC" });
       instance.addLayer({ id: "cells", type: "fill", source: "cells", paint: { "fill-color": ["interpolate", ["linear"], ["get", "value"], ...stops.flat()], "fill-opacity": 0.75, "fill-outline-color": "rgba(233,237,242,0.3)" } });
-      instance.addSource("boundary", { type: "geojson", data: "/map-data/boundary.json", attribution: "Frontera: IGN / Registro Nacional / SNIT" });
+      instance.addSource("boundary", { type: "geojson", data: "/map-data/boundary.json", attribution: t.map.boundaryAttribution });
       instance.addLayer({ id: "boundary", type: "line", source: "boundary", paint: { "line-color": "#F5B82E", "line-width": 2 } });
       const popup = new maplibregl.Popup({ closeButton: true, maxWidth: "240px" });
       instance.on("click", "cells", (event) => {
@@ -105,7 +98,7 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
         if (!feature) return;
         const text = document.createElement("p");
         text.className = "map-popup";
-        text.textContent = `${number.format(Number(feature.properties.value))} mm/mes en esta celda IMERG de ~0,1°.`;
+        text.textContent = t.map.popup(number.format(Number(feature.properties.value)));
         popup.setLngLat(event.lngLat).setDOMContent(text).addTo(instance);
       });
       instance.on("mouseenter", "cells", () => { instance.getCanvas().style.cursor = "pointer"; });
@@ -113,6 +106,7 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
       setLoaded(true);
     });
     return () => { instance.remove(); map.current = null; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- se monta una sola vez por idioma
   }, []);
 
   useEffect(() => {
@@ -142,22 +136,22 @@ export default function PrecipitationMap({ result, index, setIndex }: { result: 
     return () => window.clearTimeout(timer);
   }, [playing, layerState, index, last, setIndex]);
 
-  const regional = point?.value === null || point?.value === undefined ? "sin dato" : `${number.format(point.value)} ${result.metadata.unit === "mm/month" ? "mm/mes" : String(result.metadata.unit)}`;
-  const status = !compatible ? "La capa no corresponde al producto y la geometría de la serie consultada; no se mostrará." : manifestProblem ? "No se pudo comprobar el origen de las capas del mapa; no se mostrarán." : layerState === "error" ? `No se pudo cargar la capa de ${month}.` : layerState === "loading" ? `Cargando la capa de ${month}…` : "";
+  const regional = point?.value === null || point?.value === undefined ? t.map.noData : `${number.format(point.value)} ${result.metadata.unit === "mm/month" ? t.map.unit : String(result.metadata.unit)}`;
+  const status = !compatible ? t.map.incompatible : manifestProblem ? t.map.manifest : layerState === "error" ? t.map.layerError(month ?? "") : layerState === "loading" ? t.map.layerLoading(month ?? "") : "";
 
-  return <section className="map-view" aria-label="Mapa de precipitación mensual">
-    <div className="map-topline"><div><strong>Precipitación por celda</strong><p>IMERG Final V07 · {month} · mm/mes</p><p className="map-note">Cada celda es una estimación satelital de su área, no una medición puntual.</p></div><span>DATOS EN REVISIÓN</span></div>
-    <div className="map-canvas" ref={container} role="region" aria-label={`Mapa de Costa Rica con la precipitación estimada por celda en ${month}. Los valores regionales están en la tabla.`} />
+  return <section className="map-view" aria-label={t.map.aria}>
+    <div className="map-topline"><div><strong>{t.map.title}</strong><p>IMERG Final V07 · {month} · {t.map.unit}</p><p className="map-note">{t.map.note}</p></div><span>{t.map.badge}</span></div>
+    <div className="map-canvas" ref={container} role="region" aria-label={t.map.canvas(month ?? "")} />
     {mapProblem && <p className="map-error" role="alert">{mapProblem}</p>}
     <p className={!compatible || manifestProblem || layerState === "error" ? "map-error" : "map-loading"} role="status">{mapProblem ? "" : status}</p>
-    {basemapProblem && <p className="map-error">No se pudo cargar el fondo cartográfico de OpenStreetMap. Las capas de precipitación y la frontera se muestran sin él.</p>}
-    <div className="map-legend"><span>mm/mes</span><div className="map-legend-scale"><div style={{ background: legendGradient }} aria-hidden="true" /><span style={{ left: "0%" }}>0</span><span style={{ left: "30%" }}>300</span><span style={{ left: "60%" }}>600</span><span style={{ left: "100%" }}>≥1.000</span></div></div>
+    {basemapProblem && <p className="map-error">{t.map.basemap}</p>}
+    <div className="map-legend"><span>{t.map.unit}</span><div className="map-legend-scale"><div style={{ background: legendGradient }} aria-hidden="true" /><span style={{ left: "0%" }}>0</span><span style={{ left: "30%" }}>300</span><span style={{ left: "60%" }}>600</span><span style={{ left: "100%" }}>{t.map.legendMax}</span></div></div>
     <div className="map-timeline">
-      <button type="button" onClick={() => { if (!playing && index >= last) setIndex(0); setPlaying(!playing); }} disabled={last < 1 || !compatible || manifestProblem}>{playing ? "Pausar" : "Reproducir"}</button>
-      <label htmlFor="map-month">Mes <strong>{month}</strong></label>
+      <button type="button" onClick={() => { if (!playing && index >= last) setIndex(0); setPlaying(!playing); }} disabled={last < 1 || !compatible || manifestProblem}>{playing ? t.map.pause : t.map.play}</button>
+      <label htmlFor="map-month">{t.map.month} <strong>{month}</strong></label>
       <input id="map-month" type="range" min="0" max={Math.max(0, last)} value={index} aria-valuetext={month} onChange={(event) => { setPlaying(false); setIndex(Number(event.target.value)); }} />
       <span aria-hidden="true">{result.points.at(-1)?.date.slice(0, 7)}</span>
     </div>
-    <p className="map-description">Promedio regional de {month} en la serie: <strong>{regional}</strong>. Cada color es la estimación IMERG de una celda completa de ~0,1° que toca la frontera, aunque parte de la celda quede fuera; selecciona una celda para ver su valor. La serie promedia esas celdas ponderando solo el área dentro de la frontera, y ese cálculo se reprodujo con estas capas. La línea es una versión simplificada de la frontera, solo para visualización. El fondo es un mapa de referencia, no una imagen satelital. Fuentes: NASA GES DISC, GPM_3IMERGM.07; frontera IGN / Registro Nacional / SNIT. La procedencia y el método siguen en revisión.</p>
+    <p className="map-description">{t.map.regionalLead(month ?? "")} <strong>{regional}</strong>. {t.map.description}</p>
   </section>;
 }

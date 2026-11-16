@@ -6,6 +6,7 @@ import {
   GLOBAL_OBSERVATION_SITES,
   type GlobalSite,
 } from "./map-geometry";
+import { useI18n } from "../i18n/provider";
 
 interface WorldMapProps {
   selectedRegionId?: string;
@@ -16,6 +17,8 @@ export function WorldMap({
   selectedRegionId = "costa-rica-snit-continental-v1",
   onSelectRegion,
 }: WorldMapProps) {
+  const { t } = useI18n();
+  const siteText = (site: GlobalSite) => t.sites[site.id] ?? site;
   const [viewMode, setViewMode] = useState<"globe" | "flat">("globe");
   const [hoveredSite, setHoveredSite] = useState<GlobalSite | null>(null);
   const [activeSite, setActiveSite] = useState<GlobalSite | null>(() => {
@@ -26,37 +29,37 @@ export function WorldMap({
   const handleSelectSite = (site: GlobalSite) => {
     setActiveSite(site);
     if (site.regionId && onSelectRegion) {
-      onSelectRegion(site.regionId, site.name);
+      onSelectRegion(site.regionId, siteText(site).name);
     }
   };
 
   const currentDisplaySite = hoveredSite || activeSite || GLOBAL_OBSERVATION_SITES[0];
 
   return (
-    <div className="world-map-wrapper" role="region" aria-label="Mapamundi y Globo 3D interactivo NASA GPM">
+    <div className="world-map-wrapper" role="region" aria-label={t.world.aria}>
       {/* Barra superior de estado del mapa planetario */}
       <div className="world-map-topbar">
         <div className="world-map-title-block">
           <div className="world-map-kicker">
-            <span className="live-dot" /> RED DE OBSERVACIÓN TERRESTRE · NASA GPM CORE
+            <span className="live-dot" /> {t.world.kicker}
           </div>
           <h4 className="world-map-heading">
-            {viewMode === "globe" ? "Globo Orbital 3D" : "Mapamundi de Cobertura Global"}
+            {viewMode === "globe" ? t.world.globeTitle : t.world.flatTitle}
           </h4>
           <p className="world-map-caption">
-            Constelación de satélites GPM (65°S a 65°N). Haz clic en un sitio para seleccionarlo como ámbito de exploración.
+            {t.world.caption}
           </p>
         </div>
 
         {/* Selector de modo estilo AirIndx: [ 3D GLOBE ] [ MAPA PLANO ] */}
-        <div className="world-mode-toggle" role="group" aria-label="Modo de visualización planetaria">
+        <div className="world-mode-toggle" role="group" aria-label={t.world.modeGroup}>
           <button
             type="button"
             className={`world-mode-btn ${viewMode === "globe" ? "active" : ""}`}
             onClick={() => setViewMode("globe")}
             aria-pressed={viewMode === "globe"}
           >
-            🌐 Globo 3D
+            <span aria-hidden="true">🌐 </span>{t.world.globe}
           </button>
           <button
             type="button"
@@ -64,7 +67,7 @@ export function WorldMap({
             onClick={() => setViewMode("flat")}
             aria-pressed={viewMode === "flat"}
           >
-            🗺️ Mapamundi plano
+            <span aria-hidden="true">🗺️ </span>{t.world.flat}
           </button>
         </div>
       </div>
@@ -75,35 +78,35 @@ export function WorldMap({
           <div className="telemetry-header">
             <span className="telemetry-badge">
               {currentDisplaySite.status === "verified"
-                ? "MVP DISPONIBLE"
+                ? t.world.verified
                 : currentDisplaySite.status === "on_demand"
-                ? "BAJO DEMANDA"
-                : "RED GLOBAL"}
+                ? t.world.onDemand
+                : t.world.research}
             </span>
             <span className="telemetry-coords">
               {currentDisplaySite.lat >= 0 ? `${currentDisplaySite.lat}°N` : `${Math.abs(currentDisplaySite.lat)}°S`} ·{" "}
               {currentDisplaySite.lon >= 0 ? `${currentDisplaySite.lon}°E` : `${Math.abs(currentDisplaySite.lon)}°W`}
             </span>
           </div>
-          <strong className="telemetry-site-name">{currentDisplaySite.name}</strong>
-          <span className="telemetry-country">{currentDisplaySite.country}</span>
-          <p className="telemetry-desc">{currentDisplaySite.description}</p>
+          <strong className="telemetry-site-name">{siteText(currentDisplaySite).name}</strong>
+          <span className="telemetry-country">{siteText(currentDisplaySite).country}</span>
+          <p className="telemetry-desc">{siteText(currentDisplaySite).description}</p>
           {currentDisplaySite.regionId ? (
             <div className="telemetry-action">
               {activeSite?.id === currentDisplaySite.id ? (
-                <span className="telemetry-selected-tag">✓ Territorio activo en el explorador</span>
+                <span className="telemetry-selected-tag">✓ {t.world.active}</span>
               ) : (
                 <button
                   type="button"
                   className="telemetry-select-btn"
                   onClick={() => handleSelectSite(currentDisplaySite)}
                 >
-                  Seleccionar este territorio →
+                  {t.world.select} →
                 </button>
               )}
             </div>
           ) : (
-            <span className="telemetry-note">Sitio de calibración global (expansión futura)</span>
+            <span className="telemetry-note">{t.world.calibration}</span>
           )}
         </div>
       </div>
@@ -118,7 +121,7 @@ export function WorldMap({
             viewBox="0 0 500 500"
             className="globe-svg"
             style={{ transform: `scale(${zoomLevel})` }}
-            aria-label="Globo 3D interactivo con la Tierra y sitios de monitoreo"
+            aria-label={t.world.globeAria}
           >
             <defs>
               {/* Resplandor atmosférico exterior */}
@@ -209,7 +212,7 @@ export function WorldMap({
               onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
-              aria-label="Costa Rica continental"
+              aria-label={siteText(GLOBAL_OBSERVATION_SITES[0]).name}
             >
               {/* Pulso animado */}
               <circle cx="0" cy="0" r="14" fill="none" stroke="#F5B82E" strokeWidth="1.5" className="pin-pulse" />
@@ -233,11 +236,11 @@ export function WorldMap({
               onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
-              aria-label="Canal de Panamá"
+              aria-label={t.globeLabels.panamaAria}
             >
               <circle cx="0" cy="0" r="4.5" fill="#526A86" stroke="#E9EDF2" strokeWidth="1.5" />
               <text x="7" y="3" fill="#8E9FAE" fontSize="9">
-                Panamá
+                {t.globeLabels.panama}
               </text>
             </g>
 
@@ -250,11 +253,11 @@ export function WorldMap({
               onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
-              aria-label="Cuenca del Amazonas"
+              aria-label={t.globeLabels.amazonAria}
             >
               <circle cx="0" cy="0" r="4" fill="#526A86" stroke="#111318" strokeWidth="1" />
               <text x="7" y="3" fill="#8E9FAE" fontSize="8.5">
-                Amazonas
+                {t.globeLabels.amazon}
               </text>
             </g>
 
@@ -267,7 +270,7 @@ export function WorldMap({
               onMouseLeave={() => setHoveredSite(null)}
               tabIndex={0}
               role="button"
-              aria-label="Corredor Seco Chiquimula"
+              aria-label={t.globeLabels.chiquimulaAria}
             >
               <circle cx="0" cy="0" r="4" fill="#526A86" stroke="#111318" strokeWidth="1" />
               <text x="-48" y="-6" fill="#8E9FAE" fontSize="8.5">
@@ -283,7 +286,7 @@ export function WorldMap({
             viewBox="0 0 720 360"
             className="flat-map-svg"
             style={{ transform: `scale(${zoomLevel})` }}
-            aria-label="Mapamundi equirectangular con cobertura satelital NASA GPM"
+            aria-label={t.world.flatAria}
           >
             <defs>
               <linearGradient id="ocean-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -311,16 +314,16 @@ export function WorldMap({
               strokeDasharray="4,4"
             />
             <text x="10" y="44" fill="#8E9FAE" fontSize="8" fontFamily="monospace">
-              LÍMITE ORBITAL GPM (65°N)
+              {t.world.orbitN}
             </text>
             <text x="10" y="324" fill="#8E9FAE" fontSize="8" fontFamily="monospace">
-              LÍMITE ORBITAL GPM (65°S)
+              {t.world.orbitS}
             </text>
 
             {/* Ecuador 0° */}
             <line x1="0" y1="180" x2="720" y2="180" stroke="#F5B82E" strokeWidth="0.75" strokeDasharray="4,4" opacity="0.4" />
             <text x="650" y="176" fill="#F5B82E" fontSize="8" fontFamily="monospace" opacity="0.7">
-              ECUADOR 0°
+              {t.world.equator}
             </text>
 
             {/* Continentes */}
@@ -348,7 +351,7 @@ export function WorldMap({
                   onMouseLeave={() => setHoveredSite(null)}
                   tabIndex={0}
                   role="button"
-                  aria-label={`${site.name} (${site.country})`}
+                  aria-label={`${siteText(site).name} (${siteText(site).country})`}
                 >
                   {site.isPrimary && (
                     <circle cx={site.x} cy={site.y} r="10" fill="none" stroke="#F5B82E" strokeWidth="1.2" className="pin-pulse" />
@@ -368,7 +371,7 @@ export function WorldMap({
                     fontWeight={site.isPrimary ? "bold" : "normal"}
                     fill={site.isPrimary ? "#F5B82E" : "#E9EDF2"}
                   >
-                    {site.name}
+                    {siteText(site).name}
                   </text>
                 </g>
               );
@@ -378,12 +381,12 @@ export function WorldMap({
 
         {/* Controles de Zoom en la esquina inferior derecha (estilo AirIndx) */}
         <div className="map-zoom-controls">
-          <span className="zoom-label">Zoom</span>
+          <span className="zoom-label">{t.world.zoom}</span>
           <button
             type="button"
             className="zoom-btn"
             onClick={() => setZoomLevel((z) => Math.min(1.8, +(z + 0.2).toFixed(1)))}
-            aria-label="Acercar mapa"
+            aria-label={t.world.zoomIn}
           >
             +
           </button>
@@ -391,7 +394,7 @@ export function WorldMap({
             type="button"
             className="zoom-btn"
             onClick={() => setZoomLevel((z) => Math.max(0.8, +(z - 0.2).toFixed(1)))}
-            aria-label="Alejar mapa"
+            aria-label={t.world.zoomOut}
           >
             −
           </button>
@@ -400,7 +403,7 @@ export function WorldMap({
               type="button"
               className="zoom-reset-btn"
               onClick={() => setZoomLevel(1)}
-              aria-label="Restablecer zoom"
+              aria-label={t.world.zoomReset}
             >
               1:1
             </button>

@@ -2,7 +2,11 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 
-const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe" });
+const launched = await chromium.launch({ headless: true, executablePath: process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe" });
+// Estas pruebas verifican textos en español; el sitio usa inglés por defecto.
+const context = await launched.newContext();
+await context.addInitScript(() => { try { localStorage.setItem("iyok-locale", "es"); } catch {} });
+const browser = { newPage: (options) => options ? launched.newContext(options).then(async (c) => { await c.addInitScript(() => { try { localStorage.setItem("iyok-locale", "es"); } catch {} }); return c.newPage(); }) : context.newPage(), close: () => launched.close() };
 const base = process.env.IYOK_TEST_URL || "http://localhost:3001";
 const button = (page) => page.getByRole("button", { name: "Consultar serie" });
 async function ready(page) {
