@@ -3,21 +3,31 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 
-const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe" });
-const base = process.env.IYOK_TEST_URL || "http://localhost:3001";
+const launched = await chromium.launch({ headless: true, executablePath: process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe" });
+// Estas pruebas verifican textos en español; el sitio usa inglés por defecto.
+const context = await launched.newContext();
+await context.addInitScript(() => { try { localStorage.setItem("iyok-locale", "es"); } catch {} });
+const browser = { newPage: (options) => options ? launched.newContext(options).then(async (c) => { await c.addInitScript(() => { try { localStorage.setItem("iyok-locale", "es"); } catch {} }); return c.newPage(); }) : context.newPage(), close: () => launched.close() };
+const base = (process.env.IYOK_TEST_URL || "http://localhost:3001") + "/explorar";
 const shots = process.env.IYOK_SCREENSHOTS;
 
+// Los campos de mes son dos selects (mes y año) en el idioma del sitio; el valor enviado sigue siendo YYYY-MM.
+async function setMonth(page, id, value) {
+  const [year, month] = value.split("-");
+  await page.locator(`#${id}-year`).selectOption(String(Number(year)));
+  await page.locator(`#${id}-month`).selectOption(String(Number(month)));
+}
 async function openMap(page, { start = "2024-01", end = "2024-12" } = {}) {
   await page.goto(base);
-  await page.locator("#period-start:enabled").waitFor({ timeout: 30000 });
-  await page.locator("#period-start").fill(start);
-  await page.locator("#period-end").fill(end);
+  await page.locator("#period-start-month:enabled").waitFor({ timeout: 30000 });
+  await setMonth(page, "period-start", start);
+  await setMonth(page, "period-end", end);
   await page.getByRole("button", { name: "Consultar serie" }).click();
   await page.getByRole("heading", { name: "Precipitación mensual" }).waitFor({ timeout: 30000 });
   // Navegación de pestañas con teclado.
   await page.getByRole("tab", { name: "Serie temporal" }).focus();
   await page.keyboard.press("ArrowRight");
-  const tab = page.getByRole("tab", { name: "Mapa" });
+  const tab = page.getByRole("tab", { name: "Mapa de celdas" });
   assert.equal(await tab.getAttribute("aria-selected"), "true");
   assert.equal(await page.evaluate(() => document.activeElement?.id), "tab-map");
   await page.locator(".map-canvas canvas").waitFor({ timeout: 30000 });

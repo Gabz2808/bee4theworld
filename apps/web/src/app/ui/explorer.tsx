@@ -1,13 +1,16 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Chart } from "./chart";
-import { Research } from "./research";
 import { WorldMap } from "./world-map";
+import { useI18n } from "../i18n/provider";
+import { MonthField } from "./month-field";
+import { Completeness } from "./completeness";
+import type { Dictionary } from "../i18n/dictionaries";
 import { ApiClientError, completeMonths, createApiV1Client, type Catalog, type Exploration } from "../lib/api-v1";
 
-const PrecipitationMap = dynamic(() => import("./precipitation-map"), { ssr: false, loading: () => <p>Cargando mapa...</p> });
+const PrecipitationMap = dynamic(() => import("./precipitation-map"), { ssr: false, loading: () => <MapLoading /> });
+function MapLoading() { return <p>{useI18n().t.explorer.loadingMap}</p>; }
 
 const api = createApiV1Client("/api/backend");
 const defaultRegionId = "costa-rica-snit-continental-v1";
@@ -25,43 +28,46 @@ function formatCoverage(fraction: number) {
   if (fraction < 1 && Math.round(fraction * 100) === 100) return ">99 %";
   return `${Math.round(fraction * 100)} %`;
 }
-function coverageStatus(flag: string) {
+function coverageStatus(flag: string, t: Dictionary) {
   switch (flag) {
-    case "ok": return "Completa";
-    case "partial_coverage": return "Parcial";
-    case "missing_value": return "Sin valor";
-    case "missing_month": return "Mes ausente";
-    default: return "No disponible";
+    case "ok": return t.coverage.ok;
+    case "partial_coverage": return t.coverage.partial;
+    case "missing_value": return t.coverage.missingValue;
+    case "missing_month": return t.coverage.missingMonth;
+    default: return t.coverage.unknown;
   }
 }
-function errorMessage(error: unknown) {
-  if (error instanceof ApiClientError && error.code === "NASA_AUTH_REQUIRED") return "El servicio necesita configurar el acceso a NASA Earthdata. Solicita al equipo que configure la autenticación y vuelve a intentarlo.";
-  if (error instanceof ApiClientError && error.code === "BACKEND_TIMEOUT") return "La consulta tardó demasiado y podría seguir procesándose. Espera antes de reintentar para evitar consultas duplicadas, o elige un período más corto.";
-  if (error instanceof ApiClientError && (error.code === "RATE_LIMIT_EXCEEDED" || error.status === 429)) return "Se alcanzó el límite de consultas. Espera un momento y vuelve a intentarlo.";
-  if (error instanceof ApiClientError && error.code === "SNIT_SERIES_UNAVAILABLE") return "La serie no está disponible o no pasó la comprobación de integridad. Solicita al equipo que revise los archivos y vuelve a intentarlo.";
-  if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return "El servicio rechazó el acceso. Solicita al equipo que revise la configuración.";
-  if (error instanceof ApiClientError && error.status === 502) return "El servicio de datos no pudo completar la consulta. Vuelve a intentarlo más tarde.";
-  if (error instanceof ApiClientError && error.kind === "invalid_response") return "La respuesta no tiene el formato esperado. Vuelve a intentarlo más tarde.";
-  if (error instanceof ApiClientError && error.status && error.status >= 400 && error.status < 500) return "La selección no está disponible. Revisa el período e inténtalo de nuevo.";
-  return "No fue posible conectar con el servicio. Comprueba que la API esté disponible e inténtalo de nuevo.";
+type ErrorKey = keyof Dictionary["errors"];
+function errorKey(error: unknown): ErrorKey {
+  if (error instanceof ApiClientError && error.code === "NASA_AUTH_REQUIRED") return "auth";
+  if (error instanceof ApiClientError && error.code === "BACKEND_TIMEOUT") return "timeout";
+  if (error instanceof ApiClientError && (error.code === "RATE_LIMIT_EXCEEDED" || error.status === 429)) return "rateLimit";
+  if (error instanceof ApiClientError && error.code === "SNIT_SERIES_UNAVAILABLE") return "seriesUnavailable";
+  if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return "denied";
+  if (error instanceof ApiClientError && error.status === 502) return "upstream";
+  if (error instanceof ApiClientError && error.kind === "invalid_response") return "invalidResponse";
+  if (error instanceof ApiClientError && error.status && error.status >= 400 && error.status < 500) return "badSelection";
+  return "network";
 }
 
 export function Explorer() {
+  const { t, locale } = useI18n();
   const [selectedRegion, setSelectedRegion] = useState({
     id: defaultRegionId,
-    name: "Costa Rica continental — IGN/SNIT",
+    name: t.regions[defaultRegionId],
   });
+  const regionName = t.regions[selectedRegion.id] ?? selectedRegion.name;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [view, setView] = useState<"series" | "map" | "world">("series");
   const [catalog, setCatalog] = useState<Catalog | null>(null);
-  const [catalogError, setCatalogError] = useState("");
+  const [catalogError, setCatalogError] = useState<ErrorKey | "">("");
   const [reload, setReload] = useState(0);
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [result, setResult] = useState<Exploration | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [message, setMessage] = useState("");
-  const [periodError, setPeriodError] = useState("");
+  const [message, setMessage] = useState<ErrorKey | "">("");
+  const [periodError, setPeriodError] = useState<"periodOrder" | "periodRange" | "">("");
   const resultHeading = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -71,18 +77,18 @@ export function Explorer() {
       const combination = data.combinations.find((c) => c.region_id === selectedRegion.id && c.variable_id === "precipitation" && c.is_ready_for_exploration === true);
       if (!combination) {
         if (selectedRegion.id === defaultRegionId) {
-          setCatalogError("La serie inicial no está disponible. Solicita al equipo que revise los archivos o reintenta la conexión.");
+          setCatalogError("initialUnavailable");
         }
         return;
       }
       const interval = snitInterval(combination.available_interval as { start: string; end: string });
       const months = completeMonths(interval);
-      if (!months) { setCatalogError("El servicio no indica meses completos disponibles. Vuelve a intentarlo más tarde."); return; }
+      if (!months) { setCatalogError("noMonths"); return; }
       const endMonth = months.end;
       setStart(endMonth);
       setEnd(endMonth);
       setCatalog(data); setCatalogError("");
-    }).catch((error) => { if (!controller.signal.aborted) setCatalogError(errorMessage(error)); });
+    }).catch((error) => { if (!controller.signal.aborted) setCatalogError(errorKey(error)); });
     return () => controller.abort();
   }, [reload, selectedRegion.id]);
 
@@ -101,7 +107,7 @@ export function Explorer() {
     event.preventDefault();
     if (!coverage || !start || !end || start > end || start < coverage.start.slice(0, 7) || end > coverage.end.slice(0, 7)) {
       setResult(null); setStatus("idle");
-      setPeriodError(start > end ? "La fecha inicial debe ser anterior o igual a la fecha final. Cambia una de las dos fechas." : "Elige meses dentro del período indicado por el servicio.");
+      setPeriodError(start > end ? "periodOrder" : "periodRange");
       return;
     }
     setPeriodError("");
@@ -112,84 +118,76 @@ export function Explorer() {
       const region = catalog?.regions.find((item) => item.id === selectedRegion.id);
       if (!region || selection.geometry_sha256 !== region.geometry_sha256) throw new ApiClientError("invalid_response", "La geometría no coincide con el catálogo.");
       setSelectedIndex(0); setResult(response); setStatus("idle");
-    } catch (error) { setMessage(errorMessage(error)); setStatus("error"); }
+    } catch (error) { setMessage(errorKey(error)); setStatus("error"); }
     finally { resultHeading.current?.focus(); }
   }
 
   // Codex: mantener la incertidumbre y la procedencia junto al resultado consultado.
   const metadata = result?.metadata;
+  const unitLabel = metadata?.unit === "mm/month" ? t.map.unit : String(metadata?.unit ?? "");
   const warnings = metadata ? [...metadata.limitations as string[], ...metadata.warnings as string[]] : [];
-  return <>
-    <a className="skip-link" href="#explorar">Saltar al explorador</a>
-    <header className="topbar"><a className="brand" href="#inicio" aria-label="Iyök, inicio"><span className="brand-symbol iyok-symbol" aria-hidden="true"><Image src="/iyok-logo.jpg" alt="" width={160} height={100} priority /></span><span>Iyök</span></a><nav aria-label="Navegación principal"><a href="#explorar">Explorar</a><a href="#investigacion">Investigación</a><a href="#acerca">Sobre Iyök</a></nav><a className="header-team" href="https://github.com/Gabz2808/bee4theworld" target="_blank" rel="noopener noreferrer" aria-label="Repositorio de Bee4TheWorld en GitHub (abre en una pestaña nueva)"><span className="brand-symbol team-symbol" aria-hidden="true"><Image src="/bee4theworld-logo.jpg" alt="" width={100} height={75} priority /></span><span><small>Un proyecto de</small><strong>Bee4TheWorld</strong></span></a></header>
-    <main id="inicio"><section className="intro wrap"><div className="intro-copy"><div className="location"><span className="location-dot" /> COSTA RICA · PUNTO DE PARTIDA</div><h1>Entender la Tierra<br /><em>empieza por mirar.</em></h1><p>Explora cómo cambia nuestro territorio a través del tiempo, con datos y evidencia que cuentan la historia completa.</p><a className="primary-link" href="#explorar">Comenzar a explorar <span aria-hidden="true">↗</span></a></div><div className="intro-side"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="earth"><span>CR</span></div><div className="intro-caption"><span>UN PLANETA EN CAMBIO</span><strong>Una mirada más cercana<br />a nuestro territorio.</strong></div></div></section>
-    <section id="explorar" className="workspace"><div className="wrap"><div className="section-heading"><div><p className="section-label">EL EXPLORADOR</p><h2>Haz una pregunta.<br /><em>Encuentra contexto.</em></h2></div><p>Un espacio para observar series, entender sus límites y seguir la evidencia detrás de cada resultado.</p></div>
-      <div className="demo-notice"><strong>MVP · serie en revisión</strong><span>Este producto está en desarrollo. La serie cubre el componente terrestre principal de IGN/SNIT y excluye componentes separados. Su calidad, el método y la interpretación científica siguen en revisión.</span></div>
+  return <main id="graficos">
+    <section id="explorar" className="workspace"><div className="wrap"><div className="section-heading"><div><p className="section-label">{t.explorer.label}</p><h2>{t.explorer.title1}<br /><em>{t.explorer.title2}</em></h2></div><p>{t.explorer.body}</p></div>
+      <div className="demo-notice"><strong>{t.explorer.noticeTitle}</strong><span>{t.explorer.notice}</span></div>
       <div className="explorer">
         <form className="controls" onSubmit={explore}>
           <div className="panel-heading">
-            <h3>Configura tu exploración</h3>
-            <p>Selecciona un territorio mediante el mapa y consulta su serie histórica.</p>
+            <h3>{t.explorer.configure}</h3>
+            <p>{t.explorer.configureHint}</p>
           </div>
 
           {/* Mención en pantalla de la variable en estudio (reemplaza dropdown) */}
           <div className="variable-indicator-card">
             <div className="indicator-header">
               <span className="live-dot" />
-              <span className="indicator-tag">VARIABLE DE INVESTIGACIÓN</span>
+              <span className="indicator-tag">{t.explorer.variableTag}</span>
             </div>
-            <strong className="indicator-title">Precipitación mensual estimada</strong>
-            <p className="indicator-meta">NASA GES DISC · GPM_3IMERGM.07 · 0.1° (~10 km) · mm/mes</p>
+            <strong className="indicator-title">{t.explorer.variableTitle}</strong>
+            <p className="indicator-meta">{t.explorer.variableMeta}</p>
           </div>
 
           {/* Territorio seleccionado mediante el mapa (reemplaza dropdown) */}
           <div className="territory-indicator-card">
             <div className="indicator-header">
               <span className="territory-icon">📍</span>
-              <span className="indicator-tag">TERRITORIO ACTIVO</span>
-              <span className={`territory-status-tag ${selectedRegion.id === defaultRegionId ? "status-ready" : "status-ondemand"}`}>
-                {selectedRegion.id === defaultRegionId ? "Serie disponible" : "Bajo demanda"}
-              </span>
+              <span className="indicator-tag">{t.explorer.territoryTag}</span>
             </div>
-            <strong className="indicator-title">{selectedRegion.name}</strong>
+            <strong className="indicator-title">{regionName}</strong>
             <p className="indicator-meta">
               {selectedRegion.id === defaultRegionId
-                ? "Componente terrestre continental IGN/SNIT (2001–2024)."
-                : "Región seleccionada en el mapamundi. Serie bajo demanda mediante NASA Harmony."}
+                ? t.explorer.defaultMeta
+                : t.explorer.otherMeta}
             </p>
-            <div className="territory-action-hint">
-              <span>🌍 Selección directa en el Mapamundi interactivo</span>
-            </div>
           </div>
 
-          <label htmlFor="period-start">Desde<input id="period-start" type="month" value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setStart(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
-          <label htmlFor="period-end">Hasta<input id="period-end" type="month" value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} aria-invalid={!!periodError} aria-describedby={periodError ? "period-error" : undefined} onChange={(e) => { setEnd(e.target.value); setPeriodError(""); setResult(null); setStatus("idle"); }} disabled={!coverage || status === "loading"} required /></label>
-          {periodError && <p id="period-error" className="period-error" role="alert">{periodError}</p>}
-          <p className="control-note">{coverage ? `Período disponible: ${coverage.start.slice(0, 7)} a ${coverage.end.slice(0, 7)}. Frontera continental IGN/SNIT; componentes separados excluidos.` : catalogError || (selectedRegion.id !== defaultRegionId ? "Esta región requiere token NASA Earthdata en el backend. Selecciona Costa Rica continental para la serie del MVP." : "Consultando disponibilidad del servicio…")}</p>
-          {catalogError ? <button type="button" className="button" onClick={() => { setCatalogError(""); setReload((n) => n + 1); }}>Reintentar conexión <span aria-hidden="true">→</span></button> : <button className="button" disabled={!coverage || status === "loading"}>{status === "loading" ? "Consultando…" : "Consultar serie"}<span aria-hidden="true">→</span></button>}
+          <MonthField id="period-start" legend={t.explorer.from} value={start} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} invalid={!!periodError} disabled={!coverage || status === "loading"} onChange={(value) => { setStart(value); setPeriodError(""); setResult(null); setStatus("idle"); }} />
+          <MonthField id="period-end" legend={t.explorer.to} value={end} min={coverage?.start.slice(0, 7)} max={coverage?.end.slice(0, 7)} invalid={!!periodError} disabled={!coverage || status === "loading"} onChange={(value) => { setEnd(value); setPeriodError(""); setResult(null); setStatus("idle"); }} />
+          {periodError && <p id="period-error" className="period-error" role="alert">{t.explorer[periodError]}</p>}
+          <p className="control-note">{coverage ? t.explorer.available(coverage.start.slice(0, 7), coverage.end.slice(0, 7)) : catalogError ? t.errors[catalogError] : (selectedRegion.id !== defaultRegionId ? t.explorer.needsToken : t.explorer.checking)}</p>
+          {catalogError ? <button type="button" className="button" onClick={() => { setCatalogError(""); setReload((n) => n + 1); }}>{t.explorer.retry} <span aria-hidden="true">→</span></button> : <button className="button" disabled={!coverage || status === "loading"}>{status === "loading" ? t.explorer.querying : t.explorer.query}<span aria-hidden="true">→</span></button>}
         </form>
 
         <div className="results" aria-busy={status === "loading"}>
-          <p className="sr-only" role="status">{status === "loading" ? "Consultando serie" : message}</p>
+          <p className="sr-only" role="status">{status === "loading" ? t.results.srLoading : message ? t.errors[message] : ""}</p>
           <div className="result-header">
             <div>
-              <span className="result-kicker">SERIE TEMPORAL Y MAPAS</span>
-              <h3 ref={resultHeading} tabIndex={-1}>{status === "loading" ? "Consultando la serie" : status === "error" ? "No se pudo obtener la serie" : result ? "Precipitación mensual" : "Aquí comienza la exploración"}</h3>
+              <span className="result-kicker">{t.results.kicker}</span>
+              <h3 ref={resultHeading} tabIndex={-1}>{status === "loading" ? t.results.loadingTitle : status === "error" ? t.results.errorTitle : result ? t.results.resultTitle : t.results.idleTitle}</h3>
             </div>
-            <span className="status-pill">{status === "loading" ? "EN CURSO" : status === "error" ? "ERROR" : result ? "SIN VALIDAR" : "MAPA PLANETARIO"}</span>
+            {(status !== "idle" || result) && <span className="status-pill">{status === "loading" ? t.results.pillLoading : status === "error" ? t.results.pillError : t.results.pillResult}</span>}
           </div>
 
           {status === "loading" ? (
             <div className="empty">
-              <p>Estamos consultando el servicio. Esto puede tardar unos minutos.</p>
+              <p>{t.results.loadingBody}</p>
             </div>
           ) : status === "error" ? (
             <div className="empty">
-              <p>{message}</p>
+              <p>{message ? t.errors[message] : ""}</p>
             </div>
           ) : result && metadata ? (
             <>
-              <div className="result-tabs" role="tablist" aria-label="Vista del resultado">
+              <div className="result-tabs" role="tablist" aria-label={t.results.tabs}>
                 <button
                   type="button"
                   role="tab"
@@ -200,7 +198,7 @@ export function Explorer() {
                   onClick={() => setView("series")}
                   onKeyDown={(event) => { if (event.key === "ArrowRight") { event.preventDefault(); setView("map"); document.getElementById("tab-map")?.focus(); } }}
                 >
-                  Serie temporal
+                  {t.results.tabSeries}
                 </button>
                 <button
                   type="button"
@@ -215,7 +213,7 @@ export function Explorer() {
                     if (event.key === "ArrowLeft") { event.preventDefault(); setView("series"); document.getElementById("tab-series")?.focus(); }
                   }}
                 >
-                  Mapa de celdas
+                  {t.results.tabMap}
                 </button>
                 <button
                   type="button"
@@ -227,51 +225,51 @@ export function Explorer() {
                   onClick={() => setView("world")}
                   onKeyDown={(event) => { if (event.key === "ArrowLeft") { event.preventDefault(); setView("map"); document.getElementById("tab-map")?.focus(); } }}
                 >
-                  Mapamundi
+                  {t.results.tabWorld}
                 </button>
               </div>
 
               <div id="result-view" role="tabpanel" aria-labelledby={view === "series" ? "tab-series" : view === "map" ? "tab-map" : "tab-world"}>
                 {view === "series" ? (
                   <>
-                    <p className="chart-caption">Período solicitado: {start} a {end} · {String(metadata.unit)} · los espacios indican valores ausentes</p>
+                    <p className="chart-caption">{t.results.caption(start, end, unitLabel)}</p>
                     {result.points.every((point) => point.value === null) ? (
                       <div className="empty">
-                        <h4>No hay valores para este período.</h4>
-                        <p>Prueba otro período y consulta la cobertura en la tabla.</p>
+                        <h4>{t.results.noValuesTitle}</h4>
+                        <p>{t.results.noValuesBody}</p>
                       </div>
                     ) : (
                       <>
                         <Chart points={result.points} selectedDate={result.points[selectedIndex]?.date}/>
-                        <p className="chart-caption">Mes seleccionado en el mapa: {result.points[selectedIndex]?.date.slice(0, 7)}.</p>
+                        <p className="chart-caption">{t.results.selectedMonth(result.points[selectedIndex]?.date.slice(0, 7) ?? "")}</p>
                       </>
                     )}
                   </>
                 ) : view === "map" ? (
-                  <PrecipitationMap result={result} index={selectedIndex} setIndex={setSelectedIndex} />
+                  <PrecipitationMap key={locale} result={result} index={selectedIndex} setIndex={setSelectedIndex} />
                 ) : (
                   <WorldMap selectedRegionId={selectedRegion.id} onSelectRegion={handleSelectRegionFromMap} />
                 )}
               </div>
 
               <details className="data-table">
-                <summary>Ver valores y cobertura en una tabla</summary>
+                <summary>{t.results.tableSummary}</summary>
                 <table>
                   <thead>
                     <tr>
-                      <th scope="col">Mes</th>
-                      <th scope="col">Valor ({String(metadata.unit)})</th>
-                      <th scope="col">Cobertura</th>
-                      <th scope="col">Estado de cobertura</th>
+                      <th scope="col">{t.results.colMonth}</th>
+                      <th scope="col">{t.results.colValue(unitLabel)}</th>
+                      <th scope="col">{t.results.colCoverage}</th>
+                      <th scope="col">{t.results.colStatus}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {result.points.map((point) => (
                       <tr key={point.date}>
                         <td>{point.date.slice(0, 7)}</td>
-                        <td>{point.value ?? "Sin dato"}</td>
+                        <td>{point.value ?? t.results.noData}</td>
                         <td>{formatCoverage(point.coverageFraction)}</td>
-                        <td>{coverageStatus(point.qualityFlag)}</td>
+                        <td>{coverageStatus(point.qualityFlag, t)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -279,23 +277,23 @@ export function Explorer() {
               </details>
 
               <div className="result-note">
-                <strong>Serie pendiente de validación</strong>
-                <p>La serie fue aceptada para este MVP. Su procedencia, calidad y procesamiento siguen en revisión científica.</p>
+                <strong>{t.results.pendingTitle}</strong>
+                <p>{t.results.pendingBody}</p>
               </div>
 
               <section className="result-note trend-status" aria-labelledby="trend-heading">
-                <h4 id="trend-heading">Estado del análisis de tendencia</h4>
-                <p><strong>{result.analysisStatus === "inconclusive" ? "Inconcluso" : result.analysisStatus === "not_computed" ? "No calculado" : "Resultado en revisión"}</strong></p>
-                <p>{result.analysisStatus === "conclusive" ? "El servicio reportó un resultado, pero la inferencia permanece en revisión científica y no se publican métricas." : result.analysisNote}</p>
-                <p>Método declarado: {result.analysisMethod}. La revisión del método y sus supuestos sigue pendiente.</p>
-                <p><strong>Incertidumbre:</strong> no se dispone de un intervalo de confianza revisado para la pendiente. La cobertura de la serie no cuantifica esa incertidumbre.</p>
-                <p>Los cambios observados en esta serie no demuestran por sí solos su causa.</p>
+                <h4 id="trend-heading">{t.results.trendHeading}</h4>
+                <p><strong>{result.analysisStatus === "inconclusive" ? t.results.inconclusive : result.analysisStatus === "not_computed" ? t.results.notComputed : t.results.underReview}</strong></p>
+                <p>{result.analysisStatus === "conclusive" ? t.results.conclusiveNote : <span lang="es">{result.analysisNote}</span>}</p>
+                <p>{t.results.method(result.analysisMethod)}</p>
+                <p><strong>{t.results.uncertaintyLabel}</strong> {t.results.uncertainty}</p>
+                <p>{t.results.causality}</p>
               </section>
 
               <div className="result-note">
-                <strong>Información reportada por el servicio</strong>
-                <p>Producto: {String(metadata.dataset)}. Fuente declarada: {String(metadata.source)}. Resolución: {String(metadata.spatial_resolution)}. La cobertura indica el área con datos disponibles; no mide la precisión de la estimación. El índice de calidad de NASA aún no se muestra.</p>
-                {warnings.length > 0 && <ul>{warnings.map((warning, i) => <li key={i}>{warning}</li>)}</ul>}
+                <strong>{t.results.serviceTitle}</strong>
+                <p>{t.results.service(String(metadata.dataset), String(metadata.source), String(metadata.spatial_resolution))}</p>
+                {warnings.length > 0 && <>{t.results.serviceLanguage && <p>{t.results.serviceLanguage}</p>}<ul lang="es">{warnings.map((warning, i) => <li key={i}>{warning}</li>)}</ul></>}
               </div>
             </>
           ) : (
@@ -307,50 +305,36 @@ export function Explorer() {
       </div>
 
       <div className="evidence">
-        <div>
-          <h3>La evidencia<br />siempre a la vista.</h3>
+        <div className="evidence-intro">
+          <h3>{t.evidence.title1}<br />{t.evidence.title2}</h3>
+          <p>{t.evidence.body}</p>
         </div>
-        <p>Las cifras necesitan contexto. La procedencia y el método de la serie se están revisando con el equipo.</p>
+        <Completeness result={result} />
         <div className="evidence-list">
           {result && metadata ? (
             <>
-              <span>Producto <b>{String(metadata.dataset)}</b></span>
-              <span>Fuente declarada <b>{String(metadata.source)}</b></span>
-              {typeof metadata.effective_origin === "string" && metadata.effective_origin.trim() && <span>Origen reportado <b>{metadata.effective_origin}</b></span>}
-              {typeof metadata.product_version === "string" && metadata.product_version.trim() && <span>Versión del producto <b>{metadata.product_version}</b></span>}
-              {typeof metadata.unit_conversion === "string" && metadata.unit_conversion.trim() && <span>Conversión de unidades <b>{metadata.unit_conversion}</b></span>}
-              <span>Resolución <b>{String(metadata.spatial_resolution)}</b></span>
-              {result.evidence.weighting && <span>Método de ponderación <b>{result.evidence.weighting}</b></span>}
-              {result.evidence.doi && <span>Referencia <b><a href={result.evidence.doi}>Consultar fuente ↗</a></b></span>}
+              <span>{t.evidence.product} <b>{String(metadata.dataset)}</b></span>
+              <span>{t.evidence.source} <b>{String(metadata.source)}</b></span>
+              {typeof metadata.effective_origin === "string" && metadata.effective_origin.trim() && <span>{t.evidence.origin} <b>{metadata.effective_origin}</b></span>}
+              {typeof metadata.product_version === "string" && metadata.product_version.trim() && <span>{t.evidence.version} <b>{metadata.product_version}</b></span>}
+              {typeof metadata.unit_conversion === "string" && metadata.unit_conversion.trim() && <span>{t.evidence.conversion} <b>{metadata.unit_conversion}</b></span>}
+              <span>{t.evidence.resolution} <b>{String(metadata.spatial_resolution)}</b></span>
+              {result.evidence.weighting && <span>{t.evidence.weighting} <b>{result.evidence.weighting}</b></span>}
+              {result.evidence.doi && <span>{t.evidence.reference} <b><a href={result.evidence.doi}>{t.evidence.referenceLink} ↗</a></b></span>}
               {result.evidence.granules.length > 0 && (
                 <details>
-                  <summary>Ver gránulos reportados ({result.evidence.granules.length})</summary>
+                  <summary>{t.evidence.granules(result.evidence.granules.length)}</summary>
                   <ul>{result.evidence.granules.map((id, index) => <li key={index}>{id}</li>)}</ul>
                 </details>
               )}
-              <span>Validación científica <b>En revisión</b></span>
+              <span>{t.evidence.validation} <b>{t.evidence.validationStatus}</b></span>
             </>
           ) : (
-            <p>Consulta una serie para ver la procedencia y las limitaciones reportadas por el servicio.</p>
+            <p>{t.evidence.empty}</p>
           )}
         </div>
       </div>
     </div>
   </section>
-  <Research />
-  </main>
-  <footer id="acerca">
-    <div className="wrap footer-inner">
-      <div>
-        <a className="footer-brand" href="#inicio">iyök<span>.</span></a>
-        <p>Una forma más clara de explorar<br />el cambio en nuestro planeta.</p>
-      </div>
-      <div>
-        <strong>HECHO PARA EXPLORAR</strong>
-        <p>Un proyecto en desarrollo de Bee4TheWorld.<br />Integración y análisis en revisión.</p>
-      </div>
-      <a href="#inicio">Volver arriba ↑</a>
-    </div>
-  </footer>
-</>;
+  </main>;
 }

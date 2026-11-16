@@ -1,2 +1,2 @@
-import { Explorer } from "./ui/explorer";
-export default function Home() { return <Explorer />; }
+import { Landing } from "./ui/landing";
+export default function Home() { return <Landing />; }
